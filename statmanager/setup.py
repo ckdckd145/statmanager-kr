@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-with open(r'statmanager\README.md', encoding='utf-8') as f:
+with open(r'../README.md', encoding='utf-8') as f:
     description_markdown = f.read()
 
 setup(
@@ -13,6 +13,7 @@ setup(
     author='ckdckd145',
     author_email='ckdckd145@gmail.com',
     url='https://cslee145.notion.site/statmanager-kr-Manual-c277749fe94b4e08a836236b409642b3?pvs=4',
+    download_url='https://github.com/ckdckd145/statmanager-kr',
     install_requires=['pandas', 'scipy', 'statsmodels', 'matplotlib', 'seaborn'],
     packages=find_packages(),
     keywords=['statistic', 'socialscience', 'stats',],
