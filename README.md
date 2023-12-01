@@ -1,6 +1,7 @@
 # STATMANAGER KR
 
-# STATUS : NOW ON WORK (TEMPORARY)
+### STATUS : Released 
+#
 Open-source statistical package for Python based on the Pandas.    
 Especially for researchers, data scientists, psychologist, students, and anyone who interested in conducting hypothesis testing. The statmanager-kr aims to organize packages that are "convenient to use", "uncompliated to use", and "convenient to see results".   
 Currently, Korean and English are supported. 
@@ -12,7 +13,8 @@ Pandas를 사용하며, 가설 검증에 대해 관심을 갖는 연구원, 데�
 
 
 ## Documentaion
-https://cslee145.notion.site/statmanager-kr-Manual-c277749fe94b4e08a836236b409642b3?pvs=4
+한글 문서 : https://cslee145.notion.site/cslee145/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01   
+English Docu : https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4
 
 ## Current Ver 1.7.2 : 
 Please see documentation for the update history.    

@@ -1405,14 +1405,13 @@ class Stat_Manager:
                     
                     print(mes.notation_meesage_for_multinominal[self.language_set])
                 
-                print(f"\nDependent variable: {dv}")
-                print(f"dummy_coding : {mapper}\n")
+                print(mes.logistic_regression_result_reporting_one(dv, mapper)[self.language_set])
             
-            else:
+            else: # method == 'linearr'
                 y = df[dv]
-                print(f"\nDependent variable: {dv}")
+                print(mes.linear_regression_result_reporting_one (dv)[self.language_set])
             
-            print(f"Independent variable: {iv}\n")
+            print(mes.regression_result_reporting_ivs (iv)[self.language_set])
 
             x = df[iv]
             

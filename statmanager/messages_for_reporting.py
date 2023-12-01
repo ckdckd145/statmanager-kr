@@ -384,3 +384,26 @@ def frequency_analysis_result_reporting_two (s, p):
     return result
 
 
+def logistic_regression_result_reporting_one(dv, mapper):
+    result = {
+        'kor' : f"종속변수: {dv}\n더미코딩됨: {mapper}\n",
+        'eng' : f"\nDependent variable: {dv}\nDummy-coded as : {mapper}\n",
+    }
+    
+    return result
+    
+def linear_regression_result_reporting_one (dv):
+    result = {
+        'kor' : f"\n종속변수: {dv}",
+        'eng' : f"\nDependent variable: {dv}",
+    }
+    
+    return result
+
+def regression_result_reporting_ivs (iv):
+    result = {
+        'kor' : f"독립변수: {iv}\n",
+        'eng' : f"Independent variable: {iv}\n",
+    }
+    
+    return result

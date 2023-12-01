@@ -15,7 +15,7 @@ setup(
     description='Open-source statistical package in Python based on the Pandas',
     author='ckdckd145',
     author_email='ckdckd145@gmail.com',
-    url='https://cslee145.notion.site/statmanager-kr-Manual-c277749fe94b4e08a836236b409642b3?pvs=4',
+    url='https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4',
     download_url='https://github.com/ckdckd145/statmanager-kr',
     install_requires=['pandas', 'scipy', 'statsmodels', 'matplotlib', 'seaborn'],
     packages=find_packages(),
