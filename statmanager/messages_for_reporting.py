@@ -83,6 +83,12 @@ NOTATION_FOR_HOWTOUSE_SELECTOR = {
     'eng' : '\nThe table below describes how selector parameters are utilized to filter data in .progress(). \n',
 }
 
+notation_message_for_calculating_eta_squared  = {
+    'kor' : '효과크기: Eta-squared (η2)가 계산됩니다. : ',
+    'eng' : 'Effectsize: Eta-squared (η2) is calculated: ',
+}
+
+
 def success_message_for_creating_object (ver, doclink):
     
     success_message = {
@@ -139,6 +145,14 @@ def friedman_and_f_oneway_rm_result_reporting (vars):
     
     return reporting_result
 
+def friedman_result_reporting_two(s, p):
+    result = {
+        'kor' : f"검정 통계치 = {s:.3f}, p = {p:.3f}",
+        'eng' : f"Test statistic = {s:.3f}, p = {p:.3f}",   
+    }
+    
+    return result
+
 
 def ttest_rel_and_wilcoxon_result_reporting_one (vars, n):
     
@@ -158,21 +172,47 @@ def ttest_rel_and_wilcoxon_result_reporting_two (s, degree_of_freedom, p):
     
     return reporting_result_two
 
-def f_nway_rm_result_reporting (vars, group_vars):
+def f_nway_rm_result_reporting_one (vars, group_vars):
     reporting_result = {
-        'kor' : f"종속변수 : {vars} \n독립변인 : {group_vars}\n기술통계치 : \n",
-        'eng' : f"Dependent variables : {vars} \Independent variables : {group_vars}\Descriptive analysis : \n",
+        'kor' : f"종속변수 : {vars} \n독립변인 : {group_vars}\n\n",
+        'eng' : f"Dependent variables : {vars} \nIndependent variables : {group_vars}\n\n",
     }
     return reporting_result
 
-def f_nway_result_reporting (dv, group_vars):
+
+
+def f_nway_result_reporting_one (dv, group_vars):
     
     reporting_result = {
-        'kor' : f"종속변수 : {dv} \n독립변인 : {group_vars}\n기술통계치 : \n",
-        'eng' : f"Dependent variables : {dv} \Independent variables : {group_vars}\nDescriptive analysis : \n",
+        'kor' : f"종속변수 : {dv} \n독립변인 : {group_vars}\n\n",
+        'eng' : f"Dependent variables : {dv} \nIndependent variables : {group_vars}\n\n",
     }
     
     return reporting_result
+
+def f_nway_result_reporting_two (dv, n): # also applied in f_nway_rm
+    reporting_result = {
+        'kor' : f"기술통계치: {n}에 따른 {dv}",
+        'eng' : f"Descripitive analysis: {dv} by {n}",
+    }
+    
+    return reporting_result
+
+def f_nway_result_reporting_three (dv): # also applied in f_nway_rm
+    reporting_result = {
+        'kor' : f"기술통계치: 상호작용에 따른 {dv}",
+        'eng' : f"Descripitive analysis: {dv} by Interaction",
+    }
+    
+    return reporting_result
+
+def f_nway_result_reporting_four (testname): # also applied in f_nway_rm
+    result = {
+        'kor' : f"{testname} 통계치:\n",
+        'eng' : f"{testname} Statistics:\n",
+    }
+    
+    return result
 
 
 def posthoc_message_for_main_effect (n):

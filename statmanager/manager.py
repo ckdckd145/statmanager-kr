@@ -558,7 +558,7 @@ class Stat_Manager:
                     s, p = testfunc(*series)
                     s = round(s, 3)
                     p = round(p, 3)
-                    print(f"Test statistic = {s:.3f}, p = {p:.3f}")
+                    print(mes.friedman_result_reporting_two(s, p)[self.language_set])
                 
                 elif method == 'f_oneway_rm':
                     reset_df = df.reset_index().melt(id_vars= self.id_var, value_vars = vars)
@@ -666,15 +666,15 @@ class Stat_Manager:
                 
                 print(LINE)
                 print(f"{testname}\n")
-                print(mes.f_nway_rm_result_reporting(vars, group_vars)[self.language_set])
+                print(mes.f_nway_rm_result_reporting_one(vars, group_vars)[self.language_set])
                 
                 for n in group_vars:
                     result_table = df.groupby(n)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
-                    print(f"{dv} by {n}")
+                    print(mes.f_nway_result_reporting_two (dv, n)[self.language_set])
                     self.showing(result_table)
 
                 result_table = df.groupby(group_vars)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)  
-                print(f"{dv} by Interaction")
+                print(mes.f_nway_result_reporting_three (dv)[self.language_set])
                 self.showing(result_table)
                     
                 iv_str = self.custom_join(group_vars)
@@ -686,11 +686,11 @@ class Stat_Manager:
                 result = table
                 result.rename(columns = {'PR(>F)': 'p-value'}, inplace=True)
                 
-                print(f"{testname} result:\n")
+                print(mes.f_nway_result_reporting_four (testname)[self.language_set])
                 
                 if effectsize == True:
                     result['eta_squared'] = result['sum_sq'] / result['sum_sq']['Residual']
-                    print("Effectsize: Eta-squared (η2) is calculated")
+                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
                 
                 result = result.round(3)
                 self.showing(result)
@@ -719,14 +719,14 @@ class Stat_Manager:
                 
                 print(LINE)
                 print(f"{testname}\n")
-                print(mes.f_nway_result_reporting(dv, group_vars)[self.language_set])
+                print(mes.f_nway_result_reporting_one(dv, group_vars)[self.language_set])
                 
                 for n in group_vars:
                     result_table = df.groupby(n)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
-                    print(f"{dv} by {n}")
+                    print(mes.f_nway_result_reporting_two(dv, n)[self.language_set])
                     self.showing(result_table)
                 
-                print(f'{dv} by Interaction')
+                print(mes.f_nway_result_reporting_three (dv)[self.language_set])
                 result_table = df.groupby(group_vars)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
                 self.showing(result_table)
                     
@@ -739,13 +739,12 @@ class Stat_Manager:
                 result = table
                 result.rename(columns = {'PR(>F)': 'p-value'}, inplace=True)
                 
-
                 
-                print(f"{testname} result:\n")
+                print(mes.f_nway_result_reporting_four(testname)[self.language_set])
                 
                 if effectsize == True:
                     result['eta_squared'] = result['sum_sq'] / result['sum_sq']['Residual']
-                    print("Effectsize: Eta-squared (η2) is calculated: ")
+                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
                     
                 result = result.round(3)
                 self.showing(result)
@@ -877,7 +876,7 @@ class Stat_Manager:
                 if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
                     
                     ancova_result_table['eta_squared'] = ancova_result_table['sum_sq'] / ancova_result_table['sum_sq']['Residual']
-                    print("Effectsize: Eta-squared (η2) is calculated: ")
+                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
                 
                 
                 self.showing(ancova_result_table.rename(columns = {'PR(>F)': 'p-value'}).round(4))
@@ -994,7 +993,7 @@ class Stat_Manager:
                 if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
                     
                     ancova_result_table['eta_squared'] = ancova_result_table['sum_sq'] / ancova_result_table['sum_sq']['Residual']
-                    print("Effectsize: Eta-squared (η2) is calculated: ")
+                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
 
                 self.showing(ancova_result_table.rename(columns = {'PR(>F)': 'p-value'}).round(4))                
                 
@@ -1124,7 +1123,7 @@ class Stat_Manager:
                 if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
                     
                     ancova_result_table['eta_squared'] = ancova_result_table['sum_sq'] / ancova_result_table['sum_sq']['Residual']
-                    print("Effectsize: Eta-squared (η2) is calculated: ")
+                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
 
                 self.showing(ancova_result_table.rename(columns = {'PR(>F)': 'p-value'}).round(4))
                 
