@@ -1,5 +1,5 @@
 
-LINK ={
+LINK_DOC ={
     'kor' : '*****\n↓↓ 상세한 정보는 Documentation link를 확인하세요! ↓↓\nhttps://cslee145.notion.site/statmanager-kr-Documentation-c9d0886f29ea461d9d0f44449a145f8a?pvs=4 \n*****\n',
     'eng' : '*****\n↓↓ Check for the more details in documentation! ↓↓\nhttps://cslee145.notion.site/statmanager-kr-Documentation-c9d0886f29ea461d9d0f44449a145f8a?pvs=4 \n*****\n'
 }

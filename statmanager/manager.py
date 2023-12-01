@@ -10,14 +10,14 @@ import numpy as np
 import re as repattern
 # from itertools import product
 
-from menu_for_howtouse import menu_for_howtouse_eng, menu_for_howtouse_kor, selector_for_howtouse_eng, selector_for_howtouse_kor
-import messages_for_reporting as mes 
+from .menu_for_howtouse import menu_for_howtouse_eng, menu_for_howtouse_kor, selector_for_howtouse_eng, selector_for_howtouse_kor
+from .messages_for_reporting import *
 
 LINE = "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 
 VERSION = "1.7.2"
 
-LINK = mes.LINK
+LINK = LINK_DOC
 
 
 class Stat_Manager:
@@ -33,9 +33,9 @@ class Stat_Manager:
             self.link = LINK[self.language_set]
         
         else:
-            raise KeyError(mes.keyerror_message_for_languageset)
+            raise KeyError(keyerror_message_for_languageset)
         
-        SUCCESS_MESSAGE = mes.success_message_for_creating_object(ver = VERSION, doclink = self.link)
+        SUCCESS_MESSAGE = success_message_for_creating_object(ver = VERSION, doclink = self.link)
         
         if self.language_set == 'kor':
             
@@ -63,7 +63,7 @@ class Stat_Manager:
             else:
                 pass
         except:
-            raise TypeError(mes.typeerror_message_for_indexsetting)
+            raise TypeError(typeerror_message_for_indexsetting)
         
         else:
             print(SUCCESS_MESSAGE[self.language_set])
@@ -321,7 +321,7 @@ class Stat_Manager:
             self.filtered_df = None          
             
         else:
-            error_message_for_selector_type = mes.error_message_for_selector_type(doclink = self.link)
+            error_message_for_selector_type = error_message_for_selector_type(doclink = self.link)
             
             if type(selector) != dict:
                 raise TypeError(error_message_for_selector_type[self.language_set])
@@ -391,7 +391,7 @@ class Stat_Manager:
         testname = self.menu[method]['name']
         if selector != None:
             
-            selector_notation = mes.selector_notification(condition_texts= conditions_notification_texts, test = testname)
+            selector_notation = selector_notification(condition_texts= conditions_notification_texts, test = testname)
             testname = selector_notation[self.language_set]
 
         testdivision = self.menu[method]['division']
@@ -414,7 +414,7 @@ class Stat_Manager:
             
             except:
                 
-                raise KeyError(mes.keyerror_message_for_fisherexact[self.language_set])
+                raise KeyError(keyerror_message_for_fisherexact[self.language_set])
             
             try: 
                 predicted_value = result[3]
@@ -437,10 +437,10 @@ class Stat_Manager:
             
             print(LINE)
             print(f"{testname}")
-            print(mes.frequency_analysis_result_reporting_one(vars)[self.language_set])
+            print(frequency_analysis_result_reporting_one(vars)[self.language_set])
             
             try:
-                print(mes.frequency_analysis_result_reporting_two(s, p)[self.language_set])
+                print(frequency_analysis_result_reporting_two(s, p)[self.language_set])
             
             except:
                 pass
@@ -449,11 +449,11 @@ class Stat_Manager:
             self.showing(ser)
             
             try:
-                print(f"{mes.percentage_of_under_five_values_word[self.language_set]} = {round(percentage_of_under_five_values * 100, 2):.2f}%")
+                print(f"{percentage_of_under_five_values_word[self.language_set]} = {round(percentage_of_under_five_values * 100, 2):.2f}%")
                 
                 if percentage_of_under_five_values >= 0.25:
                     
-                    print(mes.warning_message_for_frequency_analysis[self.language_set])
+                    print(warning_message_for_frequency_analysis[self.language_set])
             
             except:
                 
@@ -476,25 +476,25 @@ class Stat_Manager:
                 s, p = testfunc(ser, 'norm')
                 
                 if n < 30:
-                    print(mes.warning_message_for_normality[method][self.language_set])
+                    print(warning_message_for_normality[method][self.language_set])
                 
             else: # method == 'shapiro'
                 s, p = testfunc(ser)
                 
                 if n >= 30:
-                    print(mes.warning_message_for_normality[method][self.language_set])
+                    print(warning_message_for_normality[method][self.language_set])
             
             
             s = round(s, 3)
             p = round(p, 3)
             
-            print(mes.normality_test_result_reporting(dv, n, s, p)[self.language_set])
+            print(normality_test_result_reporting(dv, n, s, p)[self.language_set])
             
             if p <= .05 : 
-                print(mes.conclusion_for_normality_assumption[self.language_set]['under'])
+                print(conclusion_for_normality_assumption[self.language_set]['under'])
                 
             else:
-                print(mes.conclusion_for_normality_assumption[self.language_set]['up'])
+                print(conclusion_for_normality_assumption[self.language_set]['up'])
             
             print(LINE)
         
@@ -519,13 +519,13 @@ class Stat_Manager:
             
             print(LINE)
             print(f"{testname}")
-            print(mes.homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[self.language_set])
+            print(homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[self.language_set])
             
             if p <= .05 :
-                print(mes.conclusion_for_homoskedasticity_assumption[self.language_set]['under'])
+                print(conclusion_for_homoskedasticity_assumption[self.language_set]['under'])
             
             else:
-                print(mes.conclusion_for_homoskedasticity_assumption[self.language_set]['up'])
+                print(conclusion_for_homoskedasticity_assumption[self.language_set]['up'])
             
             print(LINE)
             
@@ -551,14 +551,14 @@ class Stat_Manager:
 
                 print(LINE)
                 print(f"{testname}")
-                print(mes.friedman_and_f_oneway_rm_result_reporting(vars)[self.language_set])
+                print(friedman_and_f_oneway_rm_result_reporting(vars)[self.language_set])
                 self.showing(dict_var)
                 
                 if method == 'friedman':
                     s, p = testfunc(*series)
                     s = round(s, 3)
                     p = round(p, 3)
-                    print(mes.friedman_result_reporting_two(s, p)[self.language_set])
+                    print(friedman_result_reporting_two(s, p)[self.language_set])
                 
                 elif method == 'f_oneway_rm':
                     reset_df = df.reset_index().melt(id_vars= self.id_var, value_vars = vars)
@@ -623,9 +623,9 @@ class Stat_Manager:
                 
                 print(LINE)
                 print(f"{testname}")
-                print(mes.ttest_rel_and_wilcoxon_result_reporting_one(vars, n)[self.language_set])
+                print(ttest_rel_and_wilcoxon_result_reporting_one(vars, n)[self.language_set])
                 self.showing(dict_var)
-                print(mes.ttest_rel_and_wilcoxon_result_reporting_two(s, degree_of_freedom, p)[self.language_set])
+                print(ttest_rel_and_wilcoxon_result_reporting_two(s, degree_of_freedom, p)[self.language_set])
                 
                 if method == 'wilcoxon':
                     z = (s - n * (n + 1) / 4) / (n * (n + 1) * (2 * n + 1) / 24)**0.5
@@ -666,15 +666,15 @@ class Stat_Manager:
                 
                 print(LINE)
                 print(f"{testname}\n")
-                print(mes.f_nway_rm_result_reporting_one(vars, group_vars)[self.language_set])
+                print(f_nway_rm_result_reporting_one(vars, group_vars)[self.language_set])
                 
                 for n in group_vars:
                     result_table = df.groupby(n)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
-                    print(mes.f_nway_result_reporting_two (dv, n)[self.language_set])
+                    print(f_nway_result_reporting_two (dv, n)[self.language_set])
                     self.showing(result_table)
 
                 result_table = df.groupby(group_vars)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)  
-                print(mes.f_nway_result_reporting_three (dv)[self.language_set])
+                print(f_nway_result_reporting_three (dv)[self.language_set])
                 self.showing(result_table)
                     
                 iv_str = self.custom_join(group_vars)
@@ -686,11 +686,11 @@ class Stat_Manager:
                 result = table
                 result.rename(columns = {'PR(>F)': 'p-value'}, inplace=True)
                 
-                print(mes.f_nway_result_reporting_four (testname)[self.language_set])
+                print(f_nway_result_reporting_four (testname)[self.language_set])
                 
                 if effectsize == True:
                     result['eta_squared'] = result['sum_sq'] / result['sum_sq']['Residual']
-                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
+                    print(notation_message_for_calculating_eta_squared[self.language_set])
                 
                 result = result.round(3)
                 self.showing(result)
@@ -719,14 +719,14 @@ class Stat_Manager:
                 
                 print(LINE)
                 print(f"{testname}\n")
-                print(mes.f_nway_result_reporting_one(dv, group_vars)[self.language_set])
+                print(f_nway_result_reporting_one(dv, group_vars)[self.language_set])
                 
                 for n in group_vars:
                     result_table = df.groupby(n)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
-                    print(mes.f_nway_result_reporting_two(dv, n)[self.language_set])
+                    print(f_nway_result_reporting_two(dv, n)[self.language_set])
                     self.showing(result_table)
                 
-                print(mes.f_nway_result_reporting_three (dv)[self.language_set])
+                print(f_nway_result_reporting_three (dv)[self.language_set])
                 result_table = df.groupby(group_vars)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
                 self.showing(result_table)
                     
@@ -740,11 +740,11 @@ class Stat_Manager:
                 result.rename(columns = {'PR(>F)': 'p-value'}, inplace=True)
                 
                 
-                print(mes.f_nway_result_reporting_four(testname)[self.language_set])
+                print(f_nway_result_reporting_four(testname)[self.language_set])
                 
                 if effectsize == True:
                     result['eta_squared'] = result['sum_sq'] / result['sum_sq']['Residual']
-                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
+                    print(notation_message_for_calculating_eta_squared[self.language_set])
                     
                 result = result.round(3)
                 self.showing(result)
@@ -758,12 +758,12 @@ class Stat_Manager:
                     
                     if posthoc_method == 'bonf':
                         result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                        print(mes.posthoc_message_for_main_effect(n)[self.language_set])
+                        print(posthoc_message_for_main_effect(n)[self.language_set])
                         self.showing(result[0])
                     
                     elif posthoc_method == 'tukey':
                         result = mc.tukeyhsd()                
-                        print(mes.posthoc_message_for_main_effect(n)[self.language_set])
+                        print(posthoc_message_for_main_effect(n)[self.language_set])
                         self.showing(result.summary())
                 
                 
@@ -772,12 +772,12 @@ class Stat_Manager:
 
                     if posthoc_method == 'bonf':
                         result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                        print(mes.posthoc_message_for_interaction[self.language_set])
+                        print(posthoc_message_for_interaction[self.language_set])
                         self.showing(result[0])
                     
                     elif posthoc_method == 'tukey':
                         result = mc.tukeyhsd()                
-                        print(mes.posthoc_message_for_interaction[self.language_set])
+                        print(posthoc_message_for_interaction[self.language_set])
                         self.showing(result.summary())
 
         if testtype == 'compare_ancova':
@@ -865,7 +865,7 @@ class Stat_Manager:
                 
                 print(LINE)
                 print(testname)
-                print(mes.oneway_ancova_result_reporting(dv, group_vars, group_names, covars)[self.language_set])
+                print(oneway_ancova_result_reporting(dv, group_vars, group_names, covars)[self.language_set])
                 self.showing(dict_var)
                 
                 print('OLS Model Result:')
@@ -876,21 +876,21 @@ class Stat_Manager:
                 if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
                     
                     ancova_result_table['eta_squared'] = ancova_result_table['sum_sq'] / ancova_result_table['sum_sq']['Residual']
-                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
+                    print(notation_message_for_calculating_eta_squared[self.language_set])
                 
                 
                 self.showing(ancova_result_table.rename(columns = {'PR(>F)': 'p-value'}).round(4))
 
                 
                 print('Pair-Coef Result Table: ')
-                print(mes.ancova_coef_interpreting_message(covars)[self.language_set])
+                print(ancova_coef_interpreting_message(covars)[self.language_set])
                 self.showing(pair_coef_table)
             
                 print(LINE)
             
                 if posthoc == True:
                     print("Post-Hoc: ")
-                    print(mes.warning_message_for_ancova_posthoc[self.language_set])
+                    print(warning_message_for_ancova_posthoc[self.language_set])
                     
                     mc = MultiComparison(df[dv], df[group_vars])
                     
@@ -981,7 +981,7 @@ class Stat_Manager:
                 #결과 리포트
                 print(LINE)
                 print(testname)
-                print(mes.rm_ancova_result_reporting(repeated_vars, covars)[self.language_set])
+                print(rm_ancova_result_reporting(repeated_vars, covars)[self.language_set])
                 self.showing(dict_var)
 
                 print('OLS Model Result:')
@@ -993,19 +993,19 @@ class Stat_Manager:
                 if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
                     
                     ancova_result_table['eta_squared'] = ancova_result_table['sum_sq'] / ancova_result_table['sum_sq']['Residual']
-                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
+                    print(notation_message_for_calculating_eta_squared[self.language_set])
 
                 self.showing(ancova_result_table.rename(columns = {'PR(>F)': 'p-value'}).round(4))                
                 
                 
                 print('Pair-Coef Result Table: ')
-                print(mes.ancova_coef_interpreting_message(covars)[self.language_set])
+                print(ancova_coef_interpreting_message(covars)[self.language_set])
                 self.showing(pair_coef_table)
                 
  
                 if posthoc == True:
                     print('Post-Hoc: ')
-                    print(mes.warning_message_for_ancova_posthoc[self.language_set])
+                    print(warning_message_for_ancova_posthoc[self.language_set])
                     
                     mc = MultiComparison(melted_df['value'], melted_df['time'])
                     
@@ -1049,7 +1049,7 @@ class Stat_Manager:
                 
                 print(LINE)
                 print(testname)
-                print(mes.nway_ancova_result_reporting(dv, group_vars, covars)[self.language_set])
+                print(nway_ancova_result_reporting(dv, group_vars, covars)[self.language_set])
                 
                 
                 for n in group_vars:
@@ -1123,30 +1123,30 @@ class Stat_Manager:
                 if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
                     
                     ancova_result_table['eta_squared'] = ancova_result_table['sum_sq'] / ancova_result_table['sum_sq']['Residual']
-                    print(mes.notation_message_for_calculating_eta_squared[self.language_set])
+                    print(notation_message_for_calculating_eta_squared[self.language_set])
 
                 self.showing(ancova_result_table.rename(columns = {'PR(>F)': 'p-value'}).round(4))
                 
                 print('Coef Result Table: ')
-                print(mes.ancova_coef_interpreting_message(covars)[self.language_set])
+                print(ancova_coef_interpreting_message(covars)[self.language_set])
                 self.showing(olsmodel.summary().tables[1])        
                 
                 
                 if posthoc == True:
                     print('Post-Hoc: ')
-                    print(mes.warning_message_for_ancova_posthoc[self.language_set])
+                    print(warning_message_for_ancova_posthoc[self.language_set])
                     
                     for n in group_vars:
                         mc = MultiComparison(df[dv], df[n])                        
                         
                         if posthoc_method == 'bonf':
                             result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                            print(mes.posthoc_message_for_main_effect(n)[self.language_set])
+                            print(posthoc_message_for_main_effect(n)[self.language_set])
                             self.showing(result[0])
                         
                         elif posthoc_method == 'tukey':
                             result = mc.tukeyhsd()                
-                            print(mes.posthoc_message_for_main_effect(n)[self.language_set])
+                            print(posthoc_message_for_main_effect(n)[self.language_set])
                             print(f"\n{result.summary()}\n")                        
                     
                     
@@ -1155,12 +1155,12 @@ class Stat_Manager:
                         
                         if posthoc_method == 'bonf':
                             result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                            print(mes.posthoc_message_for_interaction[self.language_set])
+                            print(posthoc_message_for_interaction[self.language_set])
                             self.showing(result[0])
                         
                         elif posthoc_method == 'tukey':
                             result = mc.tukeyhsd()                
-                            print(mes.posthoc_message_for_interaction[self.language_set])
+                            print(posthoc_message_for_interaction[self.language_set])
                             self.showing(result.summary())
                 
             elif method == 'nway_rm_ancova':
@@ -1202,9 +1202,9 @@ class Stat_Manager:
             
             print(LINE)
             print(f"{testname}")
-            print(mes.compare_btwgroup_result_reporting_one(dv, group_vars, group_names)[self.language_set])
+            print(compare_btwgroup_result_reporting_one(dv, group_vars, group_names)[self.language_set])
             self.showing(dict_var)
-            print(mes.compare_btwgroup_result_reporting_two(s, p)[self.language_set])
+            print(compare_btwgroup_result_reporting_two(s, p)[self.language_set])
             
             if method != 'kruskal' and method != 'f_oneway': #ttest 혹은 mannwhitney, brunner
                 degree_of_freedom = 0
@@ -1236,7 +1236,7 @@ class Stat_Manager:
                     degree_of_freedom += value
                 
                 degree_of_freedom = degree_of_freedom - len(group_names)
-                print(mes.f_oneway_df_reporting(degree_of_freedom_between_group, degree_of_freedom)[self.language_set])
+                print(f_oneway_df_reporting(degree_of_freedom_between_group, degree_of_freedom)[self.language_set])
 
             print(LINE)
             
@@ -1346,7 +1346,7 @@ class Stat_Manager:
                 bootstrap_df = testfunc(ser1, ser2, label = [a_var, b_var])
                 
             
-            print(mes.notation_message_for_returning_bootstrap_df[self.language_set])
+            print(notation_message_for_returning_bootstrap_df[self.language_set])
             
             return bootstrap_df
         
@@ -1403,15 +1403,15 @@ class Stat_Manager:
                 if dv_len >= 3:
                     testfunc = api.MNLogit
                     
-                    print(mes.notation_meesage_for_multinominal[self.language_set])
+                    print(notation_meesage_for_multinominal[self.language_set])
                 
-                print(mes.logistic_regression_result_reporting_one(dv, mapper)[self.language_set])
+                print(logistic_regression_result_reporting_one(dv, mapper)[self.language_set])
             
             else: # method == 'linearr'
                 y = df[dv]
-                print(mes.linear_regression_result_reporting_one (dv)[self.language_set])
+                print(linear_regression_result_reporting_one (dv)[self.language_set])
             
-            print(mes.regression_result_reporting_ivs (iv)[self.language_set])
+            print(regression_result_reporting_ivs (iv)[self.language_set])
 
             x = df[iv]
             
@@ -1446,21 +1446,21 @@ class Stat_Manager:
         elif n > 200:
             cutoff = 3.13
         
-        print(mes.z_normal_result_reporting(dv, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, n, cutoff)[self.language_set])
+        print(z_normal_result_reporting(dv, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, n, cutoff)[self.language_set])
         
         z_skewness = abs(z_skewness)
         z_kurtosis = abs(z_kurtosis)
         
         if z_skewness < cutoff and z_kurtosis < cutoff: #up
  
-            print(mes.conclusion_for_normality_assumption[self.language_set]['up'])
+            print(conclusion_for_normality_assumption[self.language_set]['up'])
         
         else: #under
             
-            print(mes.conclusion_for_normality_assumption[self.language_set]['under'])
+            print(conclusion_for_normality_assumption[self.language_set]['under'])
             
             
-        print(mes.reference_of_z_normal)
+        print(reference_of_z_normal)
         print(LINE)
 
     def fmax_test(self, vars, group_vars, group_names):
@@ -1479,16 +1479,16 @@ class Stat_Manager:
         f_max = max_variance / min_variance
         f_max = round(f_max, 3)
         
-        print(mes.fmax_result_reporting(group_n, group_names, max_variance, min_variance, f_max)[self.language_set])
+        print(fmax_result_reporting(group_n, group_names, max_variance, min_variance, f_max)[self.language_set])
 
         
         if f_max < 10: #up
-            print(mes.conclusion_for_homoskedasticity_assumption[self.language_set]['up'])
+            print(conclusion_for_homoskedasticity_assumption[self.language_set]['up'])
             
         else: #under
-            print(mes.conclusion_for_homoskedasticity_assumption[self.language_set]['under'])
+            print(conclusion_for_homoskedasticity_assumption[self.language_set]['under'])
             
-        print(mes.reference_of_fmax)
+        print(reference_of_fmax)
         print(LINE)
         
     def r_forargs(self, method, vars):
@@ -1525,7 +1525,7 @@ class Stat_Manager:
         
         statistic_value = statistic_valuedict[method]
         
-        print(f'n = {number_of_rows}\n{mes.notation_message_for_correlation[self.language_set]}')
+        print(f'n = {number_of_rows}\n{notation_message_for_correlation[self.language_set]}')
         summary_correlation_table = pd.DataFrame()
         
         for i in range(num -1):
@@ -1607,14 +1607,14 @@ class Stat_Manager:
         b_upper_bound = b_confidence_interval[1]
         
         
-        print(mes.percentile_method_result_reporting(a_var, confidence_level, a_lower_bound, a_upper_bound, b_var, b_lower_bound, b_upper_bound)[self.language_set])
+        print(percentile_method_result_reporting(a_var, confidence_level, a_lower_bound, a_upper_bound, b_var, b_lower_bound, b_upper_bound)[self.language_set])
         
         
         if a_upper_bound < b_lower_bound or a_lower_bound > b_upper_bound:
-            print(mes.conclusion_for_percentile_method[self.language_set]['under'])
+            print(conclusion_for_percentile_method[self.language_set]['under'])
         
         else:
-            print(mes.conclusion_for_percentile_method[self.language_set]['up'])
+            print(conclusion_for_percentile_method[self.language_set]['up'])
         
         print("\nReference:\nEfron, B., & Tibshirani, R. (1986). Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science, 1(1), 54-75.\n")
         print("Histogram: \n")
@@ -1832,9 +1832,9 @@ class Stat_Manager:
                     self.showing(self.menu_for_howtouse.loc[cond1 | cond2 | cond3].set_index(index_for_howtouse))
             
         else:
-            print(mes.NOTATION_FOR_HOWTOUSE[self.language_set])
+            print(NOTATION_FOR_HOWTOUSE[self.language_set])
             self.showing(self.menu_for_howtouse.set_index(index_for_howtouse))
-            print(mes.NOTATION_FOR_HOWTOUSE_SELECTOR[self.language_set])
+            print(NOTATION_FOR_HOWTOUSE_SELECTOR[self.language_set])
             self.showing(self.selector_for_howtouse)
             
     def set_language(self, lang: str ):
@@ -1842,7 +1842,7 @@ class Stat_Manager:
         if lang == 'kor' or lang == 'eng':
             
             self.language_set = lang
-            print(mes.message_for_change_languageset[self.language_set])
+            print(message_for_change_languageset[self.language_set])
             
         else:
-             KeyError(mes.keyerror_message_for_languageset)
+             KeyError(keyerror_message_for_languageset)
