@@ -3,7 +3,7 @@
 
 from setuptools import setup, find_packages
 
-with open(r'../README.md', encoding='utf-8') as f:
+with open(r'statmanager\README.md', encoding='utf-8') as f:
     description_markdown = f.read()
 
 setup(
