@@ -1,3 +1,6 @@
+# Copyright (C) 2023 Changseok Lee 
+
+
 from setuptools import setup, find_packages
 
 with open(r'../README.md', encoding='utf-8') as f:
@@ -22,10 +25,14 @@ setup(
     zip_safe=False,
     classifiers=[
         'License :: OSI Approved :: MIT License',
+        'Intended Audience :: Science/Research',
         'Programming Language :: Python :: 3.13',
         'Operating System :: Microsoft :: Windows :: Windows 10',
         'Operating System :: Microsoft :: Windows :: Windows 11',
+        'Operating System :: MacOS', 
         'Natural Language :: Korean',
+        'Natural Language :: English',        
         'Development Status :: 4 - Beta',
+        'Topic :: Scientific/Engineering',
     ],
 )

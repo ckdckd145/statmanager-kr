@@ -153,7 +153,7 @@ class Stat_Manager:
         },
         
         'chi2_contingency' : {
-            'name' : 'Chi-Square Test',
+            'name' : 'Chi-Squared Test',
             'type' : 'frequency_analysis',
             'group': 1,
             'testfunc' : stats.chi2_contingency,
@@ -200,7 +200,7 @@ class Stat_Manager:
             'division' : None,
         },
         'kendallt' : {
-            'name' : "Correlation analysis: Kendall's tau-b",
+            'name' : "Correlation analysis: Kendall's tau",
             'type' : 'correlation',
             'group' : 1,
             'testfunc' : self.r_forargs,
@@ -437,11 +437,11 @@ class Stat_Manager:
             
             print(LINE)
             print(f"{testname}")
-            print(f"Variables : {vars[0]}, {vars[1]}")
+            print(mes.frequency_analysis_result_reporting_one(vars)[self.language_set])
             
             try:
-                print(f"\nχ² = {s:.3f}, p = {p:.3f}\n")
-                print("Crosstab : ")
+                print(mes.frequency_analysis_result_reporting_two(s, p)[self.language_set])
+            
             except:
                 pass
             
@@ -1237,7 +1237,7 @@ class Stat_Manager:
                     degree_of_freedom += value
                 
                 degree_of_freedom = degree_of_freedom - len(group_names)
-                print(f"Degree of freedom (between groups) = {degree_of_freedom_between_group}, Degree of freedom (within groups) = {degree_of_freedom}")
+                print(mes.f_oneway_df_reporting(degree_of_freedom_between_group, degree_of_freedom)[self.language_set])
 
             print(LINE)
             
@@ -1360,8 +1360,7 @@ class Stat_Manager:
             
             print(LINE)
             print(f"{testname}")
-            print(f"Variables: {dv}")
-            testfunc(df[dv])
+            testfunc(df[dv], dv)
             
         if testtype == 'homoskedasticity_etc':
             if type(vars) == list:
@@ -1429,7 +1428,7 @@ class Stat_Manager:
             self.showing(odd_ratio)          
             print(LINE)
 
-    def zscore_normality(self, series):
+    def zscore_normality(self, series, dv):
         
         n = series.count()
         
@@ -1449,7 +1448,7 @@ class Stat_Manager:
         elif n > 200:
             cutoff = 3.13
         
-        print(f"skewness = {skewness}\nstandard error of skewness = {skewness_se}\nz-skewness = {z_skewness}\n\nkurtosis = {kurtosis}\nstandard error of kurtosis = {kurtosis_se}\nz-kurtosis = {z_kurtosis}\n\nsample n = {n}, corresponding absolute cutoff score of z-skewenss and z-kurtosis = {cutoff}")
+        print(mes.z_normal_result_reporting(dv, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, n, cutoff)[self.language_set])
         
         z_skewness = abs(z_skewness)
         z_kurtosis = abs(z_kurtosis)
@@ -1459,10 +1458,11 @@ class Stat_Manager:
             print(mes.conclusion_for_normality_assumption[self.language_set]['up'])
         
         else: #under
+            
             print(mes.conclusion_for_normality_assumption[self.language_set]['under'])
             
             
-        print("\nReferences:\n[1] Ghasemi, A., & Zahediasl, S. (2012). Normality tests for statistical analysis: a guide for non-statisticians. International journal of endocrinology and metabolism, 10(2), 486. \n[2] Moon, S. (2019). Statistics for the Social Sciences: Moving Toward an Integrated Approach. Cognella Academic Publishing.")
+        print(mes.reference_of_z_normal)
         print(LINE)
 
     def fmax_test(self, vars, group_vars, group_names):
@@ -1490,7 +1490,7 @@ class Stat_Manager:
         else: #under
             print(mes.conclusion_for_homoskedasticity_assumption[self.language_set]['under'])
             
-        print("\nReference:\n[1] Fidell, L. S., & Tabachnick, B. G. (2003). Preparatory data analysis. Handbook of psychology: Research methods in psychology, 2, 115-141.\n")
+        print(mes.reference_of_fmax)
         print(LINE)
         
     def r_forargs(self, method, vars):
@@ -1508,7 +1508,7 @@ class Stat_Manager:
         statistic_valuedict = {
             'pearsonr' : "Pearson's r",
             'spearmanr' : "Spearman's rho",
-            'kendallt' : "Kendall's tau-h"
+            'kendallt' : "Kendall's tau"
         }
         
         if method == 'pearsonr':
@@ -1763,19 +1763,13 @@ class Stat_Manager:
         return cohen_d, grade
 
     def calculate_etasquared(self, series):
-        # 그룹 수
         k = len(series)
 
-        # 그룹별 평균 계산
         group_means = [ser.mean() for ser in series]
 
-        # 전체 데이터의 평균 계산
         overall_mean = np.mean(group_means)
 
-        # 그룹 간 변동(SS_Between) 계산
         ss_between = sum([(group_mean - overall_mean) ** 2 * len(ser) for group_mean, ser in zip(group_means, series)])
-
-        # 전체 변동(SS_Total) 계산
         all_data = pd.concat(series)
         ss_total = sum((all_data - overall_mean) ** 2)
 
@@ -1801,11 +1795,13 @@ class Stat_Manager:
         print(self.link)
         
         if self.language_set == 'kor':
+            
             index_for_howtouse = '분석명'
             search_column_1 = '목적'
             search_column_2 = 'method'
         
         elif self.language_set == 'eng':
+            
             index_for_howtouse = 'Analysis'
             search_column_1 = 'Purpose'
             search_column_2 = 'method'

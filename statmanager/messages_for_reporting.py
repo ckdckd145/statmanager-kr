@@ -47,7 +47,7 @@ conclusion_for_normality_assumption = {
         },
     'eng' : {
         'under' : 'Conclusion: The normality assumption is not met.',
-        'up' : 'onclusion: The normality assumption is met.',
+        'up' : 'Conclusion: The normality assumption is met.',
         }
 }
 
@@ -124,7 +124,7 @@ def homoskedasticity_test_result_reporting (group_vars, group_names, s, p):
     
     reporting_result = {
         'kor' : f"집단변수 : {group_vars}\n비교집단 : {group_names}\n검정통계치 = {s:.3f}, p = {p:.3f}\n",
-        'eng' : f"Group variable : {group_vars}\nComparison groups : {group_names}\Test statistics = {s:.3f}, p = {p:.3f}\n",
+        'eng' : f"Group variable : {group_vars}\nComparison groups : {group_names}\nTest statistics = {s:.3f}, p = {p:.3f}\n",
     }
     
     return reporting_result
@@ -238,7 +238,7 @@ def compare_btwgroup_result_reporting_one (dv, group_vars, group_names):
     
     reporting_result_one = {
         'kor' : f"변수 : {dv}\n집단변수 : {group_vars}\n비교집단 : {group_names}\n기술통계치: ",
-        'eng' : f"Variable : {dv}\nGroup variable : {group_vars}\nComparision group : {group_names}\nDecriptive analysis: ",
+        'eng' : f"Variable : {dv}\nGroup variable : {group_vars}\nComparison group : {group_names}\nDecriptive analysis: ",
         }
     
     return reporting_result_one
@@ -251,6 +251,15 @@ def compare_btwgroup_result_reporting_two (s, p):
     }
     
     return reporting_result_two
+
+def f_oneway_df_reporting(degree_of_freedom_between_group, degree_of_freedom):
+    
+    result = {
+        'kor' : f"집단 간 자유도 = {degree_of_freedom_between_group}, 집단 내 자유도 = {degree_of_freedom}",
+        'eng' : f"Degree of freedom (between groups) = {degree_of_freedom_between_group}, Degree of freedom (within groups) = {degree_of_freedom}",
+    }
+    
+    return result
 
 notation_message_for_returning_bootstrap_df = {
     'kor' : "\nbootstrap된 DataFrame이 반환되었습니다.\n특정 변수에 선언한 후 활용하세요.\n",
@@ -285,4 +294,53 @@ conclusion_for_percentile_method = {
         'up' : "The confidence intervals for the two distributions overlap. Therefore, the difference between the two distributions is not significant.",
         }
 }
+
+grade_for_cohen_d = {
+    'kor' : {
+        'under_2' : '해석 불가능',
+        'under_5' : '작은 효과크기',
+        'under_8' : '중간 효과크기',
+        'upper_8' : '큰 효과크기',
+        },
+    'eng' : {
+        'under_2' :  '',
+        'under_5' : '',
+        'under_8' : '',
+        'upper_8' : '',
+        },
+}
+
+
+def z_normal_result_reporting (dv, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, n, cutoff):
+    
+    reporting_result = {
+        'kor' : f"\n변수 = {dv}\n\n왜도 = {skewness}\n왜도의 표준오차 = {skewness_se}\nZ-왜도 = {z_skewness}\n\n첨도 = {kurtosis}\n첨도의 표준오차 = {kurtosis_se}\nZ-첨도 = {z_kurtosis}\n\nn= {n}, Z-왜도 및 Z-첨도의 절단값 (절대값) = {cutoff}",
+        'eng' : f"\nvariables = {dv}\n\nskewness = {skewness}\nstandard error of skewness = {skewness_se}\nz-skewness = {z_skewness}\n\nkurtosis = {kurtosis}\nstandard error of kurtosis = {kurtosis_se}\nz-kurtosis = {z_kurtosis}\n\nsample n = {n}, corresponding absolute cutoff score of z-skewenss and z-kurtosis = {cutoff}",
+    }
+    
+    return reporting_result
+
+reference_of_z_normal = "\nReferences:\n[1] Ghasemi, A., & Zahediasl, S. (2012). Normality tests for statistical analysis: a guide for non-statisticians. International journal of endocrinology and metabolism, 10(2), 486. \n[2] Moon, S. (2019). Statistics for the Social Sciences: Moving Toward an Integrated Approach. Cognella Academic Publishing."
+
+reference_of_fmax = "\nReference:\n[1] Fidell, L. S., & Tabachnick, B. G. (2003). Preparatory data analysis. Handbook of psychology: Research methods in psychology, 2, 115-141.\n"
+
+
+def frequency_analysis_result_reporting_one (vars):
+    
+    result = {
+        'kor' : f"변수 : {vars[0]}, {vars[1]}",
+        'eng' : f"Variables : {vars[0]}, {vars[1]}",
+    }
+    
+    return result
+
+
+def frequency_analysis_result_reporting_two (s, p):
+    result = {
+        'kor' : f"\n카이제곱 χ² = {s:.3f}, p = {p:.3f}\n분할표: ",
+        'eng' : f"\nχ² = {s:.3f}, p = {p:.3f}\nContingency Table: ",
+    }
+    
+    return result
+
 

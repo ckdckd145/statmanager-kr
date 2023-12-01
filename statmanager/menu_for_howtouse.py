@@ -388,7 +388,7 @@ selector_for_howtouse_eng = {
         },
     'mean': {
         0: 'Only the data where a is b',
-        1: 'Only the data where a is b',
+        1: 'Only the data where a is NOT b',
         2: 'Only the data with a > b',
         3: 'Only the data with a >= b',
         4: 'Only the data with a < b',
