@@ -34,7 +34,7 @@ Please see documentation for the update history.
     4. Correlation analysis | 상관분석
         * Pearson's r
         * Spearman's rho
-        * Kendall's tau-h
+        * Kendall's tau
     5. Comparison (2) | 차이비교 (2)
         * Parametric | 모수검정법
             * Independent Samples T-Test
