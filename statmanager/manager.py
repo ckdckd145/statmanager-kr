@@ -318,10 +318,9 @@ class Stat_Manager:
             self.filtered_df = None          
             
         else:
-            error_message_for_selector_type = error_message_for_selector_type(doclink = self.link)
             
             if type(selector) != dict:
-                raise TypeError(error_message_for_selector_type[self.language_set])
+                raise TypeError(error_message_for_selector_type(doclink = self.link)[self.language_set])
             
             df = self.df
             self.selector = selector
