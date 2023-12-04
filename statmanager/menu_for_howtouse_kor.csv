@@ -1,0 +1,31 @@
+분석명,목적,method,vars,group_vars,posthoc
+Kolmogorov-Smirnov Test,정규성 검정,kstest,정규성을 검정할 변수 (str),,
+Shapiro-Wilks Test,정규성 검정,shapiro,정규성을 검정할 변수 (str),,
+z-skeweness & z-kurtosis test,정규성 검정,z_normal,정규성을 검정할 변수 (str),,
+Levene Test,등분산성 검정,levene,등분산성을 검정할 변수 (str),기준이 될 집단 변수 (str),
+F-max Test,등분산성 검정,fmax,등분산성을 검정할 변수 (str),기준이 될 집단 변수 (str),
+Chi-Square Test,빈도분석,chi2_contingency,빈도차이를 확인할 변수들 (list),,
+Fisher's Exact Test,빈도분석,fisher,빈도차이를 확인할 변수들 (list),,
+상관분석: Pearson r,상관분석-모수검정,pearsonr,상관관계를 확인할 변수들 (list),,
+상관분석: Spearman rho,상관분석-비모수검정,spearmanr,상관관계를 확인할 변수들 (list),,
+상관분석: Kendall's tau-b,상관분석-비모수검정,kendallt,상관관계를 확인할 변수들 (list),,
+Indenpendent Samples T-test,차이비교 (2집단)-모수검정,ttest_ind,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),
+Dependent Samples T-test,차이비교 (집단 내 2시점)-모수검정,ttest_rel,차이를 확인할 변수들 (list),,
+Mann-Whitney U Test,차이비교 (2집단)-비모수검정,mannwhitneyu,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),
+Brunner-Munzel Test,차이비교 (2집단)-비모수검정,brunner,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),
+Wilcoxon-Signed Ranksum Test,차이비교 (집단 내 2시점)-비모수검정,wilcoxon,차이를 확인할 변수들 (list),,
+"Bootstrap Resampling (Resampling NO. = 1,000)",데이터프레임 반환,bootstrap1000_df,리샘플링을 실시할 변수 (str) 혹은 샘플링을 실시할 변수들 (list),리샘플링의 기준이 될 집단 변수 혹은 생략,
+"Bootstrap Resampling (Resampling NO. = 10,000)",데이터프레임 반환,bootstrap10000_df,리샘플링을 실시할 변수 (str) 혹은 샘플링을 실시할 변수들 (list),리샘플링의 기준이 될 집단 변수 혹은 생략,
+"Bootstrap percentile method: Resampling No. = 1,000",차이비교 (2집단 or 2시점),bootstrap1000,리샘플링을 실시할 변수 (str) 혹은 샘플링을 실시할 변수들 (list),리샘플링의 기준이 될 집단 변수 혹은 생략,
+"Bootstrap percentile method: Resampling No. = 10,000",차이비교 (2집단 or 2시점),bootstrap10000,리샘플링을 실시할 변수 (str) 혹은 샘플링을 실시할 변수들 (list),리샘플링의 기준이 될 집단 변수 혹은 생략,
+One-way ANOVA,차이비교 (3집단 이상)-모수검정,f_oneway,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),True: posthoc 진행
+One-way Repeated Measures ANOVA,차이비교 (집단 내 3시점 이상)-모수검정,f_oneway_rm,차이를 확인할 변수들 (list),,True: posthoc 진행
+Kruskal-Wallis Test,차이비교 (3집단 이상)-비모수검정,kruskal,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),True: posthoc 진행
+Friedman Test,차이비교 (집단 내 3시점 이상)-비모수검정,friedman,차이를 확인할 변수들 (list),,True: posthoc 진행
+N-way ANOVA,차이비교-모수검정,f_nway,차이를 확인할 변수 (str),기준이 될 집단 변수들 (list),True: posthoc 진행
+N-way Repeated Measures ANOVA,차이비교-모수검정,f_nway_rm,차이를 확인할 변수들 (list),기준이 될 집단 변수들 (list),True: posthoc 진행
+Linear Regression,회귀분석,linearr,"['종속변수', ['독립변수1', '독립변수2', ...., ] ]",,
+Logistic Regression,회귀분석,logisticr,"['종속변수', ['독립변수1', '독립변수2', ...., ] ]",,
+One-way ANCOVA,차이비교 (3집단 이상)-모수검정,oneway_ancova,"['종속변수', ['공변량1', '공변량2', ...., ] ]",기준이 될 집단 변수 (str),True: posthoc 진행
+Repeated Measures ANCOVA,차이비교 (집단 내 3시점 이상)-모수검정,rm_ancova,"['종속변수1', '종속변수2', ... ['공변량1', '공변량2', ...., ]]",,True: posthoc 진행
+N-way ANCOVA,차이비교-모수검정,nway_ancova,"['종속변수', ['공변량1', '공변량2', ...., ] ]",기준이 될 집단 변수들 (list),True: posthoc 진행

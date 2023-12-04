@@ -1,0 +1,7 @@
+python operator,mean,format of selector argument,pandas operator
+if a == b:,Only the data where a is b,{'a' : 'b'},df.loc['a' == 'b']
+if a != b:,Only the data where a is NOT b,"{'a' : {'!=', 'b'} }",df.loc['a' != 'b']
+if a > b:,Only the data with a > b,"{'a' : {'>', 'b'} }",df.loc['a' > 'b']
+if a >= b:,Only the data with a >= b,"{'a' : {'>=', 'b'} }",df.loc['a' >= 'b']
+if a < b:,Only the data with a < b,"{'a' : {'<', 'b'} }",df.loc['a' < 'b']
+if a <= b:,Only the data with a <= b,"{'a' : {'<=', 'b'} }",df.loc['a' <= 'b']

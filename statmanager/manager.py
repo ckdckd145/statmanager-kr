@@ -12,10 +12,11 @@ import re as repattern
 
 from .menu_for_howtouse import menu_for_howtouse_eng, menu_for_howtouse_kor, selector_for_howtouse_eng, selector_for_howtouse_kor
 from .messages_for_reporting import *
+from .__init__ import __version__
 
 LINE = "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 
-VERSION = "1.7.2"
+VERSION = __version__
 
 LINK = LINK_DOC
 
@@ -39,21 +40,17 @@ class Stat_Manager:
         
         if self.language_set == 'kor':
             
-            self.menu_for_howtouse = pd.DataFrame(menu_for_howtouse_kor).reset_index().rename(columns = {'index' : '분석명'})
+            self.menu_for_howtouse = menu_for_howtouse_kor
 
         elif self.language_set == 'eng':
             
-            self.menu_for_howtouse = pd.DataFrame(menu_for_howtouse_eng)
+            self.menu_for_howtouse = menu_for_howtouse_eng
 
         if self.language_set == 'kor':
             self.selector_for_howtouse = selector_for_howtouse_kor
-            self.selector_for_howtouse = pd.DataFrame(self.selector_for_howtouse)
-            self.selector_for_howtouse.set_index('python 식', inplace=True)
 
         elif self.language_set == 'eng':
-            self.selector_for_howtouse = selector_for_howtouse_eng
-            self.selector_for_howtouse = pd.DataFrame(self.selector_for_howtouse)
-            self.selector_for_howtouse.set_index('python operator', inplace=True)        
+            self.selector_for_howtouse = selector_for_howtouse_eng     
         
         try: # df ; index set 여부 확인
             
@@ -793,7 +790,7 @@ class Stat_Manager:
                 if group_names == None:
                     group_names = list(df[group_vars].unique())
                 
-                else: # 사용자가 group_names를 지정한 경우 
+                else: # if group_names provided
                     cond = df[group_vars].isin(group_names)
                     df = df.loc[cond]
                 
@@ -801,10 +798,10 @@ class Stat_Manager:
                 formula_for_olsmodel = self.custom_join_for_ancova(vars = vars, group_vars = group_vars, method = 'oneway_ancova')
                 olsmodel = testfunc(formula_for_olsmodel, data = df).fit()
                 
-                # 공식은 "dv ~ C(group_var) + covar..covar2.."
+                # formula =  "dv ~ C(group_var) + covar..covar2.."
                 
                 
-                #dv + covar list화
+                #dv + covar to list
                 vars_for_showing = [dv] + covars 
                 
 
@@ -860,7 +857,7 @@ class Stat_Manager:
                 pair_coef_table = pd.concat([pair_coef_table, covar_coef_table]) # concat with covar_coef_table 
                 
                 
-                #결과 리포트
+                #reporting result
 
                 
                 print(LINE)
@@ -868,10 +865,10 @@ class Stat_Manager:
                 print(oneway_ancova_result_reporting(dv, group_vars, group_names, covars)[self.language_set])
                 self.showing(dict_var)
                 
-                print('OLS Model Result:')
+                print(ancova_model_result_reporting[self.language_set])
                 self.showing(olsmodel.summary().tables[0])
                 
-                print('\nANCOVA result:')
+                print(ancova_statistic_result_reporting[self.language_set])
                 
                 if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
                     
@@ -882,7 +879,7 @@ class Stat_Manager:
                 self.showing(ancova_result_table.rename(columns = {'PR(>F)': 'p-value'}).round(4))
 
                 
-                print('Pair-Coef Result Table: ')
+                print(ancova_coef_result_reporting[self.language_set])
                 print(ancova_coef_interpreting_message(covars)[self.language_set])
                 self.showing(pair_coef_table)
             
@@ -984,11 +981,11 @@ class Stat_Manager:
                 print(rm_ancova_result_reporting(repeated_vars, covars)[self.language_set])
                 self.showing(dict_var)
 
-                print('OLS Model Result:')
+                print(ancova_model_result_reporting[self.language_set])
                 self.showing(olsmodel.summary().tables[0])
                 
 
-                print('\nANCOVA result:')
+                print(ancova_statistic_result_reporting[self.language_set])
                 
                 if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
                     
@@ -998,7 +995,7 @@ class Stat_Manager:
                 self.showing(ancova_result_table.rename(columns = {'PR(>F)': 'p-value'}).round(4))                
                 
                 
-                print('Pair-Coef Result Table: ')
+                print(ancova_coef_result_reporting[self.language_set])
                 print(ancova_coef_interpreting_message(covars)[self.language_set])
                 self.showing(pair_coef_table)
                 
@@ -1115,10 +1112,10 @@ class Stat_Manager:
 
                 # self.showing(pair_coef_table)
                 
-                print('OLS Model Result:')
+                print(ancova_model_result_reporting[self.language_set])
                 self.showing(olsmodel.summary().tables[0])
                 
-                print('\nANCOVA result:')
+                print(ancova_statistic_result_reporting[self.language_set])
                 
                 if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
                     
@@ -1842,6 +1839,15 @@ class Stat_Manager:
         if lang == 'kor' or lang == 'eng':
             
             self.language_set = lang
+            
+            if lang == 'kor':
+                self.menu_for_howtouse = menu_for_howtouse_kor
+                self.selector_for_howtouse = selector_for_howtouse_kor
+            
+            else: # lang == 'eng'
+                self.menu_for_howtouse = menu_for_howtouse_eng
+                self.selector_for_howtouse = selector_for_howtouse_eng
+            
             print(message_for_change_languageset[self.language_set])
             
         else:

@@ -1,0 +1,7 @@
+python 식,의미,selector 인자 형식,pandas 식
+if a == b:,a가 b인 데이터만,{'a' : 'b'},df.loc['a' == 'b']
+if a != b:,a가 b가 아닌 데이터만,"{'a' : {'!=', 'b'} }",df.loc['a' != 'b']
+if a > b:,a가 b 초과인 데이터만,"{'a' : {'>', 'b'} }",df.loc['a' > 'b']
+if a >= b:,a가 b 이상인 데이터만,"{'a' : {'>=', 'b'} }",df.loc['a' >= 'b']
+if a < b:,a가 b 미만인 데이터만,"{'a' : {'<', 'b'} }",df.loc['a' < 'b']
+if a <= b:,a가 b 이하인 데이터만,"{'a' : {'<=', 'b'} }",df.loc['a' <= 'b']

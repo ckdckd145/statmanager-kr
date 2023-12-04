@@ -1,7 +1,7 @@
 
 LINK_DOC ={
-    'kor' : '*****\n↓↓ 상세한 정보는 Documentation link를 확인하세요! ↓↓\nhttps://cslee145.notion.site/statmanager-kr-Documentation-c9d0886f29ea461d9d0f44449a145f8a?pvs=4 \n*****\n',
-    'eng' : '*****\n↓↓ Check for the more details in documentation! ↓↓\nhttps://cslee145.notion.site/statmanager-kr-Documentation-c9d0886f29ea461d9d0f44449a145f8a?pvs=4 \n*****\n'
+    'kor' : '*****\n↓↓ 상세한 정보는 Documentation link를 확인하세요! ↓↓\nhttps://cslee145.notion.site/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01&pvs=4 \n*****\n',
+    'eng' : '*****\n↓↓ Check for the more details in documentation! ↓↓\nhttps://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4 \n*****\n'
 }
 
 keyerror_message_for_languageset = "Language must be choosen between 'kor' and 'eng'. Default set is 'kor'. If you want to set the language to English, enter 'eng'. "
@@ -229,6 +229,21 @@ posthoc_message_for_interaction = {
     "eng" : "Posthoc test for interaction effect",
     }
 
+ancova_model_result_reporting = {
+    'kor' : 'OLS 모형 결과: ',
+    'eng' : 'OLS Model Result: ',
+}
+
+ancova_statistic_result_reporting = {
+    'kor' : '\nANCOVA 통계치: ',
+    'eng' : '\nANCOVA statistics: ',
+}
+
+ancova_coef_result_reporting = {
+    'kor' : '비교쌍-회귀계수 결과표: ',
+    'eng' : 'Pair-Coef Result Table: ',
+}
+
 def ancova_coef_interpreting_message (covars):
     
     coef_interpreting_message = {
@@ -249,7 +264,7 @@ def oneway_ancova_result_reporting (dv, group_vars, group_names, covars):
     
     reporting_result = {
         'kor' : f"\n종속변수: {dv}\n집단변수 : {group_vars}\n비교집단 : {group_names}\n공변량: {covars}\n기술통계치: ",
-        'eng' : f"\Dependent variable: {dv}\Group variable : {group_vars}\Comparision groups : {group_names}\Covariates: {covars}\nDescriptive analysis: ",
+        'eng' : f"\nDependent variable: {dv}\nGroup variable : {group_vars}\nComparision groups : {group_names}\nCovariates: {covars}\nDescriptive analysis: ",
     }
     
     return reporting_result

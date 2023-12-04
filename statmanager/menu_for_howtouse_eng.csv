@@ -1,0 +1,31 @@
+Analysis,Purpose,method,vars,group_vars,posthoc
+Kolmogorov-Smirnov Test,Check normality assumption,kstest,Variable to check for normality assumptions (str),,
+Shapiro-Wilks Test,Check normality assumption,shapiro,Variable to check for normality assumptions (str),,
+z-skeweness & z-kurtosis test,Check normality assumption,z_normal,Variable to check for normality assumptions (str),,
+Levene Test,Check homoskedasticity assumption,levene,Variable to check for homoskedasticity assumptions (str),Group variable (str),
+F-max Test,Check homoskedasticity assumption,fmax,Variable to check for homoskedasticity assumptions (str),Group variable (str),
+Chi-Square Test,Cross-tabulation analysis,chi2_contingency,Variables to check for frequency differences (list),,
+Fisher's Exact Test,Cross-tabulation analysis,fisher,Variables to check for frequency differences (list),,
+Correlation analysis: Pearson r,Correlation analysis - Parametric test,pearsonr,Variables to check correlation (list),,
+Correlation analysis: Spearman rho,Correlation analysis - Non-parametric test,spearmanr,Variables to check correlation (list),,
+Correlation analysis: Kendall's tau-b,Correlation analysis - Non-parametric test,kendallt,Variables to check correlation (list),,
+Indenpendent Samples T-test,Compare between groups (two) - Parametric test,ttest_ind,Dependent variable (str),Group variable (str),
+Dependent Samples T-test,Compare between times (two) - Parametric test,ttest_rel,Dependent variables (list),,
+Mann-Whitney U Test,Compare between groups (two) - Non-parametric test,mannwhitneyu,Dependent variable (str),Group variable (str),
+Brunner-Munzel Test,Compare between groups (two) - Non-parametric test,brunner,Dependent variable (str),Group variable (str),
+Wilcoxon-Signed Ranksum Test,Compare between times (two) - Non-parametric test,wilcoxon,Dependent variables (list),,
+"Bootstrap Resampling (Resampling NO. = 1,000)",Retunring pandas.dataframe,bootstrap1000_df,Variable (str) or variables (list) to resample,Group variable to proceed resampling on or omit,
+"Bootstrap Resampling (Resampling NO. = 10,000)",Retunring pandas.dataframe,bootstrap10000_df,Variable (str) or variables (list) to resample,Group variable to proceed resampling on or omit,
+"Bootstrap percentile method: Resampling No. = 1,000",Compare between groups or between times,bootstrap1000,Variable (str) or variables (list) to resample,,
+"Bootstrap percentile method: Resampling No. = 10,000",Compare between groups or between times,bootstrap10000,Variable (str) or variables (list) to resample,Group variable to proceed resampling on or omit,
+One-way ANOVA,Compare between groups (more than two groups) - Parametric test,f_oneway,Dependent variable (str),Group variable (str),True: Proceed the posthoc anaylsis
+One-way Repeated Measures ANOVA,Compare between times (more than two times) - Parametric test,f_oneway_rm,Dependent variables (list),,True: Proceed the posthoc anaylsis
+Kruskal-Wallis Test,Compare between groups (more than two groups) - Non-parametric test,kruskal,Dependent variable (str),Group variable (str),True: Proceed the posthoc anaylsis
+Friedman Test,Compare between times (more than two times) - Non-parametric test,friedman,Dependent variables (list),,True: Proceed the posthoc anaylsis
+N-way ANOVA,Compare between factors - Parametric test,f_nway,Dependent variable (str),Group variables or factors (list),True: Proceed the posthoc anaylsis
+N-way Repeated Measures ANOVA,Compare between factors including time - Parametric test,f_nway_rm,Dependent variables (list),Group variables or factors (list),True: Proceed the posthoc anaylsis
+Linear Regression,Regression analysis,linearr,"['dependent variable', ['independent variable1', 'independent variable2', ...., ] ]",,
+Logistic Regression,Regression analysis,logisticr,"['dependent variable', ['independent variable1', 'independent variable2', ...., ] ]",,
+One-way ANCOVA,Compare between groups (more than two groups) - Parametric test,oneway_ancova,"['dependent variable', ['covariate1', 'covariate2', ...., ] ]",Group variable (str),True: Proceed the posthoc anaylsis
+Repeated Measures ANCOVA,Compare between times (more than two times) - Parametric test,rm_ancova,"['dependent variable1', 'dependent variable2', ... ['covariate1', 'covariate2', ...., ]]",,True: Proceed the posthoc anaylsis
+N-way ANCOVA,Compare between factors - Parametric test,nway_ancova,"['dependent variable', ['covariate1', 'covariate2', ...., ] ]",Group variables or factors (list),True: Proceed the posthoc anaylsis
