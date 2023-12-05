@@ -69,6 +69,9 @@ Please see documentation for the update history.
         * Logistic Regression
         * Multinomial Logistic Regression
 
+* Available functions to make figure or graph | 그래프 혹은 그림 제작에 활용되는 기능
+  * P-P plot (Temporary)
+  * Q-Q plot (Temporary)
 
 #### INSTALLATION
 * pandas
