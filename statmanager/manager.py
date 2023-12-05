@@ -219,34 +219,17 @@ class Stat_Manager:
             'testfunc' : AnovaRM,
             'division' : 'parametric'
         },
-        
-        'bootstrap1000' : {
-            'name' : 'Bootstrap percentile method: Resampling No. = 1,000',
+        'bootstrap' : {
+            'name' : 'Bootstrap percentile method: Resampling No. =',
             'type' : 'compare_etc',
             'group' : 1,
             'testfunc' : self.percentile_method,
             'division' : None,
         },
         
-        'bootstrap10000' : {
-            'name' : 'Bootstrap percentile method: Resampling No. = 10,000',
-            'type' : 'compare_etc',
-            'group' : 1,
-            'testfunc' : self.percentile_method,
-            'division' : None,
-        },
-        
-        'bootstrap1000_df' : {
-            'name' : 'Bootstrap dataframe returning (Resampling NO. = 1,000)',
-            'type' : 'returing_df',
-            'group' : 1,
-            'testfunc' : self.bootstrap_to_dataframe,
-            'division' : None,
-        },
-        
-        'bootstrap10000_df' : {
-            'name' : 'Bootstrap dataframe returning (Resampling NO. = 10,000)',
-            'type' : 'returing_df',
+        'bootstrap_df' : {
+            'name' : 'Bootstrap dataframe returning: Resampling NO. = ',
+            'type' : 'returning_df',
             'group' : 1,
             'testfunc' : self.bootstrap_to_dataframe,
             'division' : None,
@@ -316,6 +299,33 @@ class Stat_Manager:
         Please check the documentation : https://cslee145.notion.site/statmanager-kr-Documentation-c9d0886f29ea461d9d0f44449a145f8a?pvs=4
         
         """
+        
+        if 'bootstrap' in method and not '_df' in method: #if method is percentile method
+            
+            resampling_no = method.replace('bootstrap', "")
+            
+            try :
+                resampling_no = int(resampling_no)
+
+            except : # if not entered correct number 
+                raise KeyError(keyerror_message_for_bootstrap[self.language_set])
+            
+            method = 'bootstrap' # rearrange method for matching in the menu
+            
+        
+        if 'bootstrap' in method and '_df' in method: # if method is returning boostrapped df
+            
+            resampling_no = method.replace('bootstrap', "")
+            resampling_no = resampling_no.replace('_df', "")
+            
+            try : 
+                resampling_no = int(resampling_no)
+            
+            except :
+                raise KeyError(keyerror_message_for_bootstrap[self.language_set])
+
+            method = 'bootstrap_df' # rearrange method for matching in the menu
+            
         
         testtype = self.menu[method]['type']
         
@@ -1287,30 +1297,34 @@ class Stat_Manager:
             
         if testtype == 'compare_etc':
             
-            if method == 'bootstrap1000':
-                resampling_no = 1000
-                
-            elif method == 'bootstrap10000':
-                resampling_no = 10000
             
-            if group_vars == None:
+            if group_vars == None: #percentile method within group
                 print(LINE)
-                print(f"{testname}: \n")
+                print(f"{testname} {resampling_no} \n")
                 
                 ser1 = self.bootstrap(series = df[vars[0]], n_bootstrap=resampling_no)
                 ser2 = self.bootstrap(series = df[vars[1]], n_bootstrap=resampling_no)
                 bootstrap_df = self.bootstrap_to_dataframe(ser1, ser2, label = vars)
                 testfunc(data = bootstrap_df, a_var = vars[0], b_var = vars[1])
                 
-            else:
+            else: #percentile method between group
                 if type(vars) == list:
                     dv = vars[0]
                 elif type(vars) == str:
                     dv = vars
                 
+                if group_names == None:
+                    group_names = list(df[group_vars].unique())
+                
+                else:
+                    pass
+                
+                if len(group_names) > 2:
+                    raise ValueError(valueerror_message_for_bootstrap[self.language_set])
+                
                 
                 print(LINE)
-                print(f"{testname}: \n")
+                print(f"{testname} {resampling_no} \n")
                 
                 ser1 = self.bootstrap(series= df.loc[df[group_vars] == group_names[0], dv], n_bootstrap=resampling_no)
                 ser2 = self.bootstrap(series= df.loc[df[group_vars] == group_names[1], dv], n_bootstrap=resampling_no)
@@ -1319,16 +1333,11 @@ class Stat_Manager:
                 bootstrap_df = self.bootstrap_to_dataframe(ser1, ser2, label = [a_var, b_var])
                 testfunc(data = bootstrap_df, a_var = a_var, b_var = b_var)
         
-        if testtype == 'returing_df':
+        if testtype == 'returning_df':
             
-            if method == 'bootstrap1000_df':
-                resampling_no = 1000
-            
-            elif method == 'bootstrap10000_df':
-                resampling_no = 10000
             
             print(LINE)
-            print(f"{testname}: \n")
+            print(f"{testname} {resampling_no} \n")
                 
             if group_vars == None:
                 
@@ -1342,6 +1351,15 @@ class Stat_Manager:
                 elif type(vars) == str:
                     dv = vars
                     
+                if group_names == None:
+                    group_names = list(df[group_vars].unique())
+                
+                else:
+                    pass
+                
+                if len(group_names) > 2:
+                    raise ValueError(valueerror_message_for_bootstrap[self.language_set])          
+                
                 ser1 = self.bootstrap(series= df.loc[df[group_vars] == group_names[0], dv], n_bootstrap=resampling_no)
                 ser2 = self.bootstrap(series= df.loc[df[group_vars] == group_names[1], dv], n_bootstrap=resampling_no)
                 a_var = f"{group_names[0]}_{dv}"
@@ -1642,7 +1660,10 @@ class Stat_Manager:
         
         if hist == True:
             plt.figure(figsize=(10, 8))
-            sns.set(font = "Gulim", font_scale = 1.5)
+            if self.language_set == 'kor':            
+                sns.set(font = "Gulim", font_scale = 1.5)
+            else:
+                sns.set(font = 'Times New Roman', font_scale = 1.5)
             plt.style.use('grayscale')
             plt.title(f'Histogram of {a_var} & {b_var}')
             sns.histplot(data = data[a_var], label = a_var, alpha=0.5, kde=True)
@@ -1865,12 +1886,12 @@ class Stat_Manager:
             
         target_columns = vars
         
-        if not type(vars) == list:
+        if not type(target_columns) == list:
             raise KeyError(keyerror_message_for_cronbach[self.language_set]) 
         
-        k = len(vars)
+        k = len(target_columns)
         
-        covariance_matrix = df[vars].cov()
+        covariance_matrix = df[target_columns].cov()
         sum_of_variances = np.trace(covariance_matrix)
         total_variance = covariance_matrix.sum().sum()
         

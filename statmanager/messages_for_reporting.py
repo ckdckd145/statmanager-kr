@@ -11,6 +11,15 @@ message_for_change_languageset = {
     'eng' : '*****\nThe Language is set to ENGLISH.\n*****\n'
 }
 
+keyerror_message_for_bootstrap = {
+    'kor' : "부트스트랩핑을 진행하기 위한 리샘플링 횟수가 잘못 입력되었습니다. method 파라미터에 제공된 인자의 형식이 bootstrap2000, bootstrap894 혹은 bootstrap894_df, bootstrap2000_df 등과 일치하는지 확인하십시오. ",
+    'eng' : "The number of resamples to proceed with bootstrapping was entered incorrectly. Make sure the format of the argument provided in the method parameter matches bootstrap2000, bootstrap894, or bootstrap894_df, bootstrap2000_df, etc. ",
+}
+
+valueerror_message_for_bootstrap ={
+    'kor' : "부트스트랩핑을 진행하기 위해 제공되는 그룹 변수는 반드시 2분할이어야 합니다. 2분할보다 많은 그룹 변수를 포함하고자 하는 경우, group_names 파라미터를 통해 두 개의 그룹을 특정하십시오. ",
+    'eng' : "The group variables provided for bootstrapping must be bipartite. If you want to include group variables with more than two unique categories, please specify two groups using the group_names parameter.",
+}
 
 typeerror_message_for_indexsetting = "데이터프레임에 Index가 설정되어 있지 않습니다. Stat_Manager() 생성시 id를 지정하거나, index가 설정된 df를 인자로 제공하십시오.\nIndex is not set on the dataframe. Specify id when creating Stat_Manager(), or provide a df with index set as an argument."
 
