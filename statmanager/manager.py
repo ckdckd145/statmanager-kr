@@ -301,6 +301,13 @@ class Stat_Manager:
             'group' : 2,
             'testfunc' : ols,
             'division' : 'parametric'
+        },
+        'cronbach' : {
+            'name' : "Calculating Cronbach's Alpha",
+            'type' : 'reliability',
+            'group' : 1,
+            'testfunc' : self.calculate_cronbach_alpha,
+            'division' : None 
         }
     }
         
@@ -1422,6 +1429,23 @@ class Stat_Manager:
             self.showing(odd_ratio)          
             print(LINE)
 
+        if testtype == 'reliability':
+            
+            
+            test_items = vars
+            cronbach = testfunc(test_items)
+            n = len(df)
+            
+            print(testname)
+            print(notation_message_for_cronbach_alpha[self.language_set])
+            print(cronbach_alpha_result_reporting(n, test_items, cronbach)[self.language_set])
+            
+            if cronbach < 0:
+                print(warning_message_for_negative_cronbach_alpha[self.language_set])
+            else:
+                pass
+    
+    
     def zscore_normality(self, series, dv):
         
         n = series.count()
@@ -1708,7 +1732,6 @@ class Stat_Manager:
         elif method == 'nway_rm_ancova':
             pass
 
-    
     def create_interaction_columns(self, df, elements):
         interactions = []
         new_df = df.copy()  # 원본 DataFrame 복사
@@ -1832,7 +1855,29 @@ class Stat_Manager:
             self.showing(self.menu_for_howtouse.set_index(index_for_howtouse))
             print(NOTATION_FOR_HOWTOUSE_SELECTOR[self.language_set])
             self.showing(self.selector_for_howtouse)
+    
+    def calculate_cronbach_alpha (self, vars):
+        if self.selector == None:
+            df = self.df
+        
+        else:
+            df = self.filtered_df      
             
+        target_columns = vars
+        
+        if not type(vars) == list:
+            raise KeyError(keyerror_message_for_cronbach[self.language_set]) 
+        
+        k = len(vars)
+        
+        covariance_matrix = df[vars].cov()
+        sum_of_variances = np.trace(covariance_matrix)
+        total_variance = covariance_matrix.sum().sum()
+        
+        cronbach_alpha = (k / (k-1)) * (1 - sum_of_variances / total_variance )
+        
+        return cronbach_alpha
+    
     def set_language(self, lang: str ):
         
         if lang == 'kor' or lang == 'eng':
@@ -1850,4 +1895,4 @@ class Stat_Manager:
             print(message_for_change_languageset[self.language_set])
             
         else:
-             KeyError(keyerror_message_for_languageset)
+            KeyError(keyerror_message_for_languageset)

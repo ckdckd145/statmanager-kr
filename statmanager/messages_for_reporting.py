@@ -7,8 +7,8 @@ LINK_DOC ={
 keyerror_message_for_languageset = "Language must be choosen between 'kor' and 'eng'. Default set is 'kor'. If you want to set the language to English, enter 'eng'. "
 
 message_for_change_languageset = {
-    'kor' : '언어 설정이 한글로 변경되었습니다. ',
-    'eng' : 'The Language is set to English. '
+    'kor' : '*****\n언어 설정이 한글로 변경되었습니다.\n*****\n',
+    'eng' : '*****\nThe Language is set to ENGLISH.\n*****\n'
 }
 
 
@@ -23,7 +23,12 @@ warning_message_for_frequency_analysis = {
     'kor' : "Warning: 기대빈도 5미만의 cell이 차지하는 비율이 25% 이상입니다. Fisher's Exact Test 수행을 권고합니다. .progress(method = 'fisher')",
     'eng' : "Warning: The percentage of cells with an expected frequency of less than 5 is greater than 25%. It is recommended to perform a Fisher's Exact Test.. .progress(method = 'fisher')"
     }
-            
+
+keyerror_message_for_cronbach = {
+    'kor' : "크론바흐의 알파를 계산하기 위해서는 적어도 두 개 이상의 컬럼이 제공되어야 합니다. ",
+    'eng' : "At least two columns must be provided to calculate Cronbach's alpha. ",
+}
+
 percentage_of_under_five_values_word = {
     'kor' : '기대빈도 5 미만의 cell이 차지하는 비율',
     'eng' : 'Percentage of cells with expected frequency less than 5',
@@ -72,6 +77,10 @@ notation_message_for_correlation = {
     'eng' : "Note: Missing values are automatically deleted. \n",
 }
 
+notation_message_for_cronbach_alpha = {
+    'kor' : "Note: 입력된 모든 변수에서 결측값이 없는 데이터만 계산에 포함됩니다. \n",
+    'eng' : "Note: Missing values are automatically deleted. \n",
+}
 
 NOTATION_FOR_HOWTOUSE = {
     'kor' : '.howtouse()에 분석과 관련해 검색할 키워드를 입력하세요.\n\n예시 1. ANOVA의 적용 방법이 궁금한 경우 sm.howtouse("ANOVA")\n예시 2. 정규성 검정이 궁금한 경우 sm.howtouse("정규성")\n예시 3. 비모수 검정이 궁금한 경우 sm.howtouse("비모수")\n\n데이터 필터링 방법을 확인하고 싶다면 sm.howtouse("selector")를 입력하세요! \n\n아래 표는 statmanager-kr에 구현된 통계분석 방법별로 구현 방법을 요약한 것입니다. ',
@@ -92,8 +101,8 @@ notation_message_for_calculating_eta_squared  = {
 def success_message_for_creating_object (ver, doclink):
     
     success_message = {
-        'kor' :  f"Stat_Manager 객체 생성 완료! (Version {ver})\n\n사용법 설명 메소드: .howtouse()\n분석 메소드: .progress()\nNote: To change the language, provide 'eng' as an argument to the 'language' parameter when creating the Stat_Manager() object. \n\n{doclink}",
-        'eng' : f"Stat_Manager object created successfully! (Version {ver})\n\nMethod to check how to use: .howtouse()\nMethod for statistical analysis: .progress()\n\n{doclink}",
+        'kor' :  f"Stat_Manager 객체 생성 완료! (Version {ver})\n\n사용법 설명 메소드: .howtouse()\n분석 메소드: .progress()\n언어 세팅 변경 메소드: .set_language()\n\nNote: To change the language, provide 'eng' as an argument to the 'language' parameter when creating the Stat_Manager() object.\nOr just run .set_language('eng')\n\n{doclink}",
+        'eng' : f"Stat_Manager object created successfully! (Version {ver})\n\nMethod to check how to use: .howtouse()\nMethod for statistical analysis: .progress()\nMethod for changing language: .set_language()\n\n{doclink}",
             }
     
     return success_message
@@ -419,6 +428,22 @@ def regression_result_reporting_ivs (iv):
     result = {
         'kor' : f"독립변수: {iv}\n",
         'eng' : f"Independent variable: {iv}\n",
+    }
+    
+    return result
+
+warning_message_for_negative_cronbach_alpha = {
+    'kor' : 'Warning: 크론바흐의 알파가 음수입니다.\n이러한 결과는 일반적이지 않으며, 포함된 항목 간 공분산이 음수이거나, 부적 상관관계를 이루고 있음을 반영하는 것일 수 있습니다.\n계산에 포함된 항목에 대해 전반적으로 재검토할 것을 권고합니다. ',
+    'eng' : "Warning: Cronbach's alpha is negative.\nThis result is not typical and may reflect negative covariance between the included items, or that they are corrleated in negative ways.\nA general reexamination of the items included in the calculation should be recommended.",
+}
+
+def cronbach_alpha_result_reporting(n, test_items, cronbach):
+    number_of_test_items = len(test_items)
+    test_items = ", ".join(test_items)
+    
+    result = {
+        'kor' : f"n = {n}\n포함된 항목: {test_items} ({number_of_test_items})\n\n크론바흐의 알파 = {cronbach:.3f}\n",
+        'eng' : f"n = {n}\nIncluded items: {test_items} ({number_of_test_items})\n\nCronbach's alpha = {cronbach:.3f}\n",
     }
     
     return result
