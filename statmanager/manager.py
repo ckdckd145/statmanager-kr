@@ -12,6 +12,7 @@ import re as repattern
 
 from .menu_for_howtouse import menu_for_howtouse_eng, menu_for_howtouse_kor, selector_for_howtouse_eng, selector_for_howtouse_kor
 from .messages_for_reporting import *
+from .making_figure import *
 from .__init__ import __version__
 
 LINE = "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
@@ -291,7 +292,22 @@ class Stat_Manager:
             'group' : 1,
             'testfunc' : self.calculate_cronbach_alpha,
             'division' : None 
-        }
+        },
+        'pp_plot' : {
+            'name' : "Making p-p plot",
+            'type' : 'making_figure',
+            'group' : 1,
+            'testfunc' : pp_plot,
+            'division' : None 
+        },
+        
+        'qq_plot' : {
+            'name' : 'Making q-q plot',
+            'type' : 'making_figure',
+            'group' : 1,
+            'testfunc' : qq_plot,
+            'division' : None 
+        },
     }
         
     def progress(self, method: str, vars: list, group_vars: str = None, group_names: list = None, effectsize: bool = False, posthoc: bool = False, posthoc_method: str = 'bonf', selector: dict = None):
@@ -1463,7 +1479,13 @@ class Stat_Manager:
             else:
                 pass
     
-    
+        if testtype == 'making_figure':
+            
+            if method == 'pp_plot' or method == 'qq_plot':
+                fig = testfunc(series = df[vars], language_set = self.language_set)
+                return fig
+
+            
     def zscore_normality(self, series, dv):
         
         n = series.count()

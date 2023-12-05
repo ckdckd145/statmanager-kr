@@ -1,0 +1,3 @@
+구분,method,vars,group_vars
+P-P plot 그리기,pp_plot,P-P plot을 그릴 변수 (str),
+Q-Q plot 그리기,qq_plot,Q-Q plot을 그릴 변수 (str),

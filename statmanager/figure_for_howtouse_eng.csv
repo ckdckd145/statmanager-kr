@@ -1,0 +1,3 @@
+Index,method,vars,group_vars
+Making P-P plot,pp_plot,variables to make P-P plot (str),
+Making Q-Q plot,qq_plot,variables to make Q-Q plot (str),
