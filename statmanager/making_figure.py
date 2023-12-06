@@ -121,6 +121,8 @@ class FigureInStatmanager:
         if self.yticks is not None:
             self.ax.set_yticks(self.yticks, fontdict = self.font_properties)
 
+    def save():
+        pass
 
 # make sure that all function should be finished with returning FigureInStatmanager object... Don't forget...
 
@@ -162,8 +164,14 @@ def qq_plot(series: pd.Series, language_set = 'kor'):
                                figure = ax,
                                language_set = language_set)
 
-def hist():
-    pass
+def hist(df: pd.DataFrame, var, n, statistic = 'count', language_set = 'kor'):
+    ax = sns.histplot(data = df, x = var, stat = statistic, cumulative = False, element="bars", kde=True)
+    
+    return FigureInStatmanager(xlabel = f'Value of {var}',
+                               ylabel = statistic,
+                               title = f"Histogram of {var} (n = {n})",
+                               figure = ax,
+                               language_set = language_set)
 
 def hist_cumulative():
     pass

@@ -306,6 +306,14 @@ class Stat_Manager:
             'testfunc' : qq_plot,
             'division' : None 
         },
+        
+        'hist' : {
+            'name' : 'Making histogram',
+            'type' : 'making_figure',
+            'group' : 1,
+            'testfunc' : hist,
+            'division' : None             
+        },
     }
         
     def progress(self, method: str, vars: list, group_vars: str = None, group_names: list = None, effectsize: bool = False, posthoc: bool = False, posthoc_method: str = 'bonf', selector: dict = None):
@@ -1526,6 +1534,12 @@ class Stat_Manager:
             if method == 'pp_plot' or method == 'qq_plot':
                 
                 figure_object = testfunc(series = df[vars], language_set = self.language_set)
+                
+                return figure_object
+            
+            if method == 'hist':
+                
+                figure_object = testfunc(df = df, var = vars, n = n, language_set = self.language_set)
                 
                 return figure_object
 
