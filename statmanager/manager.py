@@ -8,9 +8,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns 
 import numpy as np
 import re as repattern
+
 # from itertools import product
 
-from .menu_for_howtouse import menu_for_howtouse_eng, menu_for_howtouse_kor, selector_for_howtouse_eng, selector_for_howtouse_kor
+from .menu_for_howtouse import *
 from .messages_for_reporting import *
 from .making_figure import *
 from .__init__ import __version__
@@ -20,7 +21,6 @@ LINE = "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 VERSION = __version__
 
 LINK = LINK_DOC
-
 
 class Stat_Manager:
     def __init__(self, dataframe: pd.DataFrame, id: str = None, language: str = 'kor'):
@@ -42,16 +42,14 @@ class Stat_Manager:
         if self.language_set == 'kor':
             
             self.menu_for_howtouse = menu_for_howtouse_kor
+            self.selector_for_howtouse = selector_for_howtouse_kor
+            self.figure_for_howtouse = figure_for_howtouse_kor
 
         elif self.language_set == 'eng':
             
             self.menu_for_howtouse = menu_for_howtouse_eng
-
-        if self.language_set == 'kor':
-            self.selector_for_howtouse = selector_for_howtouse_kor
-
-        elif self.language_set == 'eng':
-            self.selector_for_howtouse = selector_for_howtouse_eng     
+            self.selector_for_howtouse = selector_for_howtouse_eng
+            self.figure_for_howtouse = figure_for_howtouse_eng 
         
         try: # df ; index set 여부 확인
             
@@ -316,14 +314,27 @@ class Stat_Manager:
         
         """
         
+        method = method.lower()
+        posthoc_method = posthoc_method.lower()
+        results_for_save = [] # for __init__
+
         if 'bootstrap' in method and not '_df' in method: #if method is percentile method
             
             resampling_no = method.replace('bootstrap', "")
             
-            try :
-                resampling_no = int(resampling_no)
+            try : 
+                if resampling_no == "":
+                    print(notation_for_bootstrap_when_zero[self.language_set])
+                    resampling_no = 1000
 
-            except : # if not entered correct number 
+                else:   
+                    
+                    resampling_no = int(resampling_no)
+                    
+                    if resampling_no <= 0:
+                        raise KeyError(keyerror_message_for_bootstrap[self.language_set])
+            
+            except :
                 raise KeyError(keyerror_message_for_bootstrap[self.language_set])
             
             method = 'bootstrap' # rearrange method for matching in the menu
@@ -335,7 +346,17 @@ class Stat_Manager:
             resampling_no = resampling_no.replace('_df', "")
             
             try : 
-                resampling_no = int(resampling_no)
+                
+                if resampling_no == "":
+                    print(notation_for_bootstrap_when_zero[self.language_set])
+                    resampling_no = 1000
+
+                else:   
+                    
+                    resampling_no = int(resampling_no)
+                    
+                    if resampling_no <= 0:
+                        raise KeyError(keyerror_message_for_bootstrap[self.language_set])
             
             except :
                 raise KeyError(keyerror_message_for_bootstrap[self.language_set])
@@ -349,7 +370,8 @@ class Stat_Manager:
             self.selector = None
             df = self.df
             self.filtered_df = None          
-            
+            conditions = None
+            self.conditions_notification_texts = None
         else:
             
             if type(selector) != dict:
@@ -399,6 +421,7 @@ class Stat_Manager:
             df = df.loc[combined_condition]
             self.filtered_df = df
             conditions_notification_texts = "\n".join(conditions_notification)
+            self.conditions_notification_texts = conditions_notification_texts
             
         if testtype == 'regression':
             df = df.dropna(axis=0, how = 'any', subset = vars[1])
@@ -426,6 +449,13 @@ class Stat_Manager:
         testdivision = self.menu[method]['division']
         
         n = len(df)
+        
+        # saving for results
+        self.method = method
+        self.vars = vars
+        self.group_vars = group_vars
+        
+        
         
         if testtype == 'frequency_analysis':
             
@@ -506,27 +536,39 @@ class Stat_Manager:
                 
                 if n < 30:
                     print(warning_message_for_normality[method][self.language_set])
-                
+                    results_for_save += [warning_message_for_normality[method][self.language_set]]
+                    
             else: # method == 'shapiro'
                 s, p = testfunc(ser)
                 
                 if n >= 30:
                     print(warning_message_for_normality[method][self.language_set])
+                    results_for_save += [warning_message_for_normality[method][self.language_set]]
             
             
             s = round(s, 3)
             p = round(p, 3)
             
+            
             print(normality_test_result_reporting(dv, n, s, p)[self.language_set])
+            
+            results_for_save += [normality_test_result_reporting(dv, n, s, p)[self.language_set]]
             
             if p <= .05 : 
                 print(conclusion_for_normality_assumption[self.language_set]['under'])
-                
+                results_for_save += [conclusion_for_normality_assumption[self.language_set]['under']]
+            
             else:
                 print(conclusion_for_normality_assumption[self.language_set]['up'])
+                results_for_save += [conclusion_for_normality_assumption[self.language_set]['up']]
             
             print(LINE)
-        
+            
+            result_object = self.saving_for_result(result = results_for_save, testname = testname)
+            return result_object
+            
+            # return StatmanagerResult(method = method, vars = vars, result = results_for_save, group_vars = group_vars, group_names = group_names, selector = conditions_notification_texts)
+            
         if testtype == 'homoskedasticity':
             if type(vars) == list:
                 dv = vars[0]
@@ -1482,8 +1524,10 @@ class Stat_Manager:
         if testtype == 'making_figure':
             
             if method == 'pp_plot' or method == 'qq_plot':
-                fig = testfunc(series = df[vars], language_set = self.language_set)
-                return fig
+                
+                figure_object = testfunc(series = df[vars], language_set = self.language_set)
+                
+                return figure_object
 
             
     def zscore_normality(self, series, dv):
@@ -1833,7 +1877,7 @@ class Stat_Manager:
         all_data = pd.concat(series)
         ss_total = sum((all_data - overall_mean) ** 2)
 
-        # Eta-squared (\(\eta^2\)) 계산
+        # Eta-squared (\(\eta^2\))
         eta_squared = ss_between / ss_total
 
         if eta_squared < 0.06:
@@ -1852,52 +1896,77 @@ class Stat_Manager:
             print(result)
     
     def howtouse(self, keyword: str = None):
+        
         print(self.link)
+        
+        search_base = {
+            'menu_for_howtouse' : self.menu_for_howtouse,
+            'figure_for_howtouse' : self.figure_for_howtouse,
+        }
         
         if self.language_set == 'kor':
             
-            index_for_howtouse = '분석명'
-            search_column_1 = '목적'
-            search_column_2 = 'method'
-        
+            search_logic = {
+                'menu_for_howtouse' : {
+                    'index_for_howtouse' : '분석명',
+                    'search_column_1' : '목적',
+                    'search_column_2' : 'method'
+                    },
+                'figure_for_howtouse' : {
+                    'index_for_howtouse' : '구분',
+                    'search_column_1' : 'method',
+                    'search_column_2' : 'vars',
+                }
+            }
+            
         elif self.language_set == 'eng':
             
-            index_for_howtouse = 'Analysis'
-            search_column_1 = 'Purpose'
-            search_column_2 = 'method'
-        
+            search_logic = {
+                'menu_for_howtouse' : {
+                    'index_for_howtouse' : 'Analysis',
+                    'search_column_1' : 'Purpose',
+                    'search_column_2' : 'method'
+                    },
+                'figure_for_howtouse' : {
+                    'index_for_howtouse' : 'Index',
+                    'search_column_1' : 'method',
+                    'search_column_2' : 'vars',
+                }
+            }
+            
         if keyword != None:
             
             if keyword == 'selector':
                 self.showing(self.selector_for_howtouse)
+
+                return self
+            
+            elif keyword == 'figure':
+                self.showing(self.figure_for_howtouse.set_index(search_logic['figure_for_howtouse']['index_for_howtouse']))
+
+                return self
             
             else:    
-            
-                if keyword == '모수' or keyword == '모수검정':
-                    cond1 = self.menu_for_howtouse[search_column_1].str.contains(keyword)
-                    cond2 = self.menu_for_howtouse[search_column_1].str.contains('비모수')
+                for key, value in search_logic.items():
+                    target_menu = search_base[key]
                     
-                    self.showing(self.menu_for_howtouse.loc[~cond2 & cond1].set_index(index_for_howtouse))
+                    cond1 = target_menu[value['index_for_howtouse']].str.contains(keyword)
+                    cond2 = target_menu[value['search_column_1']].str.contains(keyword)
+                    cond3 = target_menu[value['search_column_2']].str.contains(keyword)
                     
+                    self.showing(target_menu[cond1 | cond2 | cond3].set_index(value['index_for_howtouse']))
                 
-                elif keyword == 'Parametric' or keyword =='Parametric Test':
-                    cond1 = self.menu_for_howtouse[search_column_1].str.contains(keyword)
-                    cond2 = self.menu_for_howtouse[search_column_1].str.contains('Non-parametric')
-
-                    self.showing(self.menu_for_howtouse.loc[~cond2 & cond1].set_index(index_for_howtouse))
-                
-                else:
-                    cond1 = self.menu_for_howtouse[search_column_1].str.contains(keyword)
-                    cond2 = self.menu_for_howtouse[search_column_2].str.contains(keyword)
-                    cond3 = self.menu_for_howtouse[index_for_howtouse].str.contains(keyword)
-                    
-                    self.showing(self.menu_for_howtouse.loc[cond1 | cond2 | cond3].set_index(index_for_howtouse))
+                return self
+        
+        else: # keyword == None. ( when user just run .howtouse() )
             
-        else:
             print(NOTATION_FOR_HOWTOUSE[self.language_set])
             self.showing(self.menu_for_howtouse.set_index(index_for_howtouse))
+            
             print(NOTATION_FOR_HOWTOUSE_SELECTOR[self.language_set])
             self.showing(self.selector_for_howtouse)
+            
+            return self
     
     def calculate_cronbach_alpha (self, vars):
         if self.selector == None:
@@ -1921,21 +1990,33 @@ class Stat_Manager:
         
         return cronbach_alpha
     
+    def saving_for_result(self, result: list, testname: str):
+        
+        return StatmanagerResult(method = self.method, vars = self.vars, group_vars=self.group_vars, result = result, selector = self.selector, testname = testname)
+    
+    
     def set_language(self, lang: str ):
+        
+        lang = lang.lower()
         
         if lang == 'kor' or lang == 'eng':
             
             self.language_set = lang
+            self.link = LINK[self.language_set]
             
             if lang == 'kor':
                 self.menu_for_howtouse = menu_for_howtouse_kor
                 self.selector_for_howtouse = selector_for_howtouse_kor
+                self.figure_for_howtouse = figure_for_howtouse_kor
             
             else: # lang == 'eng'
                 self.menu_for_howtouse = menu_for_howtouse_eng
                 self.selector_for_howtouse = selector_for_howtouse_eng
+                self.figure_for_howtouse = figure_for_howtouse_eng
             
             print(message_for_change_languageset[self.language_set])
             
+            return self
+        
         else:
             KeyError(keyerror_message_for_languageset)

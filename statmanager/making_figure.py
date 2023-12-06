@@ -3,11 +3,64 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 from scipy import stats
+import datetime as dt
 
 font_properties = {
     'kor' : {'family' : 'Gulim', 'color': 'Black', 'weight': 'normal', 'size': 16},
     'eng' : {'family': 'Times New Roman', 'color': 'Black', 'weight': 'normal', 'size': 16},
 }
+
+TODAY = dt.datetime.now().strftime('%Y-%m-%d')
+NOW_TIME = dt.datetime.now().strftime("%H:%M:%S")
+
+class StatmanagerResult:
+    def __init__(self, method, vars, result, testname, group_vars = None, selector = None):
+        
+        self.saving_date = TODAY
+        self.saving_time = NOW_TIME
+        
+        self.method = method
+        self.vars = vars
+        self.result = result
+        
+        self.group_vars = group_vars
+        self.selector = selector
+        
+        self.testname = testname
+        
+    def show(self, only_result = False):
+        
+        if only_result == False:
+        
+            print(f'::: Note :::\n\nSaving Date : {TODAY}\nSaving Time : {NOW_TIME}\n\n')
+            
+            showing_one = {
+                'Method' : self.method,
+                'Vars' : self.vars,
+                'Group_vars' : self.group_vars,
+                'Selector' : self.selector,            
+            }
+            
+            print("::: Kwargs and Args Info :::\n")
+            for key, value in showing_one.items():
+                print(f"{key} : {value}")
+            print("\n")
+        
+        print("::: Original Reports :::\n\n")
+        
+        print(self.testname)
+        for n in self.result:
+            print(n)
+        
+        return self
+
+    def figure(self):
+        
+        # purpose : drawing figures or graphs depend on the APA Style. 
+        
+        
+        return FigureInStatmanager() # ..
+
 
 
 class FigureInStatmanager:

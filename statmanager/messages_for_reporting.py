@@ -4,6 +4,12 @@ LINK_DOC ={
     'eng' : '*****\n↓↓ Check for the more details in documentation! ↓↓\nhttps://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4 \n*****\n'
 }
 
+
+index_column_for_figure_for_howtouse = { 
+    'kor' : '구분',
+    'eng' : 'Index',
+}
+
 keyerror_message_for_languageset = "Language must be choosen between 'kor' and 'eng'. Default set is 'kor'. If you want to set the language to English, enter 'eng'. "
 
 message_for_change_languageset = {
@@ -12,13 +18,18 @@ message_for_change_languageset = {
 }
 
 keyerror_message_for_bootstrap = {
-    'kor' : "부트스트랩핑을 진행하기 위한 리샘플링 횟수가 잘못 입력되었습니다. method 파라미터에 제공된 인자의 형식이 bootstrap2000, bootstrap894 혹은 bootstrap894_df, bootstrap2000_df 등과 일치하는지 확인하십시오. ",
-    'eng' : "The number of resamples to proceed with bootstrapping was entered incorrectly. Make sure the format of the argument provided in the method parameter matches bootstrap2000, bootstrap894, or bootstrap894_df, bootstrap2000_df, etc. ",
+    'kor' : "부트스트랩핑을 진행하기 위한 리샘플링 횟수가 잘못 입력되었습니다. method 파라미터에 제공된 인자의 형식이 bootstrap2000, bootstrap894 혹은 bootstrap894_df, bootstrap2000_df 등과 일치하는지 확인하십시오. 리샘플링 횟수는 반드시 0보다 큰 양수여야 합니다. ",
+    'eng' : "The number of resamples to proceed with bootstrapping was entered incorrectly. Make sure the format of the argument provided in the method parameter matches bootstrap2000, bootstrap894, or bootstrap894_df, bootstrap2000_df, etc. The number of resamples must be a positive number greater than 0.",
 }
 
 valueerror_message_for_bootstrap ={
     'kor' : "부트스트랩핑을 진행하기 위해 제공되는 그룹 변수는 반드시 2분할이어야 합니다. 2분할보다 많은 그룹 변수를 포함하고자 하는 경우, group_names 파라미터를 통해 두 개의 그룹을 특정하십시오. ",
     'eng' : "The group variables provided for bootstrapping must be bipartite. If you want to include group variables with more than two unique categories, please specify two groups using the group_names parameter.",
+}
+
+notation_for_bootstrap_when_zero = {
+    'kor' : "NOTE : 부트스트랩핑을 진행하기 위한 리샘플링 횟수가 입력되지 않았습니다. 자동으로 1000번의 리샘플링이 진행됩니다.\n\n리샘플링 횟수를 조정하려면 method 파라미터에 제공된 인자의 형식이 bootstrap2000, bootstrap894 혹은 bootstrap894_df, bootstrap2000_df 등과 일치하는지 확인하십시오.\n리샘플링 횟수는 반드시 0보다 큰 양수여야 합니다. \n",
+    'eng' : "NOTE : No resampling times was entered to proceed with bootstrapping. 1000 resamplings are automatically performed.\n\nTo adjust the number of resamples, make sure that the format of the argument provided in the method parameter matches bootstrap2000, bootstrap894, or bootstrap894_df, bootstrap2000_df, etc.\nThe number of resamples must be a positive number greater than 0. \n",
 }
 
 typeerror_message_for_indexsetting = "데이터프레임에 Index가 설정되어 있지 않습니다. Stat_Manager() 생성시 id를 지정하거나, index가 설정된 df를 인자로 제공하십시오.\nIndex is not set on the dataframe. Specify id when creating Stat_Manager(), or provide a df with index set as an argument."
@@ -92,8 +103,8 @@ notation_message_for_cronbach_alpha = {
 }
 
 NOTATION_FOR_HOWTOUSE = {
-    'kor' : '.howtouse()에 분석과 관련해 검색할 키워드를 입력하세요.\n\n예시 1. ANOVA의 적용 방법이 궁금한 경우 sm.howtouse("ANOVA")\n예시 2. 정규성 검정이 궁금한 경우 sm.howtouse("정규성")\n예시 3. 비모수 검정이 궁금한 경우 sm.howtouse("비모수")\n\n데이터 필터링 방법을 확인하고 싶다면 sm.howtouse("selector")를 입력하세요! \n\n아래 표는 statmanager-kr에 구현된 통계분석 방법별로 구현 방법을 요약한 것입니다. ',
-    'eng' : 'In .howtouse(), enter the keywords you want to search for the analysis:\n\nExample 1. If you want to know how to apply ANOVA, sm.howtouse("ANOVA")\nExample 2. If you want to know how to test normality, sm.howtouse("normality")\nExample 3. If you want to know how to test nonparametric, sm.howtouse("Non-parametric")\n\nIf you want to know how to filter your data, enter sm.howtouse("selector")! \n\nThe table below summarizes the implementation methods for each statistical analysis method applied to statmanager-kr.'
+    'kor' : '.howtouse()에 분석과 관련해 검색할 키워드를 입력하세요.\n\n예시 1. ANOVA의 적용 방법이 궁금한 경우 sm.howtouse("ANOVA")\n예시 2. 정규성 검정이 궁금한 경우 sm.howtouse("정규성")\n예시 3. 비모수 검정이 궁금한 경우 sm.howtouse("비모수")\n\n데이터 필터링 방법을 확인하고 싶다면 sm.howtouse("selector")를 입력하세요! \n\n아래 표는 statmanager-kr에 구현된 통계분석 방법별로 구현 방법을 요약한 것입니다. \n통계분석 방법 외, 그림이나 그래프를 그리는 기능을 확인하려면 sm.howtouse("fgiure")를 검색하세요! ',
+    'eng' : 'In .howtouse(), enter the keywords you want to search for the analysis:\n\nExample 1. If you want to know how to apply ANOVA, sm.howtouse("ANOVA")\nExample 2. If you want to know how to test normality, sm.howtouse("normality")\nExample 3. If you want to know how to test nonparametric, sm.howtouse("Non-parametric")\n\nIf you want to know how to filter your data, enter sm.howtouse("selector")! \n\nThe table below summarizes the implementation methods for each statistical analysis method applied to statmanager-kr. \n Search sm.howtouse("fgiure") for the function to draw pictures and graphs! '
 }
 
 NOTATION_FOR_HOWTOUSE_SELECTOR = {
