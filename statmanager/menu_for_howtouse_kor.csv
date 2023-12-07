@@ -11,9 +11,9 @@ Fisher's Exact Test,빈도분석,fisher,빈도차이를 확인할 변수들 (lis
 상관분석: Kendall's tau-b,상관분석-비모수검정,kendallt,상관관계를 확인할 변수들 (list),,
 Indenpendent Samples T-test,차이비교 (2집단)-모수검정,ttest_ind,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),
 Dependent Samples T-test,차이비교 (집단 내 2시점)-모수검정,ttest_rel,차이를 확인할 변수들 (list),,
-Mann-Whitney U Test,차이비교 (2집단)-비모수검정,mannwhitneyu,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),
+Mann-Whitney U Test (Wilcoxon Rank Sum Test),차이비교 (2집단)-비모수검정,mannwhitneyu,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),
 Brunner-Munzel Test,차이비교 (2집단)-비모수검정,brunner,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),
-Wilcoxon-Signed Ranksum Test,차이비교 (집단 내 2시점)-비모수검정,wilcoxon,차이를 확인할 변수들 (list),,
+Wilcoxon-Signed Rank Test,차이비교 (집단 내 2시점)-비모수검정,wilcoxon,차이를 확인할 변수들 (list),,
 "Bootstrap Resampling ",데이터프레임 반환,bootstrap{리샘플링숫자}_df,리샘플링을 실시할 변수 (str) 혹은 샘플링을 실시할 변수들 (list),리샘플링의 기준이 될 집단 변수 혹은 생략,
 "Bootstrap percentile method: ",차이비교 (2집단 or 2시점),bootstrap{리샘플링숫자},리샘플링을 실시할 변수 (str) 혹은 샘플링을 실시할 변수들 (list),리샘플링의 기준이 될 집단 변수 혹은 생략,
 One-way ANOVA,차이비교 (3집단 이상)-모수검정,f_oneway,차이를 확인할 변수 (str),기준이 될 집단 변수 (str),True: posthoc 진행

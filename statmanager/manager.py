@@ -108,7 +108,7 @@ class Stat_Manager:
         },
         
         'mannwhitneyu' : {
-            'name' : 'Mann-Whitney U Test',
+            'name' : 'Mann-Whitney U Test (Wilcoxon Rank Sum Test)',
             'type' : 'compare_btwgroup',
             'group' : 2,
             'testfunc' : stats.mannwhitneyu,
@@ -123,7 +123,7 @@ class Stat_Manager:
         },        
         
         'wilcoxon' : {
-            'name' : 'Wilcoxon-Signed Ranksum Test',
+            'name' : 'Wilcoxon-Signed Rank Test',
             'type' : 'compare_ingroup',
             'group' : 1,
             'testfunc' : stats.wilcoxon,

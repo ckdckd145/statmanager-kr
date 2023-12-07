@@ -11,10 +11,10 @@ Correlation analysis: Spearman rho,Correlation analysis - Non-parametric test,sp
 Correlation analysis: Kendall's tau-b,Correlation analysis - Non-parametric test,kendallt,Variables to check correlation (list),,
 Indenpendent Samples T-test,Compare between groups (two) - Parametric test,ttest_ind,Dependent variable (str),Group variable (str),
 Dependent Samples T-test,Compare between times (two) - Parametric test,ttest_rel,Dependent variables (list),,
-Mann-Whitney U Test,Compare between groups (two) - Non-parametric test,mannwhitneyu,Dependent variable (str),Group variable (str),
+Mann-Whitney U Test (Wilcoxon Rank Sum Test),Compare between groups (two) - Non-parametric test,mannwhitneyu,Dependent variable (str),Group variable (str),
 Brunner-Munzel Test,Compare between groups (two) - Non-parametric test,brunner,Dependent variable (str),Group variable (str),
-Wilcoxon-Signed Ranksum Test,Compare between times (two) - Non-parametric test,wilcoxon,Dependent variables (list),,
-"Bootstrap Resampling (Resampling NO. = 1,000)",Retunring pandas.dataframe,bootstrap{resampling_number}_df,Variable (str) or variables (list) to resample,Group variable to proceed resampling on or omit,
+Wilcoxon-Signed Rank Test,Compare between times (two) - Non-parametric test,wilcoxon,Dependent variables (list),,
+Bootstrap Resampling,Retunring pandas.dataframe,bootstrap{resampling_number}_df,Variable (str) or variables (list) to resample,Group variable to proceed resampling on or omit,
 "Bootstrap percentile method: ",Compare between groups or between times,bootstrap{resampling_number},Variable (str) or variables (list) to resample,,
 One-way ANOVA,Compare between groups (more than two groups) - Parametric test,f_oneway,Dependent variable (str),Group variable (str),True: Proceed the posthoc anaylsis
 One-way Repeated Measures ANOVA,Compare between times (more than two times) - Parametric test,f_oneway_rm,Dependent variables (list),,True: Proceed the posthoc anaylsis
