@@ -31,7 +31,6 @@ def chi2(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Chi-Squared Te
     result_for_save.append(reporting_three)
     result_for_save.append(expected_frequency_df)
     
-    
     if percentage_of_under_five_values >= 0.25:
         warning = warning_message_for_frequency_analysis[lang_set]
         result_for_save.append(warning)

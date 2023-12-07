@@ -28,6 +28,10 @@ class StatmanagerResult:
         
         self.testname = testname
         
+        self.df = None
+        if 'bootstrap' in method:
+            self.df = self.result[3]
+        
     def show(self, only_result = False):
         
         if only_result == False:
@@ -50,7 +54,13 @@ class StatmanagerResult:
         
         print(self.testname)
         for n in self.result:
-            print(n)
+            if isinstance(n, str or list):
+                print(n)
+            else:
+                try:
+                    display(n)
+                except:
+                    print(n)
         
         return self
 

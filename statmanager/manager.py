@@ -17,6 +17,8 @@ from .normality_functions import *
 from .frequency_functions import *
 from .homoskedasticity_functions import *
 from .reliability_functions import *
+from .bootstrap_functions import *
+from .correlation_functions import *
 
 from .__init__ import __version__
 
@@ -188,7 +190,7 @@ class Stat_Manager:
             'name' : "Correlation analysis: Pearson's r",
             'type' : 'correlation',
             'group' : 1,
-            'testfunc' : self.r_forargs,
+            'testfunc' : pearson,
             'division' : None,
         },
         
@@ -196,14 +198,14 @@ class Stat_Manager:
             'name' : "Correlation analysis: Spearman's rho",
             'type' : 'correlation',
             'group' : 1,
-            'testfunc' : self.r_forargs,
+            'testfunc' : spearman,
             'division' : None,
         },
         'kendallt' : {
             'name' : "Correlation analysis: Kendall's tau",
             'type' : 'correlation',
             'group' : 1,
-            'testfunc' : self.r_forargs,
+            'testfunc' : kendall,
             'division' : None,   
         },
         
@@ -224,20 +226,11 @@ class Stat_Manager:
         },
         'bootstrap' : {
             'name' : 'Bootstrap percentile method: Resampling No. =',
-            'type' : 'compare_etc',
+            'type' : 'bootstrap',
             'group' : 1,
-            'testfunc' : self.percentile_method,
+            'testfunc' : percentile_method,
             'division' : None,
         },
-        
-        'bootstrap_df' : {
-            'name' : 'Bootstrap dataframe returning: Resampling NO. = ',
-            'type' : 'returning_df',
-            'group' : 1,
-            'testfunc' : self.bootstrap_to_dataframe,
-            'division' : None,
-        },
-        
         'linearr' : {
             'name' : 'Linear Regression',
             'type' : 'regression',
@@ -340,7 +333,6 @@ class Stat_Manager:
                     resampling_no = 1000
 
                 else:   
-                    
                     resampling_no = int(resampling_no)
                     
                     if resampling_no <= 0:
@@ -350,21 +342,18 @@ class Stat_Manager:
                 raise KeyError(keyerror_message_for_bootstrap[self.language_set])
             
             method = 'bootstrap' # rearrange method for matching in the menu
-            
-        
+
         if 'bootstrap' in method and '_df' in method: # if method is returning boostrapped df
             
             resampling_no = method.replace('bootstrap', "")
             resampling_no = resampling_no.replace('_df', "")
             
             try : 
-                
                 if resampling_no == "":
                     print(notation_for_bootstrap_when_zero[self.language_set])
                     resampling_no = 1000
 
                 else:   
-                    
                     resampling_no = int(resampling_no)
                     
                     if resampling_no <= 0:
@@ -374,7 +363,6 @@ class Stat_Manager:
                 raise KeyError(keyerror_message_for_bootstrap[self.language_set])
 
             method = 'bootstrap_df' # rearrange method for matching in the menu
-            
         
         testtype = self.menu[method]['type']
         
@@ -485,7 +473,12 @@ class Stat_Manager:
             result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
-            
+        
+        if testtype == 'bootstrap':
+            result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, resampling_no = resampling_no, lang_set = self.language_set, testname = testname)
+            result_object = self.saving_for_result(result = result, testname = testname)
+            return result_object
+        
         if testtype == 'compare_ingroup':
             
             if method == 'friedman' or method == 'f_oneway_rm':
@@ -1239,87 +1232,11 @@ class Stat_Manager:
                     eta, grade = self.calculate_etasquared(series)
                     print(f"Eta-Sqaured (η2) =  {eta:.2f}\nGrade : {grade}")
             
-        if testtype == 'compare_etc':
-            
-            
-            if group_vars == None: #percentile method within group
-                print(LINE)
-                print(f"{testname} {resampling_no} \n")
-                
-                ser1 = self.bootstrap(series = df[vars[0]], n_bootstrap=resampling_no)
-                ser2 = self.bootstrap(series = df[vars[1]], n_bootstrap=resampling_no)
-                bootstrap_df = self.bootstrap_to_dataframe(ser1, ser2, label = vars)
-                testfunc(data = bootstrap_df, a_var = vars[0], b_var = vars[1])
-                
-            else: #percentile method between group
-                if type(vars) == list:
-                    dv = vars[0]
-                elif type(vars) == str:
-                    dv = vars
-                
-                if group_names == None:
-                    group_names = list(df[group_vars].unique())
-                
-                else:
-                    pass
-                
-                if len(group_names) > 2:
-                    raise ValueError(valueerror_message_for_bootstrap[self.language_set])
-                
-                
-                print(LINE)
-                print(f"{testname} {resampling_no} \n")
-                
-                ser1 = self.bootstrap(series= df.loc[df[group_vars] == group_names[0], dv], n_bootstrap=resampling_no)
-                ser2 = self.bootstrap(series= df.loc[df[group_vars] == group_names[1], dv], n_bootstrap=resampling_no)
-                a_var = f"{group_names[0]}_{dv}"
-                b_var = f"{group_names[1]}_{dv}"
-                bootstrap_df = self.bootstrap_to_dataframe(ser1, ser2, label = [a_var, b_var])
-                testfunc(data = bootstrap_df, a_var = a_var, b_var = b_var)
-        
-        if testtype == 'returning_df':
-            
-            
-            print(LINE)
-            print(f"{testname} {resampling_no} \n")
-                
-            if group_vars == None:
-                
-                ser1 = self.bootstrap(series = df[vars[0]], n_bootstrap=resampling_no)
-                ser2 = self.bootstrap(series = df[vars[1]], n_bootstrap=resampling_no)
-                bootstrap_df = testfunc(ser1, ser2, label = vars)
-            
-            else: 
-                if type(vars) == list:
-                    dv = vars[0]
-                elif type(vars) == str:
-                    dv = vars
-                    
-                if group_names == None:
-                    group_names = list(df[group_vars].unique())
-                
-                else:
-                    pass
-                
-                if len(group_names) > 2:
-                    raise ValueError(valueerror_message_for_bootstrap[self.language_set])          
-                
-                ser1 = self.bootstrap(series= df.loc[df[group_vars] == group_names[0], dv], n_bootstrap=resampling_no)
-                ser2 = self.bootstrap(series= df.loc[df[group_vars] == group_names[1], dv], n_bootstrap=resampling_no)
-                a_var = f"{group_names[0]}_{dv}"
-                b_var = f"{group_names[1]}_{dv}"
-                bootstrap_df = testfunc(ser1, ser2, label = [a_var, b_var])
-                
-            
-            print(notation_message_for_returning_bootstrap_df[self.language_set])
-            
-            return bootstrap_df
-                    
         if testtype == 'correlation':
-            print(LINE)
-            print(f"{testname}\n")
-            testfunc(method = method, vars = vars)
-            print(LINE)
+            
+            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result_object = self.saving_for_result(result = result, testname = testname)
+            return result_object
     
         if testtype == 'regression':
             dv = vars[0]
@@ -1385,157 +1302,6 @@ class Stat_Manager:
                 figure_object = testfunc(df = df, var = vars, n = n, language_set = self.language_set)
                 
                 return figure_object
-
-    def r_forargs(self, method, vars):
-        
-        if self.selector == None:
-            df = self.df
-        
-        else:
-            df = self.filtered_df
-            
-        
-        df = df.dropna(axis=0, how = 'any', subset = vars)
-        number_of_rows = len(df)
-        
-        statistic_valuedict = {
-            'pearsonr' : "Pearson's r",
-            'spearmanr' : "Spearman's rho",
-            'kendallt' : "Kendall's tau"
-        }
-        
-        if method == 'pearsonr':
-            tf = stats.pearsonr
-        
-        elif method == 'spearmanr':
-            tf = stats.spearmanr
-            
-        elif method == 'kendallt':
-            tf = stats.kendalltau
-        
-        correlation_table = df[vars].corr().round(3)
-        
-        num = len(vars)
-        sets = []
-        
-        statistic_value = statistic_valuedict[method]
-        
-        print(f'n = {number_of_rows}\n{notation_message_for_correlation[self.language_set]}')
-        summary_correlation_table = pd.DataFrame()
-        
-        for i in range(num -1):
-            for j in range(i +1, num):
-                sets.append((df[vars[i]], df[vars[j]]))
-            
-        for n in sets:
-            s, p = tf(n[0], n[1])
-            s = round(s, 3)
-            p = round(p, 3)
-            var1 = n[0].name
-            var2 = n[1].name
-            
-            if p <= .05:
-                significant_r = '*'
-                s_with_significancy = f'{s:.3f}{significant_r}'
-            else:
-                significant_r = ''
-                s_with_significancy = s
-            
-            
-            
-            summary_correlation_table.loc[f"{var1} & {var2}", statistic_value] = s_with_significancy
-            summary_correlation_table.loc[f"{var1} & {var2}", 'p-value'] = f"{p:.3f}"
-            
-            print(f"{var1} & {var2}  :  {statistic_value} = {s:.3f}, p = {p:.3f}{significant_r}")
-            
-            correlation_table.loc[var1, var2] = s_with_significancy
-            correlation_table.loc[var2, var1] = s_with_significancy
-        
-        self.showing(correlation_table)
-        self.showing(summary_correlation_table)
-        print("* p < .05")
-            
-    def bootstrap(self, series, n_bootstrap=1000, statistic=np.mean):
-        
-        n = len(series)
-        bootstrap_results = []
-        for _ in range(n_bootstrap):
-            bootstrap_sample = series.sample(n, replace=True)  # 재표집
-            statistic_value = statistic(bootstrap_sample)
-            bootstrap_results.append(statistic_value)
-        
-        return bootstrap_results
-    
-    def bootstrap_to_dataframe(self, *args, label):
-        n = len(args)
-        dict_var = {}
-        for _ in range(n):
-            key = f"{_}"
-            value = args[_]
-            dict_var[key] = value
-        result = pd.DataFrame(dict_var)
-        
-        if label != None and type(label) == list:
-            t = len(label)
-            for n in range(t):
-                result.rename(columns = {f'{n}' : label[n]}, inplace=True)
-                
-        return result
-
-    def percentile_method(self, data, a_var, b_var, confidence_level = 0.95, hist=True):
-        
-        confidence_dict = {
-            0.90 : [5, 95],
-            0.95 : [2.5, 97.5],
-            0.99 : [0.5, 99.5],
-        }
-    
-        interval = confidence_dict[confidence_level]
-        
-        n = len(data)
-        
-        a_confidence_interval = np.percentile(data[a_var], interval)
-        b_confidence_interval = np.percentile(data[b_var], interval)
-        a_lower_bound = a_confidence_interval[0]
-        a_upper_bound = a_confidence_interval[1]
-        b_lower_bound = b_confidence_interval[0]
-        b_upper_bound = b_confidence_interval[1]
-        
-        
-        print(percentile_method_result_reporting(a_var, confidence_level, a_lower_bound, a_upper_bound, b_var, b_lower_bound, b_upper_bound)[self.language_set])
-        
-        
-        if a_upper_bound < b_lower_bound or a_lower_bound > b_upper_bound:
-            print(conclusion_for_percentile_method[self.language_set]['under'])
-        
-        else:
-            print(conclusion_for_percentile_method[self.language_set]['up'])
-        
-        print("\nReference:\nEfron, B., & Tibshirani, R. (1986). Bootstrap methods for standard errors, confidence intervals, and other measures of statistical accuracy. Statistical Science, 1(1), 54-75.\n")
-        print("Histogram: \n")
-        
-        
-        if hist == True:
-            plt.figure(figsize=(10, 8))
-            if self.language_set == 'kor':            
-                sns.set(font = "Gulim", font_scale = 1.5)
-            else:
-                sns.set(font = 'Times New Roman', font_scale = 1.5)
-            plt.style.use('grayscale')
-            plt.title(f'Histogram of {a_var} & {b_var}')
-            sns.histplot(data = data[a_var], label = a_var, alpha=0.5, kde=True)
-            sns.histplot(data = data[b_var], label = b_var, alpha=0.5, kde=True)
-            
-            plt.axvline(a_lower_bound, color='black', linestyle='--', label=f'{confidence_level * 100:.0f}% CI ({a_var})')
-            plt.axvline(a_upper_bound, color='black', linestyle='--')
-            plt.axvline(b_lower_bound, color='gray', linestyle='--', label=f'{confidence_level * 100:.0f}% CI ({b_var})')
-            plt.axvline(b_upper_bound, color='gray', linestyle='--')
-                    
-            plt.xlabel(f"Value of {a_var} & {b_var}")
-            plt.ylabel("No. of Samples")
-            plt.legend(bbox_to_anchor=(1, 1))
-            plt.grid(False)
-            plt.show()
     
     def custom_join(self, vars):
         result = []
