@@ -9,11 +9,15 @@ import seaborn as sns
 import numpy as np
 import re as repattern
 
-# from itertools import product
-
 from .menu_for_howtouse import *
 from .messages_for_reporting import *
 from .making_figure import *
+
+from .normality_functions import *
+from .frequency_functions import *
+from .homoskedasticity_functions import *
+from .reliability_functions import *
+
 from .__init__ import __version__
 
 LINE = "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
@@ -71,7 +75,7 @@ class Stat_Manager:
             'name' : 'Kolmogorov-Smirnov Test',
             'type' : 'normality',
             'group' : 1,
-            'testfunc' : stats.kstest,
+            'testfunc' : kstest, #normality_fuctions
             'division' : None,
         },
         
@@ -79,7 +83,7 @@ class Stat_Manager:
             'name' : 'Shapiro-Wilks Test',
             'type' : 'normality',
             'group' : 1,
-            'testfunc' : stats.shapiro,
+            'testfunc' : shapiro,
             'division' : None,
         },
         
@@ -87,7 +91,7 @@ class Stat_Manager:
             'name' : 'Levene Test',
             'type' : 'homoskedasticity',
             'group' : 2,
-            'testfunc' : stats.levene,
+            'testfunc' : levene,
             'division' : None,
         },
         
@@ -152,7 +156,7 @@ class Stat_Manager:
             'name' : 'Chi-Squared Test',
             'type' : 'frequency_analysis',
             'group': 1,
-            'testfunc' : stats.chi2_contingency,
+            'testfunc' : chi2,
             'division' : None
             },
         
@@ -160,23 +164,23 @@ class Stat_Manager:
             'name' : "Fisher's Exact Test",
             'type' : 'frequency_analysis',
             'group' : 1,
-            'testfunc' : stats.fisher_exact,
+            'testfunc' : fisher,
             'division' : None
         },
         
         'z_normal' : {
             'name' : 'z-skeweness & z-kurtosis test',
-            'type' : 'normality_etc',
+            'type' : 'normality',
             'group' : 1,
-            'testfunc' : self.zscore_normality,
+            'testfunc' : z_normal,
             'division' : None
             },
         
         'fmax' : {
             'name' : 'F-max Test',
-            'type' : 'homoskedasticity_etc',
+            'type' : 'homoskedasticity',
             'group' : 2,
-            'testfunc' : self.fmax_test,
+            'testfunc' : fmax,
             'division' : None,
             },
         
@@ -288,7 +292,7 @@ class Stat_Manager:
             'name' : "Calculating Cronbach's Alpha",
             'type' : 'reliability',
             'group' : 1,
-            'testfunc' : self.calculate_cronbach_alpha,
+            'testfunc' : cronbach,
             'division' : None 
         },
         'pp_plot' : {
@@ -449,6 +453,7 @@ class Stat_Manager:
         group_fill = self.menu[method]['group']
         
         testname = self.menu[method]['name']
+        
         if selector != None:
             
             selector_notation = selector_notification(condition_texts= conditions_notification_texts, test = testname)
@@ -464,149 +469,22 @@ class Stat_Manager:
         self.group_vars = group_vars
         
         
-        
         if testtype == 'frequency_analysis':
             
-            ser = pd.crosstab(df[vars[0]], df[vars[1]])
-            number_of_rows = len(df[vars[0]].unique())
-            number_of_columns = len(df[vars[1]].unique())
-            number_of_cells = number_of_rows * number_of_columns
-            
-            try:
-                result = testfunc(ser)
-                s = result[0]
-                p = result[1]
-                s = round(s, 3)
-                p = round(p, 3)
-            
-            except:
-                
-                raise KeyError(keyerror_message_for_fisherexact[self.language_set])
-            
-            try: 
-                predicted_value = result[3]
-                
-                values = []
-                for row in range(number_of_rows):
-                    for columns in range(number_of_columns):
-                        value = predicted_value[row][columns]
-                        values.append(value)
-                
-                under_five_values = 0
-                for n in values:
-                    if n < 5:
-                        under_five_values += 1
-                        
-                percentage_of_under_five_values =  under_five_values / number_of_cells
-            except:
-                pass
-            
-            
-            print(LINE)
-            print(f"{testname}")
-            print(frequency_analysis_result_reporting_one(vars)[self.language_set])
-            
-            try:
-                print(frequency_analysis_result_reporting_two(s, p)[self.language_set])
-            
-            except:
-                pass
-            
-            
-            self.showing(ser)
-            
-            try:
-                print(f"{percentage_of_under_five_values_word[self.language_set]} = {round(percentage_of_under_five_values * 100, 2):.2f}%")
-                
-                if percentage_of_under_five_values >= 0.25:
-                    
-                    print(warning_message_for_frequency_analysis[self.language_set])
-            
-            except:
-                
-                pass
-            
-            print(LINE)
+            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result_object = self.saving_for_result(result = result, testname = testname)
+            return result_object            
             
         if testtype == 'normality':
             
-            if type(vars) == list:
-                dv = vars[0]
-            elif type(vars) == str:
-                dv = vars
-            
-            ser = df[dv]
-            print(LINE)
-            print(f"{testname}")
-            
-            if method == 'kstest':
-                s, p = testfunc(ser, 'norm')
-                
-                if n < 30:
-                    print(warning_message_for_normality[method][self.language_set])
-                    results_for_save += [warning_message_for_normality[method][self.language_set]]
-                    
-            else: # method == 'shapiro'
-                s, p = testfunc(ser)
-                
-                if n >= 30:
-                    print(warning_message_for_normality[method][self.language_set])
-                    results_for_save += [warning_message_for_normality[method][self.language_set]]
-            
-            
-            s = round(s, 3)
-            p = round(p, 3)
-            
-            
-            print(normality_test_result_reporting(dv, n, s, p)[self.language_set])
-            
-            results_for_save += [normality_test_result_reporting(dv, n, s, p)[self.language_set]]
-            
-            if p <= .05 : 
-                print(conclusion_for_normality_assumption[self.language_set]['under'])
-                results_for_save += [conclusion_for_normality_assumption[self.language_set]['under']]
-            
-            else:
-                print(conclusion_for_normality_assumption[self.language_set]['up'])
-                results_for_save += [conclusion_for_normality_assumption[self.language_set]['up']]
-            
-            print(LINE)
-            
-            result_object = self.saving_for_result(result = results_for_save, testname = testname)
+            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
             
-            # return StatmanagerResult(method = method, vars = vars, result = results_for_save, group_vars = group_vars, group_names = group_names, selector = conditions_notification_texts)
-            
         if testtype == 'homoskedasticity':
-            if type(vars) == list:
-                dv = vars[0]
-            elif type(vars) == str:
-                dv = vars
-            
-            if group_names == None:
-                group_names = list(df[group_vars].unique())
-            
-            
-            series = []
-            for n in range(len(group_names)):
-                ser = df.loc[df[group_vars] == group_names[n], dv]
-                series.append(ser)
-            
-            s, p = testfunc(*series)
-            s = round(s, 3)
-            p = round(p, 3)
-            
-            print(LINE)
-            print(f"{testname}")
-            print(homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[self.language_set])
-            
-            if p <= .05 :
-                print(conclusion_for_homoskedasticity_assumption[self.language_set]['under'])
-            
-            else:
-                print(conclusion_for_homoskedasticity_assumption[self.language_set]['up'])
-            
-            print(LINE)
+            result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname)
+            result_object = self.saving_for_result(result = result, testname = testname)
+            return result_object
             
         if testtype == 'compare_ingroup':
             
@@ -1436,32 +1314,7 @@ class Stat_Manager:
             print(notation_message_for_returning_bootstrap_df[self.language_set])
             
             return bootstrap_df
-        
-        if testtype == 'normality_etc':
-            if type(vars) == list:
-                dv = vars[0]
-            elif type(vars) == str:
-                dv = vars            
-            
-            
-            print(LINE)
-            print(f"{testname}")
-            testfunc(df[dv], dv)
-            
-        if testtype == 'homoskedasticity_etc':
-            if type(vars) == list:
-                dv = vars[0]
-            elif type(vars) == str:
-                dv = vars  
-            
-            if group_names == None:
-                group_names = list(df[group_vars].unique())
-            
-            print(LINE)
-            print(f"{testname}")
-            print(f"Variables: {dv}")
-            testfunc(vars = dv, group_vars = group_vars, group_names = group_names)
-            
+                    
         if testtype == 'correlation':
             print(LINE)
             print(f"{testname}\n")
@@ -1515,19 +1368,9 @@ class Stat_Manager:
 
         if testtype == 'reliability':
             
-            
-            test_items = vars
-            cronbach = testfunc(test_items)
-            n = len(df)
-            
-            print(testname)
-            print(notation_message_for_cronbach_alpha[self.language_set])
-            print(cronbach_alpha_result_reporting(n, test_items, cronbach)[self.language_set])
-            
-            if cronbach < 0:
-                print(warning_message_for_negative_cronbach_alpha[self.language_set])
-            else:
-                pass
+            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result_object = self.saving_for_result(result = result, testname = testname)
+            return result_object
     
         if testtype == 'making_figure':
             
@@ -1543,72 +1386,6 @@ class Stat_Manager:
                 
                 return figure_object
 
-            
-    def zscore_normality(self, series, dv):
-        
-        n = series.count()
-        
-        skewness = series.skew().round(3)
-        skewness_se = np.sqrt(6 * n * (n - 1) / ((n - 2) * (n + 1) * (n + 3))).round(3)
-        
-        kurtosis = series.kurtosis().round(3)
-        kurtosis_se = (np.sqrt((n**2 - 1) / ((n-3)*(n+5))) * skewness_se * 2).round(3)
-        
-        z_skewness = (skewness/skewness_se).round(3)
-        z_kurtosis = (kurtosis/kurtosis_se).round(3)
-        
-        if n < 50:
-            cutoff = 1.96
-        elif n < 200:
-            cutoff = 2.59
-        elif n > 200:
-            cutoff = 3.13
-        
-        print(z_normal_result_reporting(dv, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, n, cutoff)[self.language_set])
-        
-        z_skewness = abs(z_skewness)
-        z_kurtosis = abs(z_kurtosis)
-        
-        if z_skewness < cutoff and z_kurtosis < cutoff: #up
- 
-            print(conclusion_for_normality_assumption[self.language_set]['up'])
-        
-        else: #under
-            
-            print(conclusion_for_normality_assumption[self.language_set]['under'])
-            
-            
-        print(reference_of_z_normal)
-        print(LINE)
-
-    def fmax_test(self, vars, group_vars, group_names):
-        if self.selector == None:
-            df = self.df
-        
-        else:
-            df = self.filtered_df
-        
-        df = df.loc[df[group_vars].isin(group_names)]
-        group_n = len(group_names)
-        
-        max_variance = df.groupby(group_vars)[vars].var().max().round(3)
-        min_variance = df.groupby(group_vars)[vars].var().min().round(3)
-        
-        f_max = max_variance / min_variance
-        f_max = round(f_max, 3)
-        
-        print(fmax_result_reporting(group_n, group_names, max_variance, min_variance, f_max)[self.language_set])
-
-        
-        if f_max < 10: #up
-            print(conclusion_for_homoskedasticity_assumption[self.language_set]['up'])
-            
-        else: #under
-            print(conclusion_for_homoskedasticity_assumption[self.language_set]['under'])
-            
-        print(reference_of_fmax)
-        print(LINE)
-        
     def r_forargs(self, method, vars):
         
         if self.selector == None:
@@ -1975,34 +1752,12 @@ class Stat_Manager:
         else: # keyword == None. ( when user just run .howtouse() )
             
             print(NOTATION_FOR_HOWTOUSE[self.language_set])
-            self.showing(self.menu_for_howtouse.set_index(index_for_howtouse))
+            self.showing(self.menu_for_howtouse.set_index(search_logic['menu_for_howtouse']['index_for_howtouse']))
             
             print(NOTATION_FOR_HOWTOUSE_SELECTOR[self.language_set])
             self.showing(self.selector_for_howtouse)
             
             return self
-    
-    def calculate_cronbach_alpha (self, vars):
-        if self.selector == None:
-            df = self.df
-        
-        else:
-            df = self.filtered_df      
-            
-        target_columns = vars
-        
-        if not type(target_columns) == list:
-            raise KeyError(keyerror_message_for_cronbach[self.language_set]) 
-        
-        k = len(target_columns)
-        
-        covariance_matrix = df[target_columns].cov()
-        sum_of_variances = np.trace(covariance_matrix)
-        total_variance = covariance_matrix.sum().sum()
-        
-        cronbach_alpha = (k / (k-1)) * (1 - sum_of_variances / total_variance )
-        
-        return cronbach_alpha
     
     def saving_for_result(self, result: list, testname: str):
         
@@ -2033,4 +1788,4 @@ class Stat_Manager:
             return self
         
         else:
-            KeyError(keyerror_message_for_languageset)
+            raise KeyError(keyerror_message_for_languageset)

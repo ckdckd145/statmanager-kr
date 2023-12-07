@@ -54,6 +54,11 @@ percentage_of_under_five_values_word = {
     'eng' : 'Percentage of cells with expected frequency less than 5',
     }
 
+percentage_df_word = {
+    'kor' : '기대빈도 분할표: ',
+    'eng' : 'Expected frequency contingency table: ',
+}
+
 warning_message_for_normality = {
     'kstest' : {
         'kor' : "주의: 표본 수가 30보다 적습니다. 정규성 가정 충족 여부를 확인하기 위해 다른 분석을 고려하십시오. ",
@@ -351,10 +356,10 @@ notation_message_for_returning_bootstrap_df = {
 }
 
 
-def fmax_result_reporting(group_n, group_names, max_variance, min_variance, f_max):
+def fmax_result_reporting(dv, group_n, group_names, max_variance, min_variance, f_max):
     reporting_result = {
-        'kor' : f"\n집단 수 = {group_n}\n집단 구분 : {group_names}\n집단 중 최대 분산 = {max_variance}\n집단 중 최소 분산 = {min_variance}\nF-max statistic = {f_max}\n",
-        'eng' : f"\nNo. of groups = {group_n}\nIncluded groups : {group_names}\nMax variance among groups = {max_variance}\nMin variance among groups = {min_variance}\nF-max statistic = {f_max}\n",
+        'kor' : f"집단변수: {dv}\n집단 수 = {group_n}\n집단 구분 : {group_names}\n\n집단 중 최대 분산 = {max_variance:.3f}\n집단 중 최소 분산 = {min_variance:.3f}\nF-max statistic = {f_max:.3f}\n",
+        'eng' : f"Group variable: {dv}\nNo. of groups = {group_n}\nIncluded groups : {group_names}\n\nMax variance among groups = {max_variance:.3f}\nMin variance among groups = {min_variance:.3f}\nF-max statistic = {f_max:.3f}\n",
     }
     return reporting_result
 
@@ -398,8 +403,8 @@ grade_for_cohen_d = {
 def z_normal_result_reporting (dv, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, n, cutoff):
     
     reporting_result = {
-        'kor' : f"\n변수 = {dv}\n\n왜도 = {skewness}\n왜도의 표준오차 = {skewness_se}\nZ-왜도 = {z_skewness}\n\n첨도 = {kurtosis}\n첨도의 표준오차 = {kurtosis_se}\nZ-첨도 = {z_kurtosis}\n\nn= {n}, Z-왜도 및 Z-첨도의 절단값 (절대값) = {cutoff}",
-        'eng' : f"\nvariables = {dv}\n\nskewness = {skewness}\nstandard error of skewness = {skewness_se}\nz-skewness = {z_skewness}\n\nkurtosis = {kurtosis}\nstandard error of kurtosis = {kurtosis_se}\nz-kurtosis = {z_kurtosis}\n\nsample n = {n}, corresponding absolute cutoff score of z-skewenss and z-kurtosis = {cutoff}",
+        'kor' : f"\n변수 = {dv}\n\n왜도 = {skewness:.3f}\n왜도의 표준오차 = {skewness_se:.3f}\nZ-왜도 = {z_skewness:.3f}\n\n첨도 = {kurtosis:.3f}\n첨도의 표준오차 = {kurtosis_se:.3f}\nZ-첨도 = {z_kurtosis:.3f}\n\nn= {n}, Z-왜도 및 Z-첨도의 절단값 (절대값) = {cutoff:.3f}",
+        'eng' : f"\nvariables = {dv}\n\nskewness = {skewness:.3f}\nstandard error of skewness = {skewness_se:.3f}\nz-skewness = {z_skewness:.3f}\n\nkurtosis = {kurtosis:.3f}\nstandard error of kurtosis = {kurtosis_se:.3f}\nz-kurtosis = {z_kurtosis:.3f}\n\nsample n = {n}, corresponding absolute cutoff score of z-skewenss and z-kurtosis = {cutoff:.3f}",
     }
     
     return reporting_result
@@ -423,6 +428,14 @@ def frequency_analysis_result_reporting_two (s, p):
     result = {
         'kor' : f"\n카이제곱 χ² = {s:.3f}, p = {p:.3f}\n분할표: ",
         'eng' : f"\nχ² = {s:.3f}, p = {p:.3f}\nContingency Table: ",
+    }
+    
+    return result
+
+def frequency_analysis_result_reporting_two_fisher (s, p):
+    result ={ 
+        'kor' : f"\n검정 통계치 = {s:.3f}, p = {p:.3f}\n분할표: ",
+        'eng' : f"\nTest Statistic = {s:.3f}, p = {p:.3f}\nContingency Table: ",
     }
     
     return result
