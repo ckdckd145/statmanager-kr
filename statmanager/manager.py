@@ -19,6 +19,12 @@ from .homoskedasticity_functions import *
 from .reliability_functions import *
 from .bootstrap_functions import *
 from .correlation_functions import *
+from .regression_functions import *
+from .within_group_functions import *
+from .between_group_functions import *
+
+from .posthoc_functions import *
+from .effectsize_functions import *
 
 from .__init__ import __version__
 
@@ -99,57 +105,57 @@ class Stat_Manager:
         
         'ttest_ind' : {
             'name' : 'Indenpendent Samples T-test',
-            'type' : 'compare_btwgroup',
+            'type' : 'between_group',
             'group' : 2,
-            'testfunc' : stats.ttest_ind,
+            'testfunc' : ttest_ind,
             'division' : 'parametric'
         },
         
         'ttest_rel' : {
             'name' : 'Dependent Samples T-test',
-            'type' : 'compare_ingroup',
+            'type' : 'within_group',
             'group' : 1,
-            'testfunc' : stats.ttest_rel,
+            'testfunc' : ttest_rel,
             'division' : 'parametric'
         },
         
         'mannwhitneyu' : {
             'name' : 'Mann-Whitney U Test (Wilcoxon Rank Sum Test)',
-            'type' : 'compare_btwgroup',
+            'type' : 'between_group',
             'group' : 2,
-            'testfunc' : stats.mannwhitneyu,
+            'testfunc' : mannwhitneyu,
             'division' : 'non_parametric'
         },
         'brunner' :{
             'name' : 'Brunner-Munzel Test',
-            'type' : 'compare_btwgroup',
+            'type' : 'between_group',
             'group' : 2,
-            'testfunc' : stats.brunnermunzel,
+            'testfunc' : brunner,
             'division' : 'non_parametric'
         },        
         
         'wilcoxon' : {
             'name' : 'Wilcoxon-Signed Rank Test',
-            'type' : 'compare_ingroup',
+            'type' : 'within_group',
             'group' : 1,
-            'testfunc' : stats.wilcoxon,
+            'testfunc' : wilcoxon,
             'division' : 'non_parametric'        
         },
         
         'f_oneway' : {
             'name' : 'One-way ANOVA',
-            'type' : 'compare_btwgroup',
+            'type' : 'between_group',
             'group' : 3,
-            'testfunc' : stats.f_oneway,
+            'testfunc' : f_oneway,
             'division' : 'parametric'
             
         },
         
         'kruskal' : {
             'name' : 'Kruskal-Wallis Test',
-            'type' : 'compare_btwgroup',
+            'type' : 'between_group',
             'group' : 3,
-            'testfunc' : stats.kruskal,
+            'testfunc' : kruskal,
             'division' : 'non_parametric'
             
         },
@@ -211,17 +217,17 @@ class Stat_Manager:
         
         'friedman' : {
             'name' : 'Friedman Test',
-            'type' : 'compare_ingroup',
+            'type' : 'within_group',
             'group' : 1,
-            'testfunc' : stats.friedmanchisquare,
+            'testfunc' : friedman,
             'division' : 'non_parametric'
         },
         
         'f_oneway_rm' : {
             'name' : 'One-way Repeated Measures ANOVA',
-            'type' : 'compare_ingroup',
+            'type' : 'within_group',
             'group' : 1,
-            'testfunc' : AnovaRM,
+            'testfunc' : rm_anova,
             'division' : 'parametric'
         },
         'bootstrap' : {
@@ -235,7 +241,7 @@ class Stat_Manager:
             'name' : 'Linear Regression',
             'type' : 'regression',
             'group' : 1,
-            'testfunc' : api.OLS,
+            'testfunc' : linear,
             'division' : None,
         },
         
@@ -243,7 +249,7 @@ class Stat_Manager:
             'name' : 'Logistic Regression',
             'type' : 'regression',
             'group' : 1,
-            'testfunc' : api.Logit,
+            'testfunc' : logistic,
             'division' : None
         },
         'f_nway' : {
@@ -475,119 +481,19 @@ class Stat_Manager:
             return result_object
         
         if testtype == 'bootstrap':
-            result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, resampling_no = resampling_no, lang_set = self.language_set, testname = testname)
+            result, figure_object = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, resampling_no = resampling_no, lang_set = self.language_set, testname = testname)
+            result_object = self.saving_for_result(result = result, testname = testname)
+            return result_object, figure_object
+        
+        if testtype == 'within_group':
+            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
-        
-        if testtype == 'compare_ingroup':
             
-            if method == 'friedman' or method == 'f_oneway_rm':
-                series = []
-                
-                for n in range(len(vars)):
-                    ser = df[vars[n]]
-                    series.append(ser)
-
-                dict_var = {}
-                
-                for n in range(len(vars)):
-                    dict_var[vars[n]] = {
-                        'n' : "{:.2f}".format(series[n].count()), 
-                        'mean' : "{:.2f}".format(series[n].mean().round(2)),
-                        'median' : "{:.2f}".format(series[n].median().round(2)),
-                        'sd' : "{:.2f}".format(series[n].std().round(2)),                        
-                    }
-                dict_var = pd.DataFrame(dict_var)
-
-                print(LINE)
-                print(f"{testname}")
-                print(friedman_and_f_oneway_rm_result_reporting(vars)[self.language_set])
-                self.showing(dict_var)
-                
-                if method == 'friedman':
-                    s, p = testfunc(*series)
-                    s = round(s, 3)
-                    p = round(p, 3)
-                    print(friedman_result_reporting_two(s, p)[self.language_set])
-                
-                elif method == 'f_oneway_rm':
-                    reset_df = df.reset_index().melt(id_vars= self.id_var, value_vars = vars)
-                    result = AnovaRM(data = reset_df, depvar = 'value', subject = self.id_var, within = ['variable']).fit()
-                    s = result.anova_table['F Value']
-                    p = result.anova_table['Pr > F']
-                    s = round(s, 3)
-                    p = round(p, 3)
-
-                    for f, s, p in zip(result.anova_table.index, s, p):
-                        print(f"F = {s:.3f}, p = {p:.3f}")
-
-                if posthoc == True:
-                    posthoc_df = df.reset_index().melt(id_vars=self.id_var, value_vars=vars)
-                    mc = MultiComparison(posthoc_df['value'], posthoc_df['variable'])
-                    print(LINE)
-                    print('Posthoc: ')
-                    
-                    if posthoc_method == 'bonf':
-                        if testdivision == 'parametric':
-                            result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                            self.showing(result[0])
-                            print(LINE)
-                        
-                        else: 
-                            result = mc.allpairtest(stats.mannwhitneyu, method = 'bonf')
-                            self.showing(result[0])
-                            print(LINE)
-                        
-                    elif posthoc_method == 'tukey':
-                        result = mc.tukeyhsd()
-                        self.showing(result.summary())
-                        print(LINE)
-                        
-                if effectsize == True:
-                    eta, grade = self.calculate_etasquared(series)
-                    print("Calculating effect size: \n")
-                    print(f"Eta-Sqaured (η2) =  {eta:.2f}\nGrade : {grade}")
             
-            else: # method == 'ttest_rel' or 'wilcoxon' or 
-                series = []
-                for n in range(len(vars)):
-                    ser = df[vars[n]]
-                    series.append(ser)
-                
-                dict_var = {}
-                for n in range(len(vars)):
-                    dict_var[vars[n]] = {
-                        'mean' : series[n].mean().round(2),
-                        'median' : series[n].median().round(2),
-                        'sd' : series[n].std().round(2),                        
-                    }
-                
-                dict_var = pd.DataFrame(dict_var)
-                
-                s, p = testfunc(*series)
-                s = round(s, 3)
-                p = round(p, 3)
-                degree_of_freedom = len(df) - 1
-                
-                n = len(df)
-                
-                print(LINE)
-                print(f"{testname}")
-                print(ttest_rel_and_wilcoxon_result_reporting_one(vars, n)[self.language_set])
-                self.showing(dict_var)
-                print(ttest_rel_and_wilcoxon_result_reporting_two(s, degree_of_freedom, p)[self.language_set])
-                
-                if method == 'wilcoxon':
-                    z = (s - n * (n + 1) / 4) / (n * (n + 1) * (2 * n + 1) / 24)**0.5
-                    print(f"z-statistic = {z:.3f}\n")
-                
-                if effectsize == True:
-                    cohen_d, grade = self.calculate_cohen(series)
-                    print(f"Cohen's d = {cohen_d:.2f}\Grade : {grade}")
-                
         if testtype == 'compare_ways' :
             
-            if method == 'f_nway_rm':
+            if method == 'f_nway_rm': 
                 
                 melted_df = df.reset_index().melt(id_vars = self.id_var, value_vars = vars, var_name = 'time').set_index(self.id_var)
                 df = df.drop(columns = vars).merge(melted_df, how = 'outer', on = self.id_var)
@@ -1119,118 +1025,10 @@ class Stat_Manager:
             else:
                 pass
         
-        if testtype == 'compare_btwgroup':
-            
-            if type(vars) == list:
-                dv = vars[0]
-                
-            elif type(vars) == str:
-                dv = vars
-            
-            if group_names == None:
-                group_names = list(df[group_vars].unique())
-            
-            series = []
-            for n in range(len(group_names)):
-                ser = df.loc[df[group_vars] == group_names[n], dv]
-                series.append(ser)
-            
-            dict_var = {}
-            for n in range(len(group_names)):
-                dict_var[group_names[n]] = {
-                    'n' : len(series[n]),
-                    'mean' : series[n].mean().round(2),
-                    'median' : series[n].median().round(2),
-                    'sd' : series[n].std().round(2),
-                    }
-            
-            dict_var = pd.DataFrame(dict_var)
-            
-            s, p = testfunc(*series)
-            s = round(s, 3)
-            p = round(p, 3)
-            
-            print(LINE)
-            print(f"{testname}")
-            print(compare_btwgroup_result_reporting_one(dv, group_vars, group_names)[self.language_set])
-            self.showing(dict_var)
-            print(compare_btwgroup_result_reporting_two(s, p)[self.language_set])
-            
-            if method != 'kruskal' and method != 'f_oneway': #ttest 혹은 mannwhitney, brunner
-                degree_of_freedom = 0
-                for n in range(len(group_names)):
-                    value = series[n].count()
-                    degree_of_freedom += value
-                
-                degree_of_freedom = degree_of_freedom - 2
-                print(f"Degree of freedom = {degree_of_freedom}")
-                
-                if method == 'mannwhitneyu':
-                    n1 = len(series[0])
-                    n2 = len(series[1])
-                    z = (s - n1 * n2 / 2) / ((n1 * n2 * (n1 + n2 + 1)) / 12)**0.5
-                    print(f"z-statistic = {z:.3f}\n")
-                    
-                elif method == 'brunner':
-                    n1 = len(series[0])
-                    n2 = len(series[1])
-                    z = s / ((n1 * n2)**0.5)
-                    print(f"z-statistic = {z:.3f}\n")
-            
-            
-            else:
-                degree_of_freedom_between_group = len(group_names) - 1
-                degree_of_freedom = 0
-                for n in range(len(group_names)):
-                    value = series[n].count()
-                    degree_of_freedom += value
-                
-                degree_of_freedom = degree_of_freedom - len(group_names)
-                print(f_oneway_df_reporting(degree_of_freedom_between_group, degree_of_freedom)[self.language_set])
-
-            print(LINE)
-            
-            if posthoc == True:
-                
-                cond_list = []
-                for n in range(len(group_names)):
-                    cond = df[group_vars] == group_names[n]
-                    cond_list.append(cond)
-                
-                
-                selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
-                selected_df = df[selected_rows]
-                
-                mc = MultiComparison(selected_df[dv], selected_df[group_vars])
-                
-                if posthoc_method == 'bonf':
-                
-                    if testdivision == 'parametric':
-                        result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                    
-                    else: 
-                        result = mc.allpairtest(stats.mannwhitneyu, method = 'bonf')
-                    print('Post-hoc:')
-                    self.showing(result[0])
-                    print(LINE)
-                
-                elif posthoc_method == 'tukey':
-                    print('Post-hoc:\n')
-                    result = mc.tukeyhsd()
-                    self.showing(result.summary())
-                    print(LINE)
-        
-            if effectsize == True:
-                print("Effect size is calculated : \n")
-                
-                if method != 'kruskal' and method != 'f_oneway': #ttest 혹은 뭐시기일때
-                    
-                    cohen_d, grade = self.calculate_cohen(series)
-                    print(f"Cohen's d = {cohen_d:.2f}\nGrade : {grade}")
-                    
-                else:
-                    eta, grade = self.calculate_etasquared(series)
-                    print(f"Eta-Sqaured (η2) =  {eta:.2f}\nGrade : {grade}")
+        if testtype == 'between_group':
+            result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
+            result_object = self.saving_for_result(result = result, testname = testname)
+            return result_object            
             
         if testtype == 'correlation':
             
@@ -1239,49 +1037,10 @@ class Stat_Manager:
             return result_object
     
         if testtype == 'regression':
-            dv = vars[0]
-            iv = vars[1]
-            print(LINE)
-            print(f"{testname}")
             
-            if method == 'logisticr':
-                
-                dv_list = df[dv].astype('category').cat.categories.to_list()
-                dv_len = len(dv_list)
-                
-                mapper = {}
-                for number in range(dv_len):
-                    mapper[dv_list[number]] = number
-                
-                dummy_label = f'dummy_{dv}'
-                df[dummy_label] = df[dv].map(mapper)
-                y = df[dummy_label]
-                
-                if dv_len >= 3:
-                    testfunc = api.MNLogit
-                    
-                    print(notation_meesage_for_multinominal[self.language_set])
-                
-                print(logistic_regression_result_reporting_one(dv, mapper)[self.language_set])
-            
-            else: # method == 'linearr'
-                y = df[dv]
-                print(linear_regression_result_reporting_one (dv)[self.language_set])
-            
-            print(regression_result_reporting_ivs (iv)[self.language_set])
-
-            x = df[iv]
-            
-            x = api.add_constant(x)
-            model = testfunc(y, x).fit()
-            
-            self.showing(model.summary())
-            self.showing(model.summary2())
-            
-            odd_ratio = np.exp(model.params)
-            print('odds ratio (OR): \n')
-            self.showing(odd_ratio)          
-            print(LINE)
+            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result_object = self.saving_for_result(result = result, testname = testname)
+            return result_object 
 
         if testtype == 'reliability':
             
@@ -1392,59 +1151,6 @@ class Stat_Manager:
                 interactions.append(interaction_name)
         
         return new_df, interactions
-
-    def calculate_cohen(self, series):
-        groupa_n = series[0].count()
-        groupb_n = series[1].count()
-        
-        groupa_mean = series[0].mean()
-        groupb_mean = series[1].mean()
-        
-        groupa_std = series[0].std()
-        groupb_std = series[1].std()                    
-        
-        son = groupa_mean - groupb_mean
-        
-        stage_1 = ((groupa_n - 1) * (groupa_std ** 2)) + ((groupb_n - 1) * (groupb_std ** 2))
-        stage_2 = groupa_n + groupb_n - 2
-        
-        pooled_std = np.sqrt(stage_1/stage_2)
-        
-        cohen_d = (son / pooled_std)
-        
-        if cohen_d < 0.2:
-            grade = '해석 불가'
-        elif cohen_d < 0.5:
-            grade = '작은 효과크기'
-        elif cohen_d < 0.8:
-            grade = '중간 효과크기'
-        elif cohen_d >= 0.8:
-            grade = '큰 효과크기'
-        
-        return cohen_d, grade
-
-    def calculate_etasquared(self, series):
-        k = len(series)
-
-        group_means = [ser.mean() for ser in series]
-
-        overall_mean = np.mean(group_means)
-
-        ss_between = sum([(group_mean - overall_mean) ** 2 * len(ser) for group_mean, ser in zip(group_means, series)])
-        all_data = pd.concat(series)
-        ss_total = sum((all_data - overall_mean) ** 2)
-
-        # Eta-squared (\(\eta^2\))
-        eta_squared = ss_between / ss_total
-
-        if eta_squared < 0.06:
-            grade = '작은 효과크기'
-        elif eta_squared < 0.14:
-            grade = '중간 효과크기'
-        elif eta_squared >= 0.14:
-            grade = '큰 효과크기'
-
-        return eta_squared, grade
     
     def showing(self, result):
         try:

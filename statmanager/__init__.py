@@ -9,6 +9,12 @@ from .homoskedasticity_functions import *
 from .reliability_functions import *
 from .bootstrap_functions import *
 from .correlation_functions import *
+from .regression_functions import *
+from .within_group_functions import *
+from .between_group_functions import *
+
+from .posthoc_functions import *
+from .effectsize_functions import *
 
 __version__ = '1.7.2.6'
 __all__ = ['Stat_Manager']

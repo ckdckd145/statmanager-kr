@@ -187,7 +187,6 @@ def friedman_result_reporting_two(s, p):
     
     return result
 
-
 def ttest_rel_and_wilcoxon_result_reporting_one (vars, n):
     
     reporting_result_one = {
@@ -197,11 +196,20 @@ def ttest_rel_and_wilcoxon_result_reporting_one (vars, n):
     
     return reporting_result_one
 
-def ttest_rel_and_wilcoxon_result_reporting_two (s, degree_of_freedom, p):
+def ttest_rel_result_reporting_two (s, degree_of_freedom, p, ci, d):
     
     reporting_result_two = {
-        'kor' : f'\n검정통계치 = {s:.3f}, df(자유도) = {degree_of_freedom}, p = {p:.3f}\n',
-        'eng' : f'\nTest statistic = {s:.3f}, df(degree of freedom) = {degree_of_freedom}, p = {p:.3f}\n',
+        'kor' : f"\n검정통계치 = {s:.3f}, df(자유도) = {degree_of_freedom}, p = {p:.3f}\n95% 신뢰구간 = [{ci.low:.3f}, {ci.high:.3f}]\nCohen's d = {d:.3f}",
+        'eng' : f"\nTest statistic = {s:.3f}, df(degree of freedom) = {degree_of_freedom}, p = {p:.3f}\n95% Confidence interval = [{ci.low:.3f}, {ci.high:.3f}]\nCohen's d = {d:.3f}",
+    }
+    
+    return reporting_result_two
+
+def wilcoxon_result_reporting_two (s, z, p, e):
+    
+    reporting_result_two = {
+        'kor' : f'\n검정통계치 = {s:.3f}, z = {z:.3f}, p = {p:.3f}\n랭크-비즈 상관계수(Rank-biserial correlation) = {e:.3f}',
+        'eng' : f'\nTest statistic = {s:.3f}, z = {z:.3f}, p = {p:.3f}\nRank-biserial correlation = {e:.3f}',
     }
     
     return reporting_result_two
@@ -332,11 +340,38 @@ def compare_btwgroup_result_reporting_one (dv, group_vars, group_names):
     
     return reporting_result_one
 
-def compare_btwgroup_result_reporting_two (s, p):
+def ttest_ind_result_reporting_two (s, p, dof, ci, d):
+    reporting_result_two = {
+        'kor' : f"검정통계치 = {s:.3f}, 자유도(degree of freedom) = {dof},  p = {p:.3f}\n95% 신뢰구간 = [{ci.low:.3f}, {ci.high:.3f}]\nCohen's d = {d:.3f}",
+        'eng' : f"Test statistic = {s:.3f}, degree of freedom = {dof}, p = {p:.3f}\n95% Confidence interval = [{ci.low:.3f}, {ci.high:.3f}]\nCohen's d = {d:.3f}"
+    }
+    
+    return reporting_result_two    
+
+def brunner_result_reporting_two(s, p):
     
     reporting_result_two = {
         'kor' : f"검정통계치 = {s:.3f}, p = {p:.3f}",
         'eng' : f"Test statistic = {s:.3f}, p = {p:.3f}"
+    }
+    
+    return reporting_result_two
+
+
+def kruskal_result_reporting_two(s, p, dof):
+    
+    reporting_result_two = {
+        'kor' : f"H = {s:.3f}, 자유도 = {dof}, p = {p:.3f}",
+        'eng' : f"H = {s:.3f}, degree of freedom = {dof}, p = {p:.3f}"
+    }
+    
+    return reporting_result_two
+
+def compare_btwgroup_result_reporting_two (s, p, z, e):
+    
+    reporting_result_two = {
+        'kor' : f"검정통계치 = {s:.3f}, p = {p:.3f}\nz-statistic = {z:.3f}\n랭크-비즈 상관계수(Rank-biserial correlation) = {e:.3f}",
+        'eng' : f"Test statistic = {s:.3f}, p = {p:.3f}\nz-statistic = {z:.3f}\nRank-biserial correlation = {e:.3f}"
     }
     
     return reporting_result_two
@@ -441,10 +476,10 @@ def frequency_analysis_result_reporting_two_fisher (s, p):
     return result
 
 
-def logistic_regression_result_reporting_one(dv, mapper):
+def logistic_regression_result_reporting_one(dv):
     result = {
-        'kor' : f"종속변수: {dv}\n더미코딩됨: {mapper}\n",
-        'eng' : f"\nDependent variable: {dv}\nDummy-coded as : {mapper}\n",
+        'kor' : f"종속변수: {dv}\n",
+        'eng' : f"\nDependent variable: {dv}\n",
     }
     
     return result
@@ -459,8 +494,8 @@ def linear_regression_result_reporting_one (dv):
 
 def regression_result_reporting_ivs (iv):
     result = {
-        'kor' : f"독립변수: {iv}\n",
-        'eng' : f"Independent variable: {iv}\n",
+        'kor' : f"독립변수: {iv}\nNote: 범주형 독립변수는 자동으로 더미코딩됩니다. ",
+        'eng' : f"Independent variable: {iv}\nNote: Categorical independent variables are automatically dummy-coded. ",
     }
     
     return result

@@ -28,9 +28,11 @@ class StatmanagerResult:
         
         self.testname = testname
         
-        self.df = None
-        if 'bootstrap' in method:
-            self.df = self.result[3]
+        self.df = []
+        for _ in result:
+            if type(_) == pd.DataFrame:
+                self.df.append(_)
+
         
     def show(self, only_result = False):
         
@@ -91,6 +93,8 @@ class FigureInStatmanager:
         if figure is not None:
             self.apply_settings()
 
+        plt.show(False)
+        
     def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None):
         
         if xlabel is not None:
@@ -130,7 +134,12 @@ class FigureInStatmanager:
         
         if self.yticks is not None:
             self.ax.set_yticks(self.yticks, fontdict = self.font_properties)
-
+    
+    def show(self):
+        plt.show(False)
+        
+        return self
+    
     def save():
         pass
 

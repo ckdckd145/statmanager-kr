@@ -98,28 +98,63 @@ def percentile_method(df: pd.DataFrame, vars: list or str, group_vars: str, lang
     for n in range(len(result_for_save) - 1):
         print(result_for_save[n])
         
-    plt.figure(figsize=(10, 8))
-    if lang_set == 'kor':            
-        sns.set(font = "Gulim", font_scale = 1.5)
+        
+    # Create a figure object
+    fig, ax = plt.subplots(figsize=(10, 8))
+
+    # Set font based on language
+    if lang_set == 'kor':
+        sns.set(font="Gulim", font_scale=1.5)
     else:
-        sns.set(font = 'Times New Roman', font_scale = 1.5)
+        sns.set(font='Times New Roman', font_scale=1.5)
+
+    # Use grayscale style
     plt.style.use('grayscale')
-    plt.title(f'Histogram of {a_var} & {b_var}')
-    sns.histplot(data = bootstrap_df[a_var], label = a_var, alpha=0.5, kde=True)
-    sns.histplot(data = bootstrap_df[b_var], label = b_var, alpha=0.5, kde=True)
-    
-    plt.axvline(a_lower_bound, color='black', linestyle='--', label=f'{confidence_level * 100:.0f}% CI ({a_var})')
-    plt.axvline(a_upper_bound, color='black', linestyle='--')
-    plt.axvline(b_lower_bound, color='gray', linestyle='--', label=f'{confidence_level * 100:.0f}% CI ({b_var})')
-    plt.axvline(b_upper_bound, color='gray', linestyle='--')
-            
-    plt.xlabel(f"Value of {a_var} & {b_var}")
-    plt.ylabel("No. of Samples")
-    plt.legend(bbox_to_anchor=(1, 1))
-    plt.grid(False)
+
+    # Plotting
+    ax.set_title(f'Histogram of {a_var} & {b_var}')
+    sns.histplot(data=bootstrap_df[a_var], label=a_var, alpha=0.5, kde=True, ax=ax)
+    sns.histplot(data=bootstrap_df[b_var], label=b_var, alpha=0.5, kde=True, ax=ax)
+
+    # Confidence intervals
+    ax.axvline(a_lower_bound, color='black', linestyle='--', label=f'{confidence_level * 100:.0f}% CI ({a_var})')
+    ax.axvline(a_upper_bound, color='black', linestyle='--')
+    ax.axvline(b_lower_bound, color='gray', linestyle='--', label=f'{confidence_level * 100:.0f}% CI ({b_var})')
+    ax.axvline(b_upper_bound, color='gray', linestyle='--')
+
+    # Set labels and legend
+    ax.set_xlabel(f"Value of {a_var} & {b_var}")
+    ax.set_ylabel("No. of Samples")
+    ax.legend(bbox_to_anchor=(1, 1))
+    ax.grid(False)
+
+    # Display the plot
     plt.show()
     
-    return result_for_save
+    figure_object = FigureInStatmanager(xlabel=f"Value of {a_var} & {b_var}", ylabel="No. of Samples", title=f'Histogram of {a_var} & {b_var}', figure = ax)
+    # result_for_save.append(figure_object)
+    # plt.figure(figsize=(10, 8))
+    # if lang_set == 'kor':            
+    #     sns.set(font = "Gulim", font_scale = 1.5)
+    # else:
+    #     sns.set(font = 'Times New Roman', font_scale = 1.5)
+    # plt.style.use('grayscale')
+    # plt.title(f'Histogram of {a_var} & {b_var}')
+    # sns.histplot(data = bootstrap_df[a_var], label = a_var, alpha=0.5, kde=True)
+    # sns.histplot(data = bootstrap_df[b_var], label = b_var, alpha=0.5, kde=True)
+    
+    # plt.axvline(a_lower_bound, color='black', linestyle='--', label=f'{confidence_level * 100:.0f}% CI ({a_var})')
+    # plt.axvline(a_upper_bound, color='black', linestyle='--')
+    # plt.axvline(b_lower_bound, color='gray', linestyle='--', label=f'{confidence_level * 100:.0f}% CI ({b_var})')
+    # plt.axvline(b_upper_bound, color='gray', linestyle='--')
+            
+    # plt.xlabel(f"Value of {a_var} & {b_var}")
+    # plt.ylabel("No. of Samples")
+    # plt.legend(bbox_to_anchor=(1, 1))
+    # plt.grid(False)
+    # plt.show()
+    
+    return result_for_save, figure_object
 
 def bootstrapping(series: pd.Series, resampling_no, statistic=np.mean):
     
