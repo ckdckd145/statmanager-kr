@@ -216,8 +216,8 @@ def wilcoxon_result_reporting_two (s, z, p, e):
 
 def f_nway_rm_result_reporting_one (vars, group_vars):
     reporting_result = {
-        'kor' : f"종속변수 : {vars} \n독립변인 : {group_vars}\n\n",
-        'eng' : f"Dependent variables : {vars} \nIndependent variables : {group_vars}\n\n",
+        'kor' : f"반복측정 변인 : {vars} (time) \n집단변인 : {group_vars}\n\n",
+        'eng' : f"Repeated measures factor : {vars} \nGroup factors : {group_vars}\n\n",
     }
     return reporting_result
 

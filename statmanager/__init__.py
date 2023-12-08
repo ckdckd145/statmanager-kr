@@ -12,6 +12,8 @@ from .correlation_functions import *
 from .regression_functions import *
 from .within_group_functions import *
 from .between_group_functions import *
+from .ways_anova_functions import *
+from .ancova_functions import *
 
 from .posthoc_functions import *
 from .effectsize_functions import *

@@ -10,6 +10,7 @@ from .effectsize_functions import *
 from .posthoc_functions import *
 import re as repattern
 from itertools import combinations
+import copy
 
 def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None, selector = None):
     result_for_save = []
@@ -60,7 +61,7 @@ def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, test
     result_for_save.append(anova_table)
     
     if posthoc:
-        posthoc_results = posthoc_ways(df = df, vars = vars, group_vars = group_vars, group_names = group_names, parametric = True, posthoc_method = posthoc_method, interaction_columns = interaction_columns, lang_set = lang_set)
+        posthoc_results = posthoc_ways(df = df, dv = dv, group_vars = group_vars, group_names = group_names, parametric = True, posthoc_method = posthoc_method, interaction_columns = interaction_columns, lang_set = lang_set)
         result_for_save.extend(posthoc_results)
         
     print(testname)
@@ -77,9 +78,78 @@ def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, test
     
     
     
-def f_nway_rm():
-    pass
+def f_nway_rm(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None, selector = None):
+    result_for_save = []
+    
+    group_vars_for_reporting = copy.copy(group_vars)
+    index_col = df.index.name
+    
+    melted_df = df.reset_index().melt(id_vars = index_col, value_vars = vars, var_name = 'time').set_index(index_col)
+    df = df.drop(columns = vars).merge(melted_df, how = 'outer', on = index_col)
+    
+    group_vars = [group_vars] if isinstance(group_vars, str) else group_vars
+    group_vars.append('time')
+    dv = 'value'
+    
+    way_len = len(group_vars)
+    new_testname = f'{way_len}-way Mixed Repeated Measures ANOVA'
+    
+    if selector == None:
+        testname = new_testname
 
+    else:
+        pattern = repattern.compile('-way Mixed Repeated Measures ANOVA')
+        new_testname = pattern.sub(new_testname, testname)
+        testname = new_testname    
+        
+    df, interaction_columns = create_interaction_columns(df, group_vars)
+
+    reporting_one = f_nway_rm_result_reporting_one(vars, group_vars_for_reporting)[lang_set]
+    result_for_save.append(reporting_one)
+    for n in group_vars:
+        result_table = df.groupby(n)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
+        reporting_two = f_nway_result_reporting_two(dv, n)[lang_set]
+        
+        result_for_save.append(reporting_two)
+        result_for_save.append(result_table)
+        
+    reporting_three = f_nway_result_reporting_three (dv)[lang_set]
+    result_table = df.groupby(group_vars)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
+    
+    result_for_save.append(reporting_three)
+    result_for_save.append(result_table)
+    
+    iv_str = custom_join(group_vars)
+    method_str = f"{dv} ~ {iv_str}"
+    
+    model = ols(method_str, data = df).fit()
+    anova_table = api.stats.anova_lm(model, typ=3)
+    anova_table.rename(columns = {'PR(>F)' : 'p-value'}, inplace=True)
+    anova_table['partial_eta_squared'] = anova_table['sum_sq'] / (anova_table['sum_sq'] + anova_table['sum_sq'].loc['Residual'])
+    anova_table = anova_table.round(3)
+    
+    reporting_four = f_nway_result_reporting_four (testname)[lang_set]
+    
+    result_for_save.append(reporting_four)
+    result_for_save.append(anova_table)
+
+    if posthoc:
+        posthoc_results = posthoc_ways(df = df, dv = dv, group_vars = group_vars, group_names = group_names, parametric = True, posthoc_method = posthoc_method, interaction_columns = interaction_columns, lang_set = lang_set)
+        result_for_save.extend(posthoc_results)
+        
+    print(testname)
+    for n in result_for_save:
+        if isinstance(n, str):
+            print(n)
+        else:
+            try:
+                display(n)
+            except:
+                print(n)
+                
+    return result_for_save 
+
+# ------ #
 def create_interaction_columns(df, elements):
     interactions = []
     new_df = df.copy() 

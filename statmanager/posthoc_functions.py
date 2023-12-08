@@ -53,10 +53,8 @@ def posthoc_between(df, vars, group_vars, group_names, parametric: bool, posthoc
         
     return result_table
 
-def posthoc_ways(df, vars, group_vars, group_names, parametric, posthoc_method, interaction_columns, lang_set):
+def posthoc_ways(df, dv, group_vars, group_names, parametric, posthoc_method, interaction_columns, lang_set):
     results_for_return = []
-    
-    dv = vars[0] if isinstance(vars, list) else vars
     
     for n in group_vars:
         mc = MultiComparison(df[dv], df[n])

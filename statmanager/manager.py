@@ -23,6 +23,7 @@ from .regression_functions import *
 from .within_group_functions import *
 from .between_group_functions import *
 from .ways_anova_functions import *
+from .ancova_functions import *
 
 from .posthoc_functions import *
 from .effectsize_functions import *
@@ -255,16 +256,16 @@ class Stat_Manager:
         },
         'f_nway' : {
             'name' : "-way ANOVA",
-            'type' : 'compare_ways',
+            'type' : 'anova_nways',
             'group' : 2,
-            'testfunc' : ols,
+            'testfunc' : f_nway,
             'division' : 'parametric'
         },
         'f_nway_rm' : {
-            'name' : "-way Repeated Measures ANOVA",
-            'type' : 'compare_ways',
+            'name' : "-way Mixed Repeated Measures ANOVA",
+            'type' : 'anova_nways',
             'group' : 2,
-            'testfunc' : ols,
+            'testfunc' : f_nway_rm,
             'division' : 'parametric'
         },
         'oneway_ancova' : {
@@ -283,7 +284,7 @@ class Stat_Manager:
         },
         'nway_ancova': {
             'name' : '-way ANCOVA',
-            'type' : 'compare_ancova',
+            'type' : 'anova_nways',
             'group' : 2,
             'testfunc' : ols,
             'division' : 'parametric'
@@ -492,154 +493,13 @@ class Stat_Manager:
             return result_object
             
             
-        if testtype == 'compare_ways' :
+        if testtype == 'anova_nways' :
+            result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, selector = self.selector)
+            result_object = self.saving_for_result(result = result, testname = testname)
+            return result_object                       
             
-            if method == 'f_nway_rm': 
-                
-                melted_df = df.reset_index().melt(id_vars = self.id_var, value_vars = vars, var_name = 'time').set_index(self.id_var)
-                df = df.drop(columns = vars).merge(melted_df, how = 'outer', on = self.id_var)
-                
-                if type(group_vars) == str:
-                    group_vars = [group_vars]
-                
-                elif type(group_vars) == list:
-                    pass
-                
-                group_vars.append('time')
-                dv = 'value'
-                
-                way_len = len(group_vars)
-                new_testname = f'{way_len}-way Repeated Measures ANOVA'
-                
-                if self.selector == None:
-                    testname = new_testname
-                
-                else:
-                    pattern = repattern.compile('-way Repeated Measures ANOVA')
-                    new_testname = pattern.sub(new_testname, testname)
-                    testname = new_testname
-                
-                df, interaction_columns = self.create_interaction_columns(df, group_vars)
-                
-                print(LINE)
-                print(f"{testname}\n")
-                print(f_nway_rm_result_reporting_one(vars, group_vars)[self.language_set])
-                
-                for n in group_vars:
-                    result_table = df.groupby(n)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
-                    print(f_nway_result_reporting_two (dv, n)[self.language_set])
-                    self.showing(result_table)
-
-                result_table = df.groupby(group_vars)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)  
-                print(f_nway_result_reporting_three (dv)[self.language_set])
-                self.showing(result_table)
-                    
-                iv_str = self.custom_join(group_vars)
-                method_str = f"{dv} ~ {iv_str}"
-                
-                model = testfunc(method_str, data = df).fit()
-                table = api.stats.anova_lm(model)
-                
-                result = table
-                result.rename(columns = {'PR(>F)': 'p-value'}, inplace=True)
-                
-                print(f_nway_result_reporting_four (testname)[self.language_set])
-                
-                if effectsize == True:
-                    result['eta_squared'] = result['sum_sq'] / result['sum_sq']['Residual']
-                    print(notation_message_for_calculating_eta_squared[self.language_set])
-                
-                result = result.round(3)
-                self.showing(result)
-                
-                print(LINE)
-                
-            elif method == 'f_nway': 
-                df, interaction_columns = self.create_interaction_columns(df, group_vars)
-                
-                if type(vars) == list:
-                    dv = vars[0]
-                elif type(vars) == str:
-                    dv = vars
-                
-                
-                way_len = len(group_vars)
-                new_testname = f'{way_len}-way ANOVA'
-                
-                if self.selector == None:
-                    testname = new_testname
-                
-                else:
-                    pattern = repattern.compile('-way ANOVA')
-                    new_testname = pattern.sub(new_testname, testname)
-                    testname = new_testname
-                
-                print(LINE)
-                print(f"{testname}\n")
-                print(f_nway_result_reporting_one(dv, group_vars)[self.language_set])
-                
-                for n in group_vars:
-                    result_table = df.groupby(n)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
-                    print(f_nway_result_reporting_two(dv, n)[self.language_set])
-                    self.showing(result_table)
-                
-                print(f_nway_result_reporting_three (dv)[self.language_set])
-                result_table = df.groupby(group_vars)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
-                self.showing(result_table)
-                    
-                iv_str = self.custom_join(group_vars)
-                method_str = f"{dv} ~ {iv_str}"
-                
-                model = testfunc(method_str, data = df).fit()
-                table = api.stats.anova_lm(model)
-                
-                result = table
-                result.rename(columns = {'PR(>F)': 'p-value'}, inplace=True)
-                
-                
-                print(f_nway_result_reporting_four(testname)[self.language_set])
-                
-                if effectsize == True:
-                    result['eta_squared'] = result['sum_sq'] / result['sum_sq']['Residual']
-                    print(notation_message_for_calculating_eta_squared[self.language_set])
-                    
-                result = result.round(3)
-                self.showing(result)
-                print(LINE)
-                
-            if posthoc == True:
-                
-                print("Post-Hoc:")
-                for n in group_vars:
-                    mc = MultiComparison(df[dv], df[n])
-                    
-                    if posthoc_method == 'bonf':
-                        result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                        print(posthoc_message_for_main_effect(n)[self.language_set])
-                        self.showing(result[0])
-                    
-                    elif posthoc_method == 'tukey':
-                        result = mc.tukeyhsd()                
-                        print(posthoc_message_for_main_effect(n)[self.language_set])
-                        self.showing(result.summary())
-                
-                
-                for n in interaction_columns:
-                    mc = MultiComparison(df[dv], df[n])
-
-                    if posthoc_method == 'bonf':
-                        result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                        print(posthoc_message_for_interaction[self.language_set])
-                        self.showing(result[0])
-                    
-                    elif posthoc_method == 'tukey':
-                        result = mc.tukeyhsd()                
-                        print(posthoc_message_for_interaction[self.language_set])
-                        self.showing(result.summary())
-
         if testtype == 'compare_ancova':
 
-            
             if method == 'oneway_ancova':
                 
                 dv = vars[0]
@@ -879,152 +739,6 @@ class Stat_Manager:
                         result = mc.tukeyhsd()
                         self.showing(result.summary())
                         print(LINE)
-                
-                
-            elif method == 'nway_ancova':
-                
-                df, interaction_columns = self.create_interaction_columns(df, group_vars)
-                
-                
-                dv = vars[0]
-                covars = vars[1]
-                iv = group_vars # type = list
-                
-                vars_for_showing = [dv] + covars 
-                
-                way_len = len(group_vars)
-                new_testname = f'{way_len}-way ANCOVA'
-                
-                if self.selector == None:
-                    testname = new_testname
-                
-                else:
-                    pattern = repattern.compile('-way ANCOVA')
-                    new_testname = pattern.sub(new_testname, testname)
-                    testname = new_testname
-                
-                
-                print(LINE)
-                print(testname)
-                print(nway_ancova_result_reporting(dv, group_vars, covars)[self.language_set])
-                
-                
-                for n in group_vars:
-                    result_table = df.groupby(n)[vars_for_showing].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
-                    print(f"{vars_for_showing} by {n}")
-                    self.showing(result_table)
-                    
-                result_table = df.groupby(group_vars)[vars_for_showing].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
-                print(f"{vars_for_showing} by Interaction")
-                self.showing(result_table)
-
-                formula_for_olsmodel = self.custom_join_for_ancova(vars = vars, group_vars = group_vars, method = 'nway_ancova')
-                olsmodel = testfunc(formula_for_olsmodel, data = df).fit()
-                
-                ancova_result_table = anova_lm(olsmodel, typ=3)
-                
-                #making pair-coef-table 
-                
-                # raw_coef_table = pd.DataFrame(olsmodel.summary().tables[1].data, columns = ['index','coef', 'std err', 't', 'p', '0.025', '0.975'])[1:].set_index('index')
-                
-                # pair_coef_table = raw_coef_table.loc[['Intercept']]
-                # covar_coef_table = raw_coef_table.loc[covars]                
-                # drop_col_for_coef_table = ['Intercept'] + covars
-                
-                # group_var_values = [range(len(df[value].unique())) for value in group_vars]
-                # # reference_combinations = list(product(*group_var_values))
-                
-                # ols_models_for_coef_table = {}
-                
-                # for reference_combination in reference_combinations:
-                    
-                #     formula_for_coef = self.custom_join_for_ancova(vars = vars, group_vars = group_vars, method = 'nway_ancova')
-                    
-                #     for i, j in enumerate(group_vars):
-                #         formula_for_coef = formula_for_coef.replace(f"C({j})", f"C({j}, Treatment(reference={reference_combination[i]}))")
-
-                #     olsmodel_by_combination = ols(formula_for_coef, data = df).fit()
-                #     ols_models_for_coef_table[reference_combination] = olsmodel_by_combination
-                    
-                #     working_table_for_coef = pd.DataFrame(olsmodel_by_combination.summary().tables[1].data, columns = ['index','coef', 'std err', 't', 'p', '0.025', '0.975'])[1:].set_index('index')
-                #     working_table_for_coef.drop(index = drop_col_for_coef_table, inplace=True)
-
-                #     pair_list = working_table_for_coef.index.to_list()
-                #     for i in range( len(pair_list)  ):
-                #         for j in df.time.unique():
-                #             if j in pair_list[i]:
-                #                 pair_list[i] = j
-
-                #     set_for_finding_ref_1 = set(df.time.unique())
-                #     set_for_finding_ref_2 = set(pair_list)
-                #     reference_col = list(set_for_finding_ref_1 - set_for_finding_ref_2)[0]                          
-
-                #     for i in range( len(pair_list)  ):
-                #         pair_list[i] = f"{reference_col} - {pair_list[i]}"                       
-
-                #     working_table_for_coef.index = pair_list
-                #     pair_coef_table = pd.concat([pair_coef_table, working_table_for_coef])
-
-                # pair_coef_table['coef'] = pair_coef_table['coef'].astype('float')
-                # pair_coef_table = pair_coef_table.loc[~pair_coef_table['coef'].abs().duplicated(keep='first')] #before merge, delete duplicated rows
-                    
-                # pair_coef_table = pd.concat([pair_coef_table, covar_coef_table]) #여기서 완성
-
-                # self.showing(pair_coef_table)
-                
-                print(ancova_model_result_reporting[self.language_set])
-                self.showing(olsmodel.summary().tables[0])
-                
-                print(ancova_statistic_result_reporting[self.language_set])
-                
-                if effectsize == True: #effectsize = True인 경우 eta-sqaured 계산 후 컬럼 추가. 
-                    
-                    ancova_result_table['eta_squared'] = ancova_result_table['sum_sq'] / ancova_result_table['sum_sq']['Residual']
-                    print(notation_message_for_calculating_eta_squared[self.language_set])
-
-                self.showing(ancova_result_table.rename(columns = {'PR(>F)': 'p-value'}).round(4))
-                
-                print('Coef Result Table: ')
-                print(ancova_coef_interpreting_message(covars)[self.language_set])
-                self.showing(olsmodel.summary().tables[1])        
-                
-                
-                if posthoc == True:
-                    print('Post-Hoc: ')
-                    print(warning_message_for_ancova_posthoc[self.language_set])
-                    
-                    for n in group_vars:
-                        mc = MultiComparison(df[dv], df[n])                        
-                        
-                        if posthoc_method == 'bonf':
-                            result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                            print(posthoc_message_for_main_effect(n)[self.language_set])
-                            self.showing(result[0])
-                        
-                        elif posthoc_method == 'tukey':
-                            result = mc.tukeyhsd()                
-                            print(posthoc_message_for_main_effect(n)[self.language_set])
-                            print(f"\n{result.summary()}\n")                        
-                    
-                    
-                    for n in interaction_columns:
-                        mc = MultiComparison(df[dv], df[n])
-                        
-                        if posthoc_method == 'bonf':
-                            result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
-                            print(posthoc_message_for_interaction[self.language_set])
-                            self.showing(result[0])
-                        
-                        elif posthoc_method == 'tukey':
-                            result = mc.tukeyhsd()                
-                            print(posthoc_message_for_interaction[self.language_set])
-                            self.showing(result.summary())
-                
-            elif method == 'nway_rm_ancova':
-                pass # developing..
-            
-            else:
-                pass
         
         if testtype == 'between_group':
             result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
@@ -1062,16 +776,6 @@ class Stat_Manager:
                 figure_object = testfunc(df = df, var = vars, n = n, language_set = self.language_set)
                 
                 return figure_object
-    
-    def custom_join(self, vars):
-        result = []
-    
-        for i in range(len(vars)):
-            for j in range(i + 1, len(vars)):
-                pair = f"{vars[i]}:{vars[j]}"
-                result.append(pair)
-        
-        return ' + '.join(vars + result)
 
     def custom_join_for_ancova(self, vars = None, group_vars = None, method = None, purpose = 'normal', keys = None):
         
@@ -1135,23 +839,6 @@ class Stat_Manager:
             return formula_result
         elif method == 'nway_rm_ancova':
             pass
-
-    def create_interaction_columns(self, df, elements):
-        interactions = []
-        new_df = df.copy()  # 원본 DataFrame 복사
-        
-        for i in range(len(elements)):
-            for j in range(i + 1, len(elements)):
-                element1 = elements[i]
-                element2 = elements[j]
-                
-                interaction_name = f"interaction_{element1}_{element2}"
-                interaction_values = df[element1] + "_" + df[element2]
-                
-                new_df[interaction_name] = interaction_values
-                interactions.append(interaction_name)
-        
-        return new_df, interactions
     
     def showing(self, result):
         try:
