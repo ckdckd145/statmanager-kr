@@ -1,17 +1,282 @@
 import pandas as pd
 from .messages_for_reporting import *
+from .posthoc_functions import *
+
 from statsmodels.stats.anova import anova_lm
 from statsmodels.formula.api import ols
 
 # RULE :  args for 'vars' --> [dv, [covar]]
 
-def oneway_ancova(df:pd.DataFrame, ):
-    pass
+def oneway_ancova(df:pd.DataFrame, vars: list, lang_set, testname, posthoc, posthoc_method, group_vars = None, group_names = None):
+    
+    result_for_save = []
+    
+    
+    if group_names == None:
+        group_names = df[group_vars].unique()
+    
+    else:
+        df = df[df[group_vars].isin(group_names)]
+    
+    dv = vars[0]
+    covars = vars[1]
+    iv = group_vars
+    
+    decribe_vars = [dv] + covars 
+    
+    formula_for_olsmodel = custom_join_for_ancova(vars = vars, group_vars = group_vars, method = 'oneway_ancova')
+    olsmodel = ols(formula_for_olsmodel, data = df).fit()    
+    
+    describe_df = df.groupby(group_vars)[decribe_vars].agg(['count', 'mean', 'median', 'std']).rename(
+                    columns = {
+                        'count' : 'n',
+                        'std' : 'sd'
+                    }).T.round(2)
+    describe_df.columns.name = None
 
-def rm_ancova():
-    pass
+    anova_table = anova_lm(olsmodel, typ=3)
+    anova_table.rename(columns = {'PR(>F)' : 'p-value'}, inplace=True)
+    anova_table['partial_eta_squared'] = anova_table['sum_sq'] / (anova_table['sum_sq'] + anova_table['sum_sq'].loc['Residual'])
+    anova_table = anova_table.round(3)
+    
+    
+    raw_coef_table = pd.DataFrame(olsmodel.summary().tables[1].data, columns = ['index','coef', 'std err', 't', 'p', '0.025', '0.975'])[1:].set_index('index')
+                
+                
+    pair_coef_table = raw_coef_table.loc[['Intercept']]
+    covar_coef_table = raw_coef_table.loc[covars]
+    drop_col_for_coef_table = ['Intercept'] + covars
+
+    for n in range(len(group_names)):
+                    
+        formula_for_coef = custom_join_for_ancova(vars = vars, group_vars = group_vars, method = 'oneway_ancova', purpose = 'coef', keys = n)
+        model_for_coef = ols(formula_for_coef, data = df).fit()
+        working_table_for_coef = pd.DataFrame(model_for_coef.summary().tables[1].data, columns = ['index','coef', 'std err', 't', 'p', '0.025', '0.975'])[1:].set_index('index')
+        working_table_for_coef.drop(index = drop_col_for_coef_table, inplace=True)
+
+        pair_list = working_table_for_coef.index.to_list()
+        
+        for i in range( len(pair_list)  ):
+            for j in group_names:
+                if j in pair_list[i]:
+                    pair_list[i] = j
+                    
+        set_for_finding_ref_1 = set(group_names)
+        set_for_finding_ref_2 = set(pair_list)
+        reference_col = list(set_for_finding_ref_1 - set_for_finding_ref_2)[0]
+        
+        for i in range( len(pair_list)  ):
+            pair_list[i] = f"{reference_col} - {pair_list[i]}"
+        
+        working_table_for_coef.index = pair_list
+        pair_coef_table = pd.concat([pair_coef_table, working_table_for_coef])
+                    
+    pair_coef_table['coef'] = pair_coef_table['coef'].astype('float')
+    pair_coef_table = pair_coef_table.loc[~pair_coef_table['coef'].abs().duplicated(keep='first')] #before merge, delete duplicated rows
+    pair_coef_table = pd.concat([pair_coef_table, covar_coef_table]) # concat with covar_coef_table 
+
+    reporting_one = oneway_ancova_result_reporting(dv, group_vars, group_names, covars)[lang_set]
+    reporting_two = ancova_model_result_reporting[lang_set]
+    reporting_three = ancova_statistic_result_reporting[lang_set]
+    reporting_four = ancova_coef_result_reporting[lang_set]
+    reporting_five = ancova_coef_interpreting_message(covars)[lang_set]
+    
+    result_for_save.append(reporting_one)
+    result_for_save.append(describe_df)
+    result_for_save.append(reporting_two)
+    result_for_save.append(olsmodel.summary().tables[0])
+    result_for_save.append(reporting_three)
+    result_for_save.append(anova_table)
+    result_for_save.append(reporting_four)
+    result_for_save.append(reporting_five)
+    result_for_save.append(pair_coef_table)
+
+    if posthoc:
+        posthoc_table = posthoc_between(df = df, vars = dv, group_vars = group_vars, group_names = group_names, parametric = True, posthoc_method = posthoc_method)
+        reporting_posthoc = 'Posthoc: '
+        warning= warning_message_for_ancova_posthoc[lang_set]
+        result_for_save.append(reporting_posthoc)
+        result_for_save.append(warning)
+        result_for_save.append(posthoc_table)
+
+    print(testname)
+    for n in result_for_save:
+        if isinstance(n, str):
+            print(n)
+        else:
+            try:
+                display(n)
+            except:
+                print(n)
+                
+    return result_for_save 
+    
+
+def rm_ancova(df:pd.DataFrame, vars: list, group_vars, lang_set, testname, posthoc, posthoc_method, group_names = None):
+    
+    result_for_save = []
+    
+    index_col = df.index.name
+    repeated_vars = vars [:-1]
+    covars = vars[-1]
+    vars_for_melting  = [index_col] + covars
+
+    decribe_vars = ['value'] + covars
 
 
+    melted_df = df.reset_index().melt(id_vars = index_col, value_vars = repeated_vars, var_name = 'time')
+    melted_df = melted_df.merge(df.reset_index()[vars_for_melting], on = index_col, how = 'left').set_index(index_col)
+    
+    formula_for_olsmodel = custom_join_for_ancova(vars = vars, method = 'rm_ancova')
+    olsmodel = ols(formula_for_olsmodel, data = melted_df).fit()
+    
+    describe_df = melted_df.groupby('time')[decribe_vars].agg(['count', 'mean', 'median', 'std']).rename(
+                    columns = {
+                        'count' : 'n',
+                        'std' : 'sd'
+                    }).T.round(2)
+    describe_df.columns.name = None
+    
+    anova_table = anova_lm(olsmodel, typ=3)
+    anova_table.rename(columns = {'PR(>F)' : 'p-value'}, inplace=True)
+    anova_table['partial_eta_squared'] = anova_table['sum_sq'] / (anova_table['sum_sq'] + anova_table['sum_sq'].loc['Residual'])
+    anova_table = anova_table.round(3)
+    
+    raw_coef_table = pd.DataFrame(olsmodel.summary().tables[1].data, columns = ['index','coef', 'std err', 't', 'p', '0.025', '0.975'])[1:].set_index('index')
+
+    pair_coef_table = raw_coef_table.loc[['Intercept']]
+    covar_coef_table = raw_coef_table.loc[covars]
+    drop_col_for_coef_table = ['Intercept'] + covars
+    
+    for n in range( len (melted_df.time.unique() ) ):
+        formula_for_coef = custom_join_for_ancova(vars = vars, method = 'rm_ancova', purpose = 'coef', keys = n)
+        model_for_coef = ols(formula_for_coef, data = melted_df).fit()
+        working_table_for_coef = pd.DataFrame(model_for_coef.summary().tables[1].data, columns = ['index','coef', 'std err', 't', 'p', '0.025', '0.975'])[1:].set_index('index')
+        working_table_for_coef.drop(index = drop_col_for_coef_table, inplace=True)
+        
+        pair_list = working_table_for_coef.index.to_list()
+        
+        for i in range( len(pair_list)  ):
+            for j in melted_df.time.unique():
+                if j in pair_list[i]:
+                    pair_list[i] = j
+    
+        set_for_finding_ref_1 = set(melted_df.time.unique())
+        set_for_finding_ref_2 = set(pair_list)
+        reference_col = list(set_for_finding_ref_1 - set_for_finding_ref_2)[0]            
+        
+        for i in range( len(pair_list)  ):
+            pair_list[i] = f"{reference_col} - {pair_list[i]}"                    
+
+        working_table_for_coef.index = pair_list
+        pair_coef_table = pd.concat([pair_coef_table, working_table_for_coef])
+    
+    pair_coef_table['coef'] = pair_coef_table['coef'].astype('float')
+    pair_coef_table = pair_coef_table.loc[~pair_coef_table['coef'].abs().duplicated(keep='first')] #before merge, delete duplicated rows
+        
+    pair_coef_table = pd.concat([pair_coef_table, covar_coef_table]) 
+
+    reporting_one = rm_ancova_result_reporting(repeated_vars, covars)[lang_set]
+    reporting_two = ancova_model_result_reporting[lang_set]
+    reporting_three = ancova_statistic_result_reporting[lang_set]
+    reporting_four = ancova_coef_result_reporting[lang_set]
+    reporting_five = ancova_coef_interpreting_message(covars)[lang_set]
+    
+    result_for_save.append(reporting_one)
+    result_for_save.append(describe_df)
+    result_for_save.append(reporting_two)
+    result_for_save.append(olsmodel.summary().tables[0])
+    result_for_save.append(reporting_three)
+    result_for_save.append(anova_table)
+    result_for_save.append(reporting_four)
+    result_for_save.append(reporting_five)
+    result_for_save.append(pair_coef_table)
+    
+    
+    if posthoc:
+        posthoc_table = posthoc_within(df = df, vars = repeated_vars, parametric=True, posthoc_method=posthoc_method)
+        reporting_posthoc = 'Posthoc: '
+        warning= warning_message_for_ancova_posthoc[lang_set]
+        result_for_save.append(reporting_posthoc)
+        result_for_save.append(warning)
+        result_for_save.append(posthoc_table)        
+    
+    print(testname)
+    for n in result_for_save:
+        if isinstance(n, str):
+            print(n)
+        else:
+            try:
+                display(n)
+            except:
+                print(n)
+                
+    return result_for_save     
+
+
+
+def custom_join_for_ancova(vars = None, group_vars = None, method = None, purpose = 'normal', keys = None):
+    
+    if method == 'oneway_ancova':
+    
+        dv = vars[0]
+        covars = vars[1]
+        iv = group_vars 
+        number = keys
+        
+        if purpose == 'normal':
+            formula_result = f"{dv} ~ C({iv}) + {' + '.join(covars)}"
+        
+        elif purpose == 'coef':
+            formula_result = f"{dv} ~ C({iv}, Treatment(reference={number})) + {' + '.join(covars)}"
+        
+        return formula_result
+    
+    elif method == 'rm_ancova':
+        dv = 'value'
+        covars = vars[-1]
+        iv = 'time'
+        number = keys
+        
+        if purpose == 'normal':
+        
+            formula_result = f"{dv} ~ C({iv}) + {' + '.join(covars)}"
+        
+        
+        elif purpose == 'coef':
+            
+            formula_result = f"{dv} ~ C({iv}, Treatment(reference={number})) + {' + '.join(covars)}"
+        
+        return formula_result
+
+    elif method == 'nway_ancova':
+        
+        # vars = ['dv', [covar1, covar2...] ]
+        # group_vars = [group1, group2..]
+        
+        dv = vars[0]
+        covars = vars[1]
+        iv = group_vars #list 형태임
+        
+        formula_ivs = ""
+        
+        for var in iv:
+            formula_ivs += f"C({var}) + "
+            
+        for i in range(len(iv)):
+            for j in range(i + 1, len(iv)):
+                item1 = f"C({iv[i]})"
+                item2 = f"C({iv[j]})"
+                items = f"{item1} * {item2}"
+                
+                formula_ivs += f"{items} + "
+
+        formula_ivs = formula_ivs[:-2]        
+        formula_result = f"{dv} ~ {formula_ivs} + {' + '.join(covars)}"
+
+        return formula_result
+    elif method == 'nway_rm_ancova':
+        pass
 
 # -- just for saving.. future development #
 # def nway_ancova():

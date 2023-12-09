@@ -17,13 +17,13 @@ Currently, <b><u>KOREAN</u></b> and <b><u>ENGLISH</u></b> are supported.
 [English Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
 
 
-## Current Ver 1.7.2 :
+## Current Ver 1.8.0.0 :
 Source codes are available in the [Github respository](https://github.com/ckdckd145/statmanager-kr)  
 소스코드는 [깃헙 레포지토리](https://github.com/ckdckd145/statmanager-kr)에서 확인할 수 있습니다.  
 
 For updates, please see [the notice in the documentation]((https://www.notion.so/cslee145/NOTICEs-4bb2177eeb0f412a81b8dbd3215058e6)) or the [Github release](https://github.com/ckdckd145/statmanager-kr/releases).  
 업데이트 내역은 정식 문서 내 [공지사항](https://www.notion.so/cslee145/NOTICEs-4bb2177eeb0f412a81b8dbd3215058e6) 혹은 [Github release](https://github.com/ckdckd145/statmanager-kr/releases)에서 확인하시기 바랍니다. 
-
+****
 
 #
 * [Quick Start with sample jupyter notebook file](https://github.com/ckdckd145/statmanager-kr/blob/main/test.ipynb) 

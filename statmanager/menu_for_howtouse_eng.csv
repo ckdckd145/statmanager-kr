@@ -21,7 +21,7 @@ One-way Repeated Measures ANOVA,Compare between times (more than two times) - Pa
 Kruskal-Wallis Test,Compare between groups (more than two groups) - Non-parametric test,kruskal,Dependent variable (str),Group variable (str),True: Proceed the posthoc anaylsis
 Friedman Test,Compare between times (more than two times) - Non-parametric test,friedman,Dependent variables (list),,True: Proceed the posthoc anaylsis
 N-way ANOVA,Compare between factors - Parametric test,f_nway,Dependent variable (str),Group variables or factors (list),True: Proceed the posthoc anaylsis
-N-way Repeated Measures ANOVA,Compare between factors including time - Parametric test,f_nway_rm,Dependent variables (list),Group variables or factors (list),True: Proceed the posthoc anaylsis
+N-way Mixed Repeated Measures ANOVA,Compare between factors including time - Parametric test,f_nway_rm,Dependent variables (list),Group variables or factors (list),True: Proceed the posthoc anaylsis
 Linear Regression,Regression analysis,linearr,"['dependent variable', ['independent variable1', 'independent variable2', ...., ] ]",,
 Logistic Regression,Regression analysis,logisticr,"['dependent variable', ['independent variable1', 'independent variable2', ...., ] ]",,
 One-way ANCOVA,Compare between groups (more than two groups) - Parametric test,oneway_ancova,"['dependent variable', ['covariate1', 'covariate2', ...., ] ]",Group variable (str),True: Proceed the posthoc anaylsis

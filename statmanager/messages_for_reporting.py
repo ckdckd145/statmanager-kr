@@ -126,12 +126,15 @@ notation_message_for_calculating_eta_squared  = {
 def success_message_for_creating_object (ver, doclink):
     
     success_message = {
-        'kor' :  f"Stat_Manager 객체 생성 완료! (Version {ver})\n\n사용법 설명 메소드: .howtouse()\n분석 메소드: .progress()\n언어 세팅 변경 메소드: .set_language()\n\nNote: To change the language, provide 'eng' as an argument to the 'language' parameter when creating the Stat_Manager() object.\nOr just run .set_language('eng')\n\n{doclink}",
-        'eng' : f"Stat_Manager object created successfully! (Version {ver})\n\nMethod to check how to use: .howtouse()\nMethod for statistical analysis: .progress()\nMethod for changing language: .set_language()\n\n{doclink}",
+        'kor' :  f"Stat_Manager 객체 생성 완료! (Version {ver})\n\n사용법 설명 메소드: .howtouse()\n분석 메소드: .progress()\n언어 세팅 변경 메소드: .set_language()\n데이터프레임 변경 메소드 .change_dataframe()\nNote: To change the language, provide 'eng' as an argument to the 'language' parameter when creating the Stat_Manager() object.\nOr just run .set_language('eng')\n\n{doclink}",
+        'eng' : f"Stat_Manager object created successfully! (Version {ver})\n\nMethod to check how to use: .howtouse()\nMethod for statistical analysis: .progress()\nMethod for changing language: .set_language()\nMethod for changing dataframe .change_dataframe()\n\n{doclink}",
             }
     
     return success_message
-
+success_message_for_changing_dataframe = {
+    'kor' : f'데이터프레임 변경에 성공했습니다.\n',
+    'eng' : f'Dataframe change was successful. \n'
+    }
 
 def error_message_for_selector_type (doclink):
     
@@ -217,7 +220,7 @@ def wilcoxon_result_reporting_two (s, z, p, e):
 def f_nway_rm_result_reporting_one (vars, group_vars):
     reporting_result = {
         'kor' : f"반복측정 변인 : {vars} (time) \n집단변인 : {group_vars}\n\n",
-        'eng' : f"Repeated measures factor : {vars} \nGroup factors : {group_vars}\n\n",
+        'eng' : f"Repeated measures factor : {vars} (time) \nGroup factors : {group_vars}\n\n",
     }
     return reporting_result
 
