@@ -68,12 +68,14 @@ class StatmanagerResult:
 
     def figure(self):
         
-        # purpose : drawing figures or graphs depend on the APA Style. 
+        if self.method == 'kstest':
+            result = plot_cdf(df = self.df, dv = self.vars)
+            return result
         
+        if self.method == 'shapiro' or 'z_normal':
+            result = qq_plot(self.df[self.vars], language_set='kor')
+            return result
         
-        return FigureInStatmanager() # ..
-
-
 
 class FigureInStatmanager:
     def __init__(self, xlabel, ylabel, title, xticks=None, yticks=None, figure=None, style='grayscale', language_set = 'kor'):
@@ -183,8 +185,8 @@ def qq_plot(series: pd.Series, language_set = 'kor'):
                                figure = ax,
                                language_set = language_set)
 
-def hist(df: pd.DataFrame, var, n, statistic = 'count', language_set = 'kor'):
-    ax = sns.histplot(data = df, x = var, stat = statistic, cumulative = False, element="bars", kde=True)
+def hist(df: pd.DataFrame, var, n, statistic = 'count', language_set = 'kor', cumulate = False):
+    ax = sns.histplot(data = df, x = var, stat = statistic, cumulative = cumulate, element="bars", kde=True)
     
     return FigureInStatmanager(xlabel = f'Value of {var}',
                                ylabel = statistic,
@@ -192,6 +194,28 @@ def hist(df: pd.DataFrame, var, n, statistic = 'count', language_set = 'kor'):
                                figure = ax,
                                language_set = language_set)
 
-def hist_cumulative():
-    pass
+def hist_cumulative(df: pd.DataFrame, var, n, statistic = 'count', language_set = 'kor'):
+    
+    result_ax = hist(df = df, var = var, n = n, statistic = statistic, language_set = language_set, cumulate = True)
+    
+    return result_ax
 
+
+def plot_cdf(df, dv): # 'kstest'
+    plt.style.use('grayscale')
+    data_sorted = np.sort(df[dv])
+    cdf = np.arange(1, len(data_sorted)+1) / len(data_sorted)
+    norm_cdf = stats.norm.cdf(data_sorted, np.mean(data_sorted), np.std(data_sorted))
+
+    # Figure와 Axes 객체 생성
+    fig, ax = plt.subplots(figsize=(8, 4))
+
+    # Axes 객체에 두 CDF 그래프를 그림
+    sns.lineplot(x=data_sorted, y=cdf, label='Data CDF', ax=ax, linewidth=3, errorbar = None)
+    sns.lineplot(x=data_sorted, y=norm_cdf, label='Normal CDF', ax=ax, linewidth=3, errorbar = None)
+
+    return FigureInStatmanager(xlabel = dv,
+                               ylabel = 'CDF',
+                               title = 'Kolmogorov-Smirnov Test: CDF Comparison',
+                               figure = ax,
+                               language_set='eng')

@@ -219,6 +219,13 @@ class Stat_Manager:
             'type' : 'making_figure',
             'testfunc' : hist,           
         },
+        'hist_cumulative' : {
+            'name' : 'Making histogram in cumulative format',
+            'type' : 'making_figure',
+            'testfunc' : hist_cumulative,           
+        },        
+        
+        
     }
         
     def progress(self, method: str, vars: list, group_vars: str = None, group_names: list = None, posthoc: bool = False, posthoc_method: str = 'bonf', selector: dict = None):
@@ -427,7 +434,7 @@ class Stat_Manager:
                 figure_object = testfunc(series = df[vars], language_set = self.language_set)
                 return figure_object
             
-            if method == 'hist':
+            if 'hist' in method:
                 
                 figure_object = testfunc(df = df, var = vars, n = n, language_set = self.language_set)
                 return figure_object
