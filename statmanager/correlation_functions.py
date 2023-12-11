@@ -73,15 +73,13 @@ def correlations(df, vars, tf, method, lang_set):
             s_with_significancy = f'{s:.3f}{significant_r}'
         else:
             significant_r = ''
-            s_with_significancy = s
+            s_with_significancy = f"{s}"
         
         summary_correlation_table.loc[f"{var1} & {var2}", statistic_value] = s_with_significancy
         summary_correlation_table.loc[f"{var1} & {var2}", 'p-value'] = f"{p:.3f}"
-        
-        # print(f"{var1} & {var2}  :  {statistic_value} = {s:.3f}, p = {p:.3f}{significant_r}")
-        
-        correlation_table.loc[var1, var2] = s_with_significancy
-        correlation_table.loc[var2, var1] = s_with_significancy
+
+        correlation_table.loc[var1, var2] = s # prevent future error 
+        correlation_table.loc[var2, var1] = s # prevent future error 
     
     correlation_table
     summary_correlation_table

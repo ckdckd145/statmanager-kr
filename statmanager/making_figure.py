@@ -72,10 +72,17 @@ class StatmanagerResult:
             result = plot_cdf(df = self.df, dv = self.vars)
             return result
         
-        if self.method == 'shapiro' or 'z_normal':
+        elif self.method == 'shapiro' or self.method == 'z_normal':
             result = qq_plot(self.df[self.vars], language_set='kor')
             return result
         
+        elif self.method == 'levene' or self.method == 'fmax':
+            result = boxplot_homoskedasticity(df = self.df, vars = self.vars, group_vars = self.group_vars)
+            return result
+        
+        elif self.method == 'pearsonr' or self.method == 'spearmanr' or self.method == 'kendallt':
+            result = correlation_heatmap(self.df_results[1])
+            return result
 
 class FigureInStatmanager:
     def __init__(self, xlabel, ylabel, title, xticks=None, yticks=None, figure=None, style='grayscale', language_set = 'kor'):
@@ -132,10 +139,10 @@ class FigureInStatmanager:
         self.ax.set_title(self.title, fontdict = self.font_properties)
         
         if self.xticks is not None:
-            self.ax.set_xticks(self.xticks, fontdict = self.font_properties)
+            self.ax.set_xticks(self.xticks)
         
         if self.yticks is not None:
-            self.ax.set_yticks(self.yticks, fontdict = self.font_properties)
+            self.ax.set_yticks(self.yticks)
     
     def show(self):
         plt.show(False)
@@ -219,3 +226,25 @@ def plot_cdf(df, dv): # 'kstest'
                                title = 'Kolmogorov-Smirnov Test: CDF Comparison',
                                figure = ax,
                                language_set='eng')
+    
+    
+def boxplot_homoskedasticity(df, vars, group_vars):
+    plt.style.use('grayscale')
+    ax = sns.boxplot(x = group_vars, y = vars, data = df, hue = group_vars)    
+    
+    return FigureInStatmanager(xlabel = group_vars,
+                               ylabel = vars,
+                               title = f'Box plot for {vars}',
+                               figure = ax,
+                               language_set='eng')    
+    
+    
+def correlation_heatmap(df_result:pd.DataFrame):
+    plt.style.use('grayscale')
+    ax = sns.heatmap(df_result.abs(), annot=df_result, fmt = '.3f', cmap ='gray')
+    
+    return FigureInStatmanager(xlabel = None,
+                               ylabel = None,
+                               title = 'Heatmap for correlation coefficients',
+                               figure = ax,
+                               language_set= 'kor')
