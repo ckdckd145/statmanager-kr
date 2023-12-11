@@ -462,10 +462,10 @@ def frequency_analysis_result_reporting_one (vars):
     return result
 
 
-def frequency_analysis_result_reporting_two (s, p):
+def frequency_analysis_result_reporting_two (s, p, dof):
     result = {
-        'kor' : f"\n카이제곱 χ² = {s:.3f}, p = {p:.3f}\n분할표: ",
-        'eng' : f"\nχ² = {s:.3f}, p = {p:.3f}\nContingency Table: ",
+        'kor' : f"\n카이제곱 χ² = {s:.3f}, p = {p:.3f}, 자유도 = {dof}\n분할표: ",
+        'eng' : f"\nχ² = {s:.3f}, p = {p:.3f}, 자유도 = {dof}\nContingency Table: ",
     }
     
     return result

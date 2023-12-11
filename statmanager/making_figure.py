@@ -14,8 +14,9 @@ TODAY = dt.datetime.now().strftime('%Y-%m-%d')
 NOW_TIME = dt.datetime.now().strftime("%H:%M:%S")
 
 class StatmanagerResult:
-    def __init__(self, method, vars, result, testname, group_vars = None, selector = None):
+    def __init__(self, method, vars, result, testname, group_vars = None, selector = None, df = None):
         
+        self.df = df
         self.saving_date = TODAY
         self.saving_time = NOW_TIME
         
@@ -28,11 +29,10 @@ class StatmanagerResult:
         
         self.testname = testname
         
-        self.df = []
+        self.df_results = []
         for _ in result:
             if type(_) == pd.DataFrame:
-                self.df.append(_)
-
+                self.df_results.append(_)
         
     def show(self, only_result = False):
         
@@ -93,7 +93,7 @@ class FigureInStatmanager:
         if figure is not None:
             self.apply_settings()
 
-        plt.show(False)
+        # plt.show(False)
         
     def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None):
         

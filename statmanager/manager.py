@@ -278,6 +278,7 @@ class Stat_Manager:
             self.filtered_df = None          
             conditions = None
             self.conditions_notification_texts = None
+        
         else:
             
             if type(selector) != dict:
@@ -513,7 +514,7 @@ class Stat_Manager:
     
     def saving_for_result(self, result: list, testname: str):
         
-        return StatmanagerResult(method = self.method, vars = self.vars, group_vars=self.group_vars, result = result, selector = self.selector, testname = testname)
+        return StatmanagerResult(method = self.method, vars = self.vars, group_vars=self.group_vars, result = result, selector = self.selector, testname = testname, df = self.df)
     
     def change_dataframe(self, dataframe:pd.DataFrame, id :str = None):
         

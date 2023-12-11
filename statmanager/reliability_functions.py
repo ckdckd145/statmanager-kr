@@ -1,5 +1,4 @@
 import pandas as pd
-from scipy import stats
 from .messages_for_reporting import *
 from .making_figure import *
 import numpy as np

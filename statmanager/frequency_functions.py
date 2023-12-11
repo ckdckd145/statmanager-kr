@@ -7,6 +7,7 @@ def chi2(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Chi-Squared Te
     
     result_for_save = []
     cross_df = pd.crosstab(df[vars[0]], df[vars[1]])
+    cross_df.columns.name = None
     number_of_cells = cross_df.count().sum()
     
     result_object = stats.chi2_contingency(cross_df)
@@ -15,6 +16,7 @@ def chi2(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Chi-Squared Te
     p = result_object.pvalue
     dof = result_object.dof #to be-
     expected_frequency_df = pd.DataFrame(result_object.expected_freq, index = cross_df.index, columns = cross_df.columns)
+    expected_frequency_df.columns.name = None
     
     num_under_five_expected_frequency = (expected_frequency_df < 5).sum().sum()
     
@@ -22,7 +24,7 @@ def chi2(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Chi-Squared Te
     
     # -- #
     reporting = frequency_analysis_result_reporting_one(vars)[lang_set]
-    reporting_two = frequency_analysis_result_reporting_two(s, p)[lang_set]
+    reporting_two = frequency_analysis_result_reporting_two(s, p, dof)[lang_set]
     reporting_three = f"{percentage_df_word[lang_set]}\n{percentage_of_under_five_values_word[lang_set]} = {round(percentage_of_under_five_values * 100, 2):.2f}%\n"
     
     result_for_save.append(reporting)
@@ -50,6 +52,7 @@ def chi2(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Chi-Squared Te
 def fisher(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Fisher Exact Test'):
     result_for_save = []
     cross_df = pd.crosstab(df[vars[0]], df[vars[1]])
+    cross_df.name = None
     number_of_cells = cross_df.count().sum()
     
     if len(cross_df.columns) == 2 and len(cross_df.index) == 2:

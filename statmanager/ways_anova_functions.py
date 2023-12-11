@@ -12,6 +12,10 @@ import re as repattern
 from itertools import combinations
 import copy
 
+
+AGG_FORMULA = ['count', 'mean', 'median', 'std', 'min', 'max'] # .round(3).rename(columns = {'count' : 'n'})
+
+
 def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None, selector = None):
     result_for_save = []
     
@@ -34,14 +38,14 @@ def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, test
     result_for_save.append(reporting_one)
     
     for n in group_vars:
-        result_table = df.groupby(n)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
+        result_table = df.groupby(n)[dv].agg(AGG_FORMULA).rename(columns = {'count' : "n"}).round(2)
         reporting_two = f_nway_result_reporting_two(dv, n)[lang_set]
         
         result_for_save.append(reporting_two)
         result_for_save.append(result_table)
     
     reporting_three = f_nway_result_reporting_three (dv)[lang_set]
-    result_table = df.groupby(group_vars)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
+    result_table = df.groupby(group_vars)[dv].agg(AGG_FORMULA).rename(columns = {'count' : "n"}).round(2)
     
     result_for_save.append(reporting_three)
     result_for_save.append(result_table)
@@ -107,14 +111,14 @@ def f_nway_rm(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
     reporting_one = f_nway_rm_result_reporting_one(vars, group_vars_for_reporting)[lang_set]
     result_for_save.append(reporting_one)
     for n in group_vars:
-        result_table = df.groupby(n)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
+        result_table = df.groupby(n)[dv].agg(AGG_FORMULA).rename(columns = {'count' : "n"}).round(2)
         reporting_two = f_nway_result_reporting_two(dv, n)[lang_set]
         
         result_for_save.append(reporting_two)
         result_for_save.append(result_table)
         
     reporting_three = f_nway_result_reporting_three (dv)[lang_set]
-    result_table = df.groupby(group_vars)[dv].agg(['count', 'mean', 'median', 'std']).rename(columns = {'count' : "n"}).round(2)
+    result_table = df.groupby(group_vars)[dv].agg(AGG_FORMULA).rename(columns = {'count' : "n"}).round(2)
     
     result_for_save.append(reporting_three)
     result_for_save.append(result_table)

@@ -22,6 +22,7 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
     
     
     describe_df = df.groupby(group_vars)[vars].agg(AGG_FORMULA).round(3).rename(columns = {'count' : 'n'}).T
+    describe_df.columns.name = None
     
     series = []
     for n in range(len(group_names)):
@@ -77,6 +78,7 @@ def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set
     df = df.loc[df[group_vars].isin(group_names)]
     
     describe_df = df.groupby(group_vars)[vars].agg(AGG_FORMULA).round(3).rename(columns = {'count' : 'n'}).T
+    describe_df.columns.name = None
     
     series = []
     for n in range(len(group_names)):
@@ -122,6 +124,7 @@ def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
     df = df.loc[df[group_vars].isin(group_names)]
     
     describe_df = df.groupby(group_vars)[vars].agg(AGG_FORMULA).round(3).rename(columns = {'count' : 'n'}).T
+    describe_df.columns.name = None
     
     series = []
     for n in range(len(group_names)):
@@ -163,6 +166,7 @@ def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, te
     
     
     describe_df = df.groupby(group_vars)[vars].agg(AGG_FORMULA).round(3).rename(columns = {'count' : 'n'}).T
+    describe_df.columns.name = None
     
     formula = f'{dv} ~ C({group_vars})'
     model = ols(formula, data = df).fit()
@@ -212,6 +216,7 @@ def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
     df = df.loc[df[group_vars].isin(group_names)]
     
     describe_df = df.groupby(group_vars)[vars].agg(AGG_FORMULA).round(3).rename(columns = {'count' : 'n'}).T
+    describe_df.columns.name = None
     
     series = []
     for n in range(len(group_names)):
