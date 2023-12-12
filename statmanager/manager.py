@@ -383,19 +383,27 @@ class Stat_Manager:
         return StatmanagerResult(method = self.method, vars = self.vars, group_vars=self.group_vars, result = result, selector = self.selector, testname = testname, df = self.df, lang_set = self.language_set)
     
     def change_dataframe(self, dataframe:pd.DataFrame, id :str = None):
-        
+
         if dataframe.index.name == None and id != None:
             self.df = dataframe
             self.df.set_index(id, inplace=True)
+            self.df_original = dataframe
         
         elif dataframe.index.name != None:
             self.df = dataframe
+            self.df_original = dataframe
             
         else:
             raise TypeError(typeerror_message_for_indexsetting)
         
+        self.result = None
+        self.selector = None        
+        self.filtered_df = None
+        
         self.id_var = self.df.index.name
+        
         print(success_message_for_changing_dataframe[self.language_set])
+        
         return self
     
     def set_language(self, lang: str ):
