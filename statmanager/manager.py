@@ -68,165 +68,8 @@ class Stat_Manager:
 
         self.id_var = self.df.index.name
 
-        self.menu = {
-        'kstest' : {
-            'name' : 'Kolmogorov-Smirnov Test',
-            'type' : 'normality',
-            'testfunc' : kstest, #normality_fuctions
-        },
-        'shapiro' : {
-            'name' : 'Shapiro-Wilks Test',
-            'type' : 'normality',
-            'testfunc' : shapiro,
-        },
-        'levene' : {
-            'name' : 'Levene Test',
-            'type' : 'homoskedasticity',
-            'testfunc' : levene,
-        },
-        'ttest_ind' : {
-            'name' : 'Indenpendent Samples T-test',
-            'type' : 'between_group',
-            'testfunc' : ttest_ind,
-        },
-        'ttest_rel' : {
-            'name' : 'Dependent Samples T-test',
-            'type' : 'within_group',
-            'testfunc' : ttest_rel,
-        },
-        'mannwhitneyu' : {
-            'name' : 'Mann-Whitney U Test (Wilcoxon Rank Sum Test)',
-            'type' : 'between_group',
-            'testfunc' : mannwhitneyu,
-        },
-        'brunner' :{
-            'name' : 'Brunner-Munzel Test',
-            'type' : 'between_group',
-            'testfunc' : brunner,
-        },        
-        'wilcoxon' : {
-            'name' : 'Wilcoxon-Signed Rank Test',
-            'type' : 'within_group',
-            'testfunc' : wilcoxon,    
-        },
-        'f_oneway' : {
-            'name' : 'One-way ANOVA',
-            'type' : 'between_group',
-            'testfunc' : f_oneway,
-        },
-        'kruskal' : {
-            'name' : 'Kruskal-Wallis Test',
-            'type' : 'between_group',
-            'testfunc' : kruskal,
-        },
-        'chi2_contingency' : {
-            'name' : 'Chi-Squared Test',
-            'type' : 'frequency_analysis',
-            'testfunc' : chi2,
-            },
-        'fisher' : {
-            'name' : "Fisher's Exact Test",
-            'type' : 'frequency_analysis',
-            'testfunc' : fisher,
-        },
-        'z_normal' : {
-            'name' : 'z-skeweness & z-kurtosis test',
-            'type' : 'normality',
-            'testfunc' : z_normal,
-            },
-        'fmax' : {
-            'name' : 'F-max Test',
-            'type' : 'homoskedasticity',
-            'testfunc' : fmax,
-            },
-        'pearsonr' : {
-            'name' : "Correlation analysis: Pearson's r",
-            'type' : 'correlation',
-            'testfunc' : pearson,
-        },
-        'spearmanr' : {
-            'name' : "Correlation analysis: Spearman's rho",
-            'type' : 'correlation',
-            'testfunc' : spearman,
-        },
-        'kendallt' : {
-            'name' : "Correlation analysis: Kendall's tau",
-            'type' : 'correlation',
-            'testfunc' : kendall,  
-        },
-        'friedman' : {
-            'name' : 'Friedman Test',
-            'type' : 'within_group',
-            'testfunc' : friedman,
-        },
-        'f_oneway_rm' : {
-            'name' : 'One-way Repeated Measures ANOVA',
-            'type' : 'within_group',
-            'testfunc' : rm_anova,
-        },
-        'bootstrap' : {
-            'name' : 'Bootstrap percentile method: Resampling No. =',
-            'type' : 'bootstrap',
-            'testfunc' : percentile_method,
-        },
-        'linearr' : {
-            'name' : 'Linear Regression',
-            'type' : 'regression',
-            'testfunc' : linear,
-        },
-        'logisticr' : {
-            'name' : 'Logistic Regression',
-            'type' : 'regression',
-            'testfunc' : logistic,
-        },
-        'f_nway' : {
-            'name' : "-way ANOVA",
-            'type' : 'anova_nways',
-            'testfunc' : f_nway,
-        },
-        'f_nway_rm' : {
-            'name' : "-way Mixed Repeated Measures ANOVA",
-            'type' : 'anova_nways',
-            'testfunc' : f_nway_rm,
-        },
-        'oneway_ancova' : {
-            'name' : 'One-way ANCOVA',
-            'type' : 'compare_ancova',
-            'testfunc' : oneway_ancova,
-        },
-        'rm_ancova' : {
-            'name' : 'Repeated-Measures ANCOVA',
-            'type' : 'compare_ancova',
-            'testfunc' : rm_ancova,
-        },
-        'cronbach' : {
-            'name' : "Calculating Cronbach's Alpha",
-            'type' : 'reliability',
-            'testfunc' : cronbach,
-        },
-        'pp_plot' : {
-            'name' : "Making p-p plot",
-            'type' : 'making_figure',
-            'testfunc' : pp_plot,
-        },
-        'qq_plot' : {
-            'name' : 'Making q-q plot',
-            'type' : 'making_figure',
-            'testfunc' : qq_plot,
-        },
-        'hist' : {
-            'name' : 'Making histogram',
-            'type' : 'making_figure',
-            'testfunc' : hist,           
-        },
-        'hist_cumulative' : {
-            'name' : 'Making histogram in cumulative format',
-            'type' : 'making_figure',
-            'testfunc' : hist_cumulative,           
-        },        
-        
-        
-    }
+        self.menu = menu
+        self.menu.update(figure_functions)
         
     def progress(self, method: str, vars: list, group_vars: str = None, group_names: list = None, posthoc: bool = False, posthoc_method: str = 'bonf', selector: dict = None):
         """
@@ -366,6 +209,7 @@ class Stat_Manager:
         self.method = method
         self.vars = vars
         self.group_vars = group_vars
+        self.df = df
         
         if testtype == 'frequency_analysis': 
             
@@ -431,12 +275,26 @@ class Stat_Manager:
             
             if method == 'pp_plot' or method == 'qq_plot':
                 
-                figure_object = testfunc(series = df[vars], language_set = self.language_set)
+                figure_object = testfunc(series = self.df[self.vars], language_set = self.language_set)
                 return figure_object
             
             if 'hist' in method:
                 
-                figure_object = testfunc(df = df, var = vars, n = n, language_set = self.language_set)
+                figure_object = testfunc(df = self.df, var = self.vars, n = n, language_set = self.language_set)
+                return figure_object
+
+            if 'boxplot' in method:
+                
+                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                return figure_object
+            
+            if method == 'point_within':
+                
+                figure_object = testfunc(df = self.df, vars = self.vars, language_set = self.language_set, parametric = True)
+                return figure_object
+            
+            if method == 'bar_between':
+                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, parametric = True)
                 return figure_object
     
     def showing(self, result):
@@ -521,7 +379,7 @@ class Stat_Manager:
     
     def saving_for_result(self, result: list, testname: str):
         
-        return StatmanagerResult(method = self.method, vars = self.vars, group_vars=self.group_vars, result = result, selector = self.selector, testname = testname, df = self.df)
+        return StatmanagerResult(method = self.method, vars = self.vars, group_vars=self.group_vars, result = result, selector = self.selector, testname = testname, df = self.df, lang_set = self.language_set)
     
     def change_dataframe(self, dataframe:pd.DataFrame, id :str = None):
         
