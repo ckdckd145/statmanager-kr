@@ -5,7 +5,6 @@ import pandas as pd
 from scipy import stats
 import datetime as dt
 
-
 font_properties = {
     'kor' : {'family' : 'Gulim', 'color': 'Black', 'weight': 'normal', 'size': 16},
     'eng' : {'family': 'Times New Roman', 'color': 'Black', 'weight': 'normal', 'size': 16},
@@ -98,11 +97,11 @@ class StatmanagerResult:
                 result = point_within(df = self.df, vars = self.vars, language_set = self.language_set, parametric = False)
                 return result
             
-            elif self.method == 'ttest_ind' or self.method == 'f_oneway' or self.method == 'oneway_ancova' :
+            elif self.method == 'ttest_ind' or self.method == 'f_oneway': # or self.method == 'oneway_ancova'  --> should be different
                 result = bar_between(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, parametric = True)
                 return result
             
-            elif self.method == 'mannwhitneyu' or self.method == 'brunner' or self.method == 'kruskal' or self.method == 'rm_ancova':
+            elif self.method == 'mannwhitneyu' or self.method == 'brunner' or self.method == 'kruskal':# or self.method == 'rm_ancova'  --> should be different
                 result = bar_between(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, parametric = False)
                 return result                
             
@@ -112,6 +111,14 @@ class StatmanagerResult:
             
             elif self.method == 'f_nway_rm':
                 result = f_nway_rm_plot(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                return result
+            
+            elif self.method == 'linearr':
+                result = residual_plot(df = self.df, vars = self.vars, language_set = self.language_set)
+                return result
+            
+            elif self.method == 'logisticr':
+                result = roc_curve (df = self.df, vars = self.vars, language_set = self.language_set)
                 return result
         
         else:
@@ -328,7 +335,7 @@ def point_within (df, vars, language_set, parametric):
     
     return FigureInStatmanager(xlabel = None,
                                ylabel = None,
-                               title = f'difference between {vars}',
+                               title = f'difference between {", ".join(vars)}',
                                figure = ax,
                                language_set = language_set)
 
@@ -496,3 +503,87 @@ def f_nway_rm_plot(df, vars, group_vars, language_set):
     else:
         result = plot_rm_onegroup (df = df, vars = vars, group_vars = group_vars, language_set = language_set)
         return result        
+    
+def residual_plot (df, vars, language_set):
+    from statsmodels import api
+    plt.style.use('grayscale')
+    dv = vars[0]
+    iv = vars[1] 
+
+    y = df[dv]
+    x = df[iv]
+    x = pd.get_dummies(data = x, drop_first=True, dtype='int', prefix='dummy_',prefix_sep='_' )
+    
+    x = api.add_constant(x)
+    model = api.OLS(y, x).fit()
+    prediction = model.predict(x)
+    
+    residuals = y - prediction
+    
+    fig, ax = plt.subplots()
+
+    ax.scatter(prediction, residuals, alpha=0.5)
+    ax.axhline(y=0, color='r', linestyle='--')
+    
+    return FigureInStatmanager(xlabel = 'Predicted Values',
+                               ylabel = 'Residuals',
+                               title = 'Residual plot',
+                               figure = ax,
+                               language_set=language_set)
+    
+def roc_curve(df, vars, language_set):
+    from statsmodels import api
+    
+    plt.style.use('grayscale')
+
+    dv = vars[0]
+    iv = vars[1] 
+    
+    y = df[dv]    
+    x = df[iv]
+    
+    if len(y.unique()) == 2:
+        y = pd.get_dummies(y, drop_first=True).iloc[:, 0]
+    else:
+        raise ValueError("Now, figure making not works in Multinominal Regression. It will be ready soon")
+    
+    
+    x = pd.get_dummies(data=x, drop_first=True, dtype='int', prefix='dummy_', prefix_sep='_')
+    x = api.add_constant(x)
+
+    model = api.Logit(y, x).fit()
+
+    y_score = model.predict(x)
+
+    thresholds = np.linspace(0, 1, 100)
+
+    tpr = []
+    fpr = []
+
+    for thresh in thresholds:
+        tp = np.sum((y_score > thresh) & (y == 1))
+        fn = np.sum((y_score <= thresh) & (y == 1))
+        fp = np.sum((y_score > thresh) & (y == 0))
+        tn = np.sum((y_score <= thresh) & (y == 0))
+
+        tpr.append(tp / (tp + fn) if (tp + fn) != 0 else 0)
+        fpr.append(fp / (fp + tn) if (fp + tn) != 0 else 0)
+
+    # AUC 계산
+    auc = np.trapz(tpr, fpr)
+
+    # ROC 곡선 그리기
+    fig, ax = plt.subplots()
+    ax.plot(fpr, tpr, color='Red')
+    ax.plot([0, 1], [0, 1], 'k--')
+    ax.set_xlim([0.0, 1.0])
+    ax.set_ylim([0.0, 1.05])
+
+    # AUC 텍스트 추가
+    ax.text(0.6, 0.2, f'AUC = {auc:.3f}', fontdict = font_properties[language_set])
+
+    return FigureInStatmanager(xlabel = 'False Positive Rate',
+                               ylabel = 'True Positive Rate',
+                               title = 'ROC curve',
+                               figure = ax,
+                               language_set=language_set)
