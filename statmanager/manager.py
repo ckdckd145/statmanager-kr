@@ -28,6 +28,7 @@ LINK = LINK_DOC
 class Stat_Manager:
     def __init__(self, dataframe: pd.DataFrame, id: str = None, language: str = 'kor'):
         self.df = dataframe
+        self.df_original = dataframe
         self.filtered_df = None
         self.result = None
         self.selector = None
@@ -124,7 +125,7 @@ class Stat_Manager:
         
         if selector == None:
             self.selector = None
-            df = self.df
+            df = self.df_original
             self.filtered_df = None          
             conditions = None
             self.conditions_notification_texts = None

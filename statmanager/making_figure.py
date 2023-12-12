@@ -281,9 +281,10 @@ def plot_cdf(df, dv, language_set): # 'kstest'
 
     fig, ax = plt.subplots(figsize=(8, 4))
 
-    sns.lineplot(x=data_sorted, y=cdf, label='Data CDF', ax=ax, linewidth=3, errorbar = None)
+    sns.lineplot(x=data_sorted, y=cdf, label='Empirical CDF', ax=ax, linewidth=3, errorbar = None)
     sns.lineplot(x=data_sorted, y=norm_cdf, label='Normal CDF', ax=ax, linewidth=3, errorbar = None)
-
+    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    
     return FigureInStatmanager(xlabel = dv,
                                ylabel = 'CDF',
                                title = 'Kolmogorov-Smirnov Test: CDF Comparison',

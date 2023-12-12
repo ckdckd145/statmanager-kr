@@ -200,17 +200,17 @@ figure_functions = {
         'testfunc' : hist_cumulative,
         },
     'boxplot_variance' : {
-        'name' : "Making cumulative histogram",
+        'name' : "Making boxplot for checking variance among groups",
         'type' : 'making_figure',
         'testfunc' : boxplot_homoskedasticity,
         },
     "point_within" : {
-        'name' : "Making cumulative histogram",
+        'name' : "Making pointplot for repeated variables",
         'type' : 'making_figure',
         'testfunc' : point_within,
         },
     "bar_between" : {
-        'name' : "Making cumulative histogram",
+        'name' : "Making bar graph among groups",
         'type' : 'making_figure',
         'testfunc' : bar_between,
         },
