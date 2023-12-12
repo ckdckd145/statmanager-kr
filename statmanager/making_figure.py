@@ -569,17 +569,14 @@ def roc_curve(df, vars, language_set):
         tpr.append(tp / (tp + fn) if (tp + fn) != 0 else 0)
         fpr.append(fp / (fp + tn) if (fp + tn) != 0 else 0)
 
-    # AUC 계산
     auc = np.trapz(tpr, fpr)
 
-    # ROC 곡선 그리기
     fig, ax = plt.subplots()
     ax.plot(fpr, tpr, color='Red')
     ax.plot([0, 1], [0, 1], 'k--')
     ax.set_xlim([0.0, 1.0])
     ax.set_ylim([0.0, 1.05])
 
-    # AUC 텍스트 추가
     ax.text(0.6, 0.2, f'AUC = {auc:.3f}', fontdict = font_properties[language_set])
 
     return FigureInStatmanager(xlabel = 'False Positive Rate',
