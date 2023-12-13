@@ -251,7 +251,7 @@ def qq_plot(series: pd.Series, language_set = 'kor'):
     ax.get_lines()[0].set_markerfacecolor('Black')
     ax.get_lines()[0].set_markeredgecolor('Black')
     ax.get_lines()[0].set_markersize(6)
-    
+    ax.grid(False)
     return FigureInStatmanager(xlabel = 'Theoretical quantiles',
                                ylabel = 'Ordered Values',
                                title = 'q-q plot',
@@ -270,7 +270,7 @@ def hist(df: pd.DataFrame, var, n, statistic = 'count', language_set = 'kor', cu
 def hist_cumulative(df: pd.DataFrame, var, n, statistic = 'count', language_set = 'kor'):
     
     result_ax = hist(df = df, var = var, n = n, statistic = statistic, language_set = language_set, cumulate = True)
-    
+    plt.grid(False)
     return result_ax
 
 
@@ -285,7 +285,7 @@ def plot_cdf(df, dv, language_set): # 'kstest'
     sns.lineplot(x=data_sorted, y=cdf, label='Empirical CDF', ax=ax, linewidth=3, errorbar = None)
     sns.lineplot(x=data_sorted, y=norm_cdf, label='Normal CDF', ax=ax, linewidth=3, errorbar = None)
     ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0]) # CDF Yticks
-    
+    ax.grid(False)
     return FigureInStatmanager(xlabel = dv,
                                ylabel = 'CDF',
                                title = 'Kolmogorov-Smirnov Test: CDF Comparison',
@@ -296,7 +296,7 @@ def plot_cdf(df, dv, language_set): # 'kstest'
 def boxplot_homoskedasticity(df, vars, group_vars, language_set = 'kor'):
     plt.style.use('grayscale')
     ax = sns.boxplot(x = group_vars, y = vars, data = df, hue = group_vars)    
-    
+    ax.grid(False)
     return FigureInStatmanager(xlabel = group_vars,
                                ylabel = vars,
                                title = f'Box plot for "{vars}"',
@@ -314,7 +314,7 @@ def correlation_heatmap(df_result:pd.DataFrame, testname, language_set = 'kor'):
     }
     
     ax = sns.heatmap(df_result.abs(), annot=df_result, fmt = '.3f', cmap ='gray')
-    
+    ax.grid(False)
     return FigureInStatmanager(xlabel = None,
                                ylabel = None,
                                title = f'Heatmap for correlation coefficients ({coefficient_name[testname]})',
@@ -343,7 +343,7 @@ def point_within (df, vars, language_set, parametric):
     ax.set_yticks(ticks)
     ax.set_xlabel(None)
     ax.set_ylabel(None)
-    
+    ax.grid(False)
     return FigureInStatmanager(xlabel = None,
                                ylabel = None,
                                title = f'{stat_value} difference between {", ".join(vars)}',
@@ -369,7 +369,7 @@ def bar_between (df, vars, group_vars, parametric, language_set):
     
     ticks = np.linspace(min_value, max_value, ideal_ticks)
     ax.set_yticks(ticks)    
-
+    ax.grid(False)
     return FigureInStatmanager(xlabel = group_vars,
                                ylabel = vars,
                                title = f'{stat_value} differences in {vars} by {group_vars}',
@@ -388,7 +388,7 @@ def point_between_twogroup (df, vars, group_vars, language_set):
     
     ticks = np.linspace(min_value, max_value, ideal_ticks)
     ax.set_yticks(ticks)  
-    
+    ax.grid(False)
     return FigureInStatmanager(xlabel = group_vars[0],
                                ylabel = vars,
                                title = 'title',
@@ -421,7 +421,7 @@ def mulitway_interaction_plot (df, vars, group_vars, language_set):
     
     g.fig.subplots_adjust(top=0.8)
     g.fig.suptitle(f'Interaction Plot for {", ".join(group_vars)}')
-    
+    plt.grid(False)
     return FigureInStatmanager(xlabel = None,
                                ylabel = vars,
                                title = 'title',
@@ -458,7 +458,7 @@ def plot_rm_onegroup(df, vars, group_vars, language_set):
     
     # Enhancing the plot
     plt.legend(title=group_vars)
-    
+    ax.grid(False)
     return FigureInStatmanager(xlabel = 'time',
                                ylabel = 'value',
                                title = f'Interaction Plot for {group_vars}',
@@ -501,7 +501,7 @@ def plot_rm_twogroup(df, vars, group_vars, language_set):
         
     g.fig.subplots_adjust(top=0.8)
     g.fig.suptitle(f'Interaction Plot for {", ".join(group_vars)}', fontsize=16)
-
+    plt.grid(False)
     return FigureInStatmanager(xlabel = None,
                                ylabel = None,
                                title = None,
@@ -538,7 +538,7 @@ def residual_plot (df, vars, language_set):
 
     ax.scatter(prediction, residuals, alpha=0.5)
     ax.axhline(y=0, color='r', linestyle='--')
-    
+    ax.grid(False)
     return FigureInStatmanager(xlabel = 'Predicted Values',
                                ylabel = 'Residuals',
                                title = 'Residual plot',
@@ -592,7 +592,7 @@ def roc_curve(df, vars, language_set):
     ax.set_ylim([0.0, 1.05])
 
     ax.text(0.6, 0.2, f'AUC = {auc:.3f}', fontdict = font_properties[language_set])
-
+    ax.grid(False)
     return FigureInStatmanager(xlabel = 'False Positive Rate',
                                ylabel = 'True Positive Rate',
                                title = 'ROC curve',
