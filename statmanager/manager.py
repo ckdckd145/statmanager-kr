@@ -192,6 +192,9 @@ class Stat_Manager:
             elif method == 'rm_anocva':
                 df = df.dropna(axis=0, how = 'any', subset = vars[-1] + vars[-1])
         
+        elif testtype == 'correlation':
+            pass
+        
         else:
             df = df.dropna(axis=0, how = 'any', subset = vars)
         

@@ -112,17 +112,17 @@ menu = {
         'testfunc' : fmax,
         },
     'pearsonr' : {
-        'name' : "Correlation analysis: Pearson's r",
+        'name' : "Correlation analysis: Pearson's r (Pearson correlation coefficient)",
         'type' : 'correlation',
         'testfunc' : pearson,
     },
     'spearmanr' : {
-        'name' : "Correlation analysis: Spearman's rho",
+        'name' : "Correlation analysis: Spearman's rho (Spearman's rank correlation coefficient)",
         'type' : 'correlation',
         'testfunc' : spearman,
     },
     'kendallt' : {
-        'name' : "Correlation analysis: Kendall's tau",
+        'name' : "Correlation analysis: Kendall's tau (Kendall's tau correlation coefficient)",
         'type' : 'correlation',
         'testfunc' : kendall,  
     },

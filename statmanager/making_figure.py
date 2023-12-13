@@ -86,7 +86,7 @@ class StatmanagerResult:
                 return result
             
             elif self.method == 'pearsonr' or self.method == 'spearmanr' or self.method == 'kendallt':
-                result = correlation_heatmap(self.df_results[1], language_set = self.language_set)
+                result = correlation_heatmap(self.df_results[1], language_set = self.language_set, testname = self.method)
                 return result
             
             elif self.method == 'ttest_rel' or self.method == 'f_oneway_rm':
@@ -229,7 +229,7 @@ def pp_plot(series: pd.Series, language_set = 'kor'):
     ax = plt.subplot()
     ax.plot(theoretical_cdf, cdf, marker='o', linestyle = '', markersize=6)
     ax.plot([0, 1], [0, 1], color='red', linestyle='-', linewidth=2)
-    ax.text(x= 0.7, y= 0.2, s = f"R\u00B2 = {r_value:.4f}", style = 'italic')
+    ax.text(x= 0.7, y= 0.2, s = f"R\u00B2 = {r_value:.4f}", style = 'italic', fontdict = font_properties[language_set])
     ax.grid(False)
     
     return FigureInStatmanager(xlabel = 'Theoretical cumulative distribution', 
@@ -283,7 +283,7 @@ def plot_cdf(df, dv, language_set): # 'kstest'
 
     sns.lineplot(x=data_sorted, y=cdf, label='Empirical CDF', ax=ax, linewidth=3, errorbar = None)
     sns.lineplot(x=data_sorted, y=norm_cdf, label='Normal CDF', ax=ax, linewidth=3, errorbar = None)
-    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0]) # CDF Yticks
     
     return FigureInStatmanager(xlabel = dv,
                                ylabel = 'CDF',
@@ -298,18 +298,25 @@ def boxplot_homoskedasticity(df, vars, group_vars, language_set = 'kor'):
     
     return FigureInStatmanager(xlabel = group_vars,
                                ylabel = vars,
-                               title = f'Box plot for {vars}',
+                               title = f'Box plot for "{vars}"',
                                figure = ax,
                                language_set = language_set)    
     
     
-def correlation_heatmap(df_result:pd.DataFrame, language_set = 'kor'):
+def correlation_heatmap(df_result:pd.DataFrame, testname, language_set = 'kor'):
     plt.style.use('grayscale')
+    
+    coefficient_name = {
+        'pearsonr' : "Pearson's r",
+        'spearmanr' : "Spearman's r",
+        'kendallt' : "Kendall's tau"
+    }
+    
     ax = sns.heatmap(df_result.abs(), annot=df_result, fmt = '.3f', cmap ='gray')
     
     return FigureInStatmanager(xlabel = None,
                                ylabel = None,
-                               title = 'Heatmap for correlation coefficients',
+                               title = f'Heatmap for correlation coefficients ({coefficient_name[testname]})',
                                figure = ax,
                                language_set= language_set)
 
@@ -320,8 +327,10 @@ def point_within (df, vars, language_set, parametric):
     
     if parametric:
         stat = np.mean
+        stat_value = 'Mean'
     else:
         stat = np.median
+        stat_value = 'Median'
     
     ax = sns.pointplot(data = melted_df, x = 'variable', y = 'value', errorbar = 'ci', estimator = stat)
     
@@ -336,7 +345,7 @@ def point_within (df, vars, language_set, parametric):
     
     return FigureInStatmanager(xlabel = None,
                                ylabel = None,
-                               title = f'difference between {", ".join(vars)}',
+                               title = f'{stat_value} difference between {", ".join(vars)}',
                                figure = ax,
                                language_set = language_set)
 
@@ -346,8 +355,11 @@ def bar_between (df, vars, group_vars, parametric, language_set):
     
     if parametric:
         stat = np.mean
+        stat_value = 'Mean'
     else:
         stat = np.median
+        stat_value = 'Median'
+        
     ax = sns.barplot(data = df, y = vars, x = group_vars, estimator = stat, hue = group_vars)
     
     min_value = df[vars].min()
@@ -359,7 +371,7 @@ def bar_between (df, vars, group_vars, parametric, language_set):
 
     return FigureInStatmanager(xlabel = group_vars,
                                ylabel = vars,
-                               title = f'differences of {vars} between {group_vars}',
+                               title = f'{stat_value} differences in {vars} by {group_vars}',
                                figure = ax,
                                language_set = language_set)
     
