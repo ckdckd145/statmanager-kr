@@ -1,3 +1,7 @@
 Index,method,vars,group_vars
-Making P-P plot,pp_plot,variables to make P-P plot (str),
-Making Q-Q plot,qq_plot,variables to make Q-Q plot (str),
+Making P-P plot,pp_plot,variable to make P-P plot (str),
+Making Q-Q plot,qq_plot,variable to make Q-Q plot (str),
+Making histogram,hist,variable to make histogram (str),
+Making histogram in cumulative format,hist_cumulative,variables to make histogram (str),
+Making pointplot for within group difference,point_within,variables to compare (list),
+Making barplot for between group difference,bar_between,variable to compare between groups (str), group variable (str)

@@ -1,3 +1,7 @@
 구분,method,vars,group_vars
 P-P plot 그리기,pp_plot,P-P plot을 그릴 변수 (str),
 Q-Q plot 그리기,qq_plot,Q-Q plot을 그릴 변수 (str),
+히스토그램 그리기,hist,히스토그램을 그릴 변수 (str),
+누적형 히스토그램 그리기,hist_cumulative,히스토그램을 그릴 변수 (str),
+집단 내 차이비교 목적의 point plot 그리기,point_within,비교할 변수들 (list),
+집단 간 차이비교 목적의 barplot 그리기,bar_between,비교할 변수(str),집단 변수(str)

@@ -195,6 +195,7 @@ class FigureInStatmanager:
     def apply_settings(self):
         
         plt.style.use(self.style)
+        
         try:
             self.ax.set_xlabel(self.xlabel, fontdict = self.font_properties)
             
