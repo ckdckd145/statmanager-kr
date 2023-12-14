@@ -69,7 +69,65 @@ class StatmanagerResult:
                     print(n)
         
         return self
+    
+    def save(self, filename, file_format ='txt'):
 
+        if file_format == 'txt':
+            content = []
+            content.append(f'::: Note :::\n\nSaving Date : {TODAY}\nSaving Time : {NOW_TIME}\n\n')
+
+            showing_one = {
+                'Testname' : self.testname,
+                'Method': self.method,
+                'Variables': self.vars,
+                'Group_vars': self.group_vars,
+                'Selector': self.selector,
+            }
+
+            for key, value in showing_one.items():
+                content.append(f"{key} : {value}")
+            content.append("\n")
+
+            content.append("::: Original Reports :::\n\n")
+            content.append(self.testname)            
+            
+            for n in self.result:
+                if isinstance(n, str) or isinstance(n, list):
+                    content.append(str(n))
+                elif isinstance(n, pd.DataFrame):
+                    content.append(n.to_string())
+
+            content_str = '\n'.join(content)
+            
+            with open(f'{filename}.txt', 'w', encoding='utf-8') as file:
+                file.write(content_str)
+
+        elif file_format == 'xlsx':
+            writer = pd.ExcelWriter(f'{filename}.xlsx', engine='xlsxwriter')
+
+            basic_infos = {
+                'Saving Date' : TODAY,
+                'Saving Time' : NOW_TIME,
+                'Testname' : self.testname,
+                'method' : self.method,
+                'variables' : self.vars,
+                'Group_vars' : self.group_vars,
+                'Selector' : self.selector,
+            }
+
+            basic_infos = pd.DataFrame(list(basic_infos.items()), columns = ['type', 'info'])
+            basic_infos.to_excel(writer, sheet_name='basic_info', index=False)
+
+            for i, item in enumerate(self.result):
+                if isinstance(item, pd.DataFrame):
+                    item.to_excel(writer, sheet_name=f'result_{i + 1}')
+
+            writer.close()
+
+        else:
+            raise ValueError("Unsupported fileformat. You must choose 'txt' or 'xlsx'.")        
+    
+    
     def figure(self, method = 'auto'):
 
         if method == 'auto':

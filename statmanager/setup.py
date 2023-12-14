@@ -17,7 +17,7 @@ setup(
     author_email='ckdckd145@gmail.com',
     url='https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4',
     download_url='https://github.com/ckdckd145/statmanager-kr',
-    install_requires=['pandas', 'scipy', 'statsmodels', 'matplotlib', 'seaborn'],
+    install_requires=['pandas', 'scipy', 'statsmodels', 'matplotlib', 'seaborn', 'XlsxWriter'],
     packages=find_packages(),
     keywords=['statistic', 'socialscience', 'stats',],
     python_requires='>=3.0',

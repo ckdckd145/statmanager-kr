@@ -23,7 +23,7 @@ Source codes are available in the [Github respository](https://github.com/ckdckd
 
 For updates, please see [the notice in the documentation]((https://www.notion.so/cslee145/NOTICEs-4bb2177eeb0f412a81b8dbd3215058e6)) or the [Github release](https://github.com/ckdckd145/statmanager-kr/releases).  
 업데이트 내역은 정식 문서 내 [공지사항](https://www.notion.so/cslee145/NOTICEs-4bb2177eeb0f412a81b8dbd3215058e6) 혹은 [Github release](https://github.com/ckdckd145/statmanager-kr/releases)에서 확인하시기 바랍니다. 
-****
+
 
 #
 * [Quick Start with sample jupyter notebook file](https://github.com/ckdckd145/statmanager-kr/blob/main/test.ipynb) 
@@ -40,8 +40,12 @@ For updates, please see [the notice in the documentation]((https://www.notion.so
 
 
 * Available functions to make figure or graph | 그래프 혹은 그림 제작에 활용되는 기능
-  * P-P plot (Temporary)
-  * Q-Q plot (Temporary)
+  * P-P plot 
+  * Q-Q plot 
+  * Histogram 
+  * Histogram (cumulative)
+  * Pointplot (within differences)
+  * Boxplot (between group difference)
 
 #### Dependency
 * pandas
@@ -50,6 +54,7 @@ For updates, please see [the notice in the documentation]((https://www.notion.so
 * numpy
 * matplotlib
 * seaborn
+* XlsxWriter
 
 #### Recommendation
 Using "Jupyter Notebook" is <b>STRONGLY RECOMMENDED</b> (Of course, statmanager-kr works just as well in a Python environment)   
@@ -60,7 +65,6 @@ Using "Jupyter Notebook" is <b>STRONGLY RECOMMENDED</b> (Of course, statmanager-
 
 #### Updating statmanager-kr
     pip install statmanager-kr --upgrade
-
 
 
 
