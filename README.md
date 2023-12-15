@@ -1,4 +1,8 @@
+![pypi](https://badge.fury.io/py/statmanager-kr.svg)
+<hr>  
+
 ![logo](./doc/logo.png)
+
 # statmanager-kr
 ### Open-source statistical package for Python based on the Pandas.    
 ### Python과 Pandas 사용자를 위한 오픈소스 통계 패키지
