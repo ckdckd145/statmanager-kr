@@ -27,7 +27,10 @@ Source codes are available in the [Github respository](https://github.com/ckdckd
 소스코드는 [깃헙 레포지토리](https://github.com/ckdckd145/statmanager-kr)에서 확인할 수 있습니다.  
 
 For updates, please see [the notice in the documentation]((https://www.notion.so/cslee145/NOTICEs-4bb2177eeb0f412a81b8dbd3215058e6)) or the [Github release](https://github.com/ckdckd145/statmanager-kr/releases).  
-업데이트 내역은 정식 문서 내 [공지사항](https://www.notion.so/cslee145/NOTICEs-4bb2177eeb0f412a81b8dbd3215058e6) 혹은 [Github release](https://github.com/ckdckd145/statmanager-kr/releases)에서 확인하시기 바랍니다. 
+업데이트 내역은 정식 문서 내 [공지사항](https://www.notion.so/cslee145/NOTICEs-4bb2177eeb0f412a81b8dbd3215058e6) 혹은 [Github release](https://github.com/ckdckd145/statmanager-kr/releases)에서 확인하시기 바랍니다.    
+
+Please use [Github Discussion](https://github.com/ckdckd145/statmanager-kr/discussions) to let me know if you have any questions, bugs you encounter, suggestions, etc. Of course, you can also email the developer directly. 
+궁금하신 점, 발생하는 버그, 제안 사항 등 모든 것은 [Github Discussion](https://github.com/ckdckd145/statmanager-kr/discussions)을 활용해서 알려주시면 감사하겠습니다. 물론, 개발자에게 직접 이메일을 보내셔도 됩니다. 
 
 
 #
@@ -36,7 +39,7 @@ For updates, please see [the notice in the documentation]((https://www.notion.so
   * [Read detailed instructions](https://www.notion.so/cslee145/Documentation-74a610c12881402d96dc5d1654f97433?pvs=4#be93db7f4159419fa73eb324d6567793)  | [상세 사용법 열람](https://www.notion.so/cslee145/dded43262f784c70a37fddb11ec7c9d1?pvs=4#ef9a4aacd8b34b96bd7a4abdea4f5170)
     1. Normality assumption | 정규성 가정
     2. Homoskedasticity assumption | 등분산성 가정
-    3. Reliability | 신뢰도 확인
+    3. Reliability | 신뢰도 **확인**
     4. Frequency analysis  | 빈도분석
     5. Correlation analysis | 상관분석
     6. Comparison (2) | 차이비교 (2)
