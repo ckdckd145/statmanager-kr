@@ -118,10 +118,17 @@ class StatmanagerResult:
             basic_infos = pd.DataFrame(list(basic_infos.items()), columns = ['type', 'info'])
             basic_infos.to_excel(writer, sheet_name='basic_info', index=False)
 
+            non_dfs = {}
             for i, item in enumerate(self.result):
                 if isinstance(item, pd.DataFrame):
                     item.to_excel(writer, sheet_name=f'result_{i + 1}')
-
+                else:
+                    non_dfs[f'Item{i}'] = item
+            
+            if non_dfs:
+                non_dfs = pd.DataFrame(list(non_dfs.items()), columns=['Item', 'Content']).set_index('Item')
+                non_dfs.to_excel(writer, sheet_name='results_', index=False)
+            
             writer.close()
 
         else:
