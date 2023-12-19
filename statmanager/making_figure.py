@@ -221,12 +221,13 @@ class FigureInStatmanager:
         self.yticks = yticks
         self.ax = figure
         self.style = style
+        self.figsize = (10, 8)
         plt.style.use(self.style)
         
         if figure is not None:
             self.apply_settings()
         
-    def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None):
+    def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None, figsize=None):
         
         if xlabel is not None:
             self.xlabel = xlabel
@@ -246,6 +247,10 @@ class FigureInStatmanager:
         if style is not None:
             self.style = style
 
+        if figsize is not None:
+            self.figsize = figsize
+        
+        
         self.apply_settings()
         
         return self
@@ -266,6 +271,10 @@ class FigureInStatmanager:
             
             if self.yticks is not None:
                 self.ax.set_yticks(self.yticks)
+            
+            if self.figsize is not None:
+                self.ax.figure.set_size_inches(self.figsize[0], self.figsize[1])
+            
         except:
             pass
     
