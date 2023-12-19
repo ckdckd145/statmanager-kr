@@ -20,13 +20,28 @@ def linear(df: pd.DataFrame, vars : list, lang_set, testname):
     reporting_one = linear_regression_result_reporting_one (dv)[lang_set]
     reporting_two = regression_result_reporting_ivs (iv)[lang_set]
     
-    model_df1 = model.summary()
-    model_df2 = model.summary2()
+    # model_df1 = model.summary()
+    # model_df2 = model.summary2(
+    
+    model_df1 = model.summary2().tables[0]
+    model_df1.columns = ['index', 'value', 'index_', 'value']
+    model_df1 = model_df1.set_index('index')
+    model_df2 = model.summary2().tables[1].round(3)
+    model_df3 = model.summary2().tables[2].round(3)
+    model_df3.columns = ['index', 'value', 'index_', 'value']
+    model_df3 = model_df3.set_index('index')
+    warning_message = "\n".join(model.summary2().extra_txt)    
+    
     
     result_for_save.append(reporting_one)
     result_for_save.append(reporting_two)
     result_for_save.append(model_df1)
     result_for_save.append(model_df2)
+    result_for_save.append(model_df3)
+    result_for_save.append(warning_message)
+
+    # result_for_save.append(model_df1)
+    # result_for_save.append(model_df2)
     
     print(testname)
     for n in result_for_save:
