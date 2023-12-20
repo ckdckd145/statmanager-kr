@@ -18,5 +18,5 @@ from .ancova_functions import *
 from .posthoc_functions import *
 from .effectsize_functions import *
 
-__version__ = '1.8.1.0'
+__version__ = '1.8.1.1'
 __all__ = ['Stat_Manager']

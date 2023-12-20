@@ -8,7 +8,7 @@ with open(r'statmanager\README.md', encoding='utf-8') as f:
 
 setup(
     name='statmanager-kr',
-    version='1.8.1.0',
+    version='1.8.1.1',
     license='MIT',
     long_description=description_markdown,
     long_description_content_type='text/markdown',
@@ -22,7 +22,7 @@ setup(
     keywords=['statistic', 'socialscience', 'stats',],
     python_requires='>=3.0',
     package_data={
-        'statmanager' : ['*.csv'],
+        'statmanager' : ['*.csv', '*.png'],
         },
     zip_safe=False,
     classifiers=[
