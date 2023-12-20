@@ -10,7 +10,7 @@ from statsmodels.formula.api import ols
 
 AGG_FORMULA = ['count', 'mean', 'median', 'std', 'min', 'max'] # .round(3).rename(columns = {'count' : 'n'})
 
-def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, trim = None, group_names : list = None):
+def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None):
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
@@ -29,12 +29,9 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
         ser = df.loc[df[group_vars] == group_names[n], dv]
         series.append(ser)
         
-    if not trim :
-        result_object = stats.ttest_ind(*series) #, trim = True --> Yuen's T-test (non-homoskedasticity)
-    else:
-        result_object = stats.ttest_ind(*series, trim = trim)
-    
-    
+
+    result_object = stats.ttest_ind(*series)
+
     s = result_object.statistic
     p = result_object.pvalue
     dof = result_object.df
@@ -61,12 +58,77 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
                 
     return result_for_save
 
-def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None):
+def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None, trim = None):
     
-    result_for_save = ttest_ind(df =df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = lang_set, testname=testname, trim = .2)
+    
+    result_for_save = []
+    
+    dv = vars[0] if isinstance(vars, list) else vars
+    
+    if group_names == None:
+        group_names = df[group_vars].unique()
 
-    return result_for_save
-
+    df = df.loc[df[group_vars].isin(group_names)]
+    
+    series = []
+    for n in range(len(group_names)):
+        ser = df.loc[df[group_vars] == group_names[n], dv]
+        series.append(ser)
+    
+    
+    result_object = stats.ttest_ind(*series, trim = trim)
+    s = result_object.statistic
+    p = result_object.pvalue
+    dof = result_object.df
+    ci = result_object.confidence_interval() 
+    
+    # trimmed_data
+    
+    df_trimed = df[[dv, group_vars]]
+    score1 = np.sort(df_trimed.loc[df_trimed[group_vars] == group_names[0], vars])
+    score2 = np.sort(df_trimed.loc[df_trimed[group_vars] == group_names[1], vars])
+    
+    g_score1 = int(len(score1) * trim)
+    g_score2 = int(len(score2) * trim)
+    
+    trimed_series1 = pd.Series(score1[g_score1 : -g_score1])
+    trimed_series2 = pd.Series(score2[g_score2 : -g_score2])
+    
+    trimed_series = [trimed_series1, trimed_series2]
+    cohen_d = calculate_cohen(trimed_series)
+    
+    describe_df = pd.DataFrame(columns = [group_names[0], group_names[1]], index = ['n', 'mean', 'median', 'min', 'max'])
+    
+    for n in range(len(trimed_series)):
+        describe_df.loc['n', group_names[n]] = trimed_series[n].count().round(3)
+        describe_df.loc['mean', group_names[n]] = trimed_series[n].mean().round(3)
+        describe_df.loc['median', group_names[n]] = trimed_series[n].median().round(3)
+        describe_df.loc['min', group_names[n]] = trimed_series[n].min().round(3)
+        describe_df.loc['max', group_names[n]] = trimed_series[n].max().round(3)
+    
+    notation = notation_for_trim_ttest(trim)[lang_set]
+    reporting_one = compare_btwgroup_result_reporting_one(dv, group_vars, group_names)[lang_set]
+    reporting_two = ttest_ind_result_reporting_two (s, p, dof, ci, cohen_d)[lang_set]
+    result_for_save.append(notation)
+    result_for_save.append(reporting_one)
+    result_for_save.append(describe_df)
+    result_for_save.append(reporting_two)
+    
+    print(testname)
+    
+    for n in result_for_save:
+        if isinstance(n, str):
+            print(n)
+        else:
+            try:
+                display(n)
+            except:
+                print(n)
+                
+    return result_for_save    
+    
+    
+    
 def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None):
     result_for_save = []
     

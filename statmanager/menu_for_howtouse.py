@@ -175,7 +175,13 @@ menu = {
         'name' : "Calculating Cronbach's Alpha",
         'type' : 'reliability',
         'testfunc' : cronbach,
-    },}
+    },
+    'ttest_ind_trim' : {
+        'name' : "Yuen's Two-Sample T-test (Independent samples t-test using unequal variance)",
+        'type' : 'between_group',
+        'testfunc' : ttest_ind_yuen,
+    },
+    }
 
 
 figure_functions = {

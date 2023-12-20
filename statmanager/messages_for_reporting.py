@@ -5,6 +5,8 @@ LINK_DOC ={
 }
 
 
+TRIM_REFERENCE = "Reference:\n[1] Guo, J. H., & Luh, W. M. (2009). Optimum sample size allocation to minimize cost or maximize power for the two‐sample trimmed mean test. British Journal of Mathematical and Statistical Psychology, 62(2), 283-298.\n[2] Yuen, K. K. (1974). The two-sample trimmed t for unequal population variances. Biometrika, 61(1), 165-170.\n\n"
+
 index_column_for_figure_for_howtouse = { 
     'kor' : '구분',
     'eng' : 'Index',
@@ -20,6 +22,11 @@ message_for_change_languageset = {
 keyerror_message_for_bootstrap = {
     'kor' : "부트스트랩핑을 진행하기 위한 리샘플링 횟수가 잘못 입력되었습니다. method 파라미터에 제공된 인자의 형식이 bootstrap2000, bootstrap894 혹은 bootstrap894_df, bootstrap2000_df 등과 일치하는지 확인하십시오. 리샘플링 횟수는 반드시 0보다 큰 양수여야 합니다. ",
     'eng' : "The number of resamples to proceed with bootstrapping was entered incorrectly. Make sure the format of the argument provided in the method parameter matches bootstrap2000, bootstrap894, or bootstrap894_df, bootstrap2000_df, etc. The number of resamples must be a positive number greater than 0.",
+}
+
+keyerror_message_for_trim = {
+    'kor' : f'Trim ratio가 잘못 입력되었습니다. method 파라미터에 제공된 인자의 형식이 ttest_ind_trim0.2, ttest_ind_trim0.1 등과 일치하는지 확인하십시오. Trim ratio는 반드시 0 초과 0.5 미만의 값이어야 합니다. 자세한 내용은 아래 논문을 참고하십시오. {TRIM_REFERENCE}',
+    'eng' : f"The trim ratio to proceed with Yuen's t-test was entered incorrectly. Make sure the format of the argument provided in the method parameter matches ttest_ind_trim0.2, or ttest_ind_trim0.1. The trim ratio shoule be a value ranging from 0 to 0.5. If you want to get more information, see the references. {TRIM_REFERENCE}",
 }
 
 valueerror_message_for_bootstrap ={
@@ -333,7 +340,14 @@ def nway_ancova_result_reporting (dv, group_vars, covars):
     
     return reporting_result
 
+def notation_for_trim_ttest(trim):
+    result ={
+        'kor' : f"Note: 백분율을 기준으로 상위 및 하위 {trim * 100}% 데이터를 자르고 분석이 진행됩니다.\n",
+        'eng' : f"Note: The analysis will trim the top and bottom {trim * 100}% data based on percentage.\n",
+    }
 
+    return result
+    
 def compare_btwgroup_result_reporting_one (dv, group_vars, group_names):
     
     reporting_result_one = {
@@ -391,6 +405,16 @@ def f_oneway_df_reporting(degree_of_freedom_between_group, degree_of_freedom):
 notation_message_for_returning_bootstrap_df = {
     'kor' : "\nbootstrap된 DataFrame이 반환되었습니다.\n특정 변수에 선언한 후 활용하세요.\n",
     'eng' : "\nA bootstrapped DataFrame was returned.\nDeclare it in a specific variable and utilize it."
+}
+
+notation_for_trim_ratio_when_zero = {
+    'kor' : f"trim ratio가 입력되지 않아, 기본 값인 0.2로 분석이 진행됩니다.\ntrim ratio는 0 ~ 0.5 사이의 수치가 권고됩니다.\n자세한 내용은 아래 레퍼런스를 참고하십시오.\n\n{TRIM_REFERENCE}",
+    'eng' : f"The trim ratio wasn't entered, so the analysis proceeds with set the trim ratio as 0.2.\nThe trim ratio is recommended to be set ranging from 0 to 0.5\nCSee the reference below for more information.\n\nP{TRIM_REFERENCE}",
+}
+
+valueerror_message_for_trim_ratio = {
+    'kor' : f'Trim ratio는 0 초과, 0.5 미만의 값으로 설정되어야 합니다.자세한 내용은 아래 레퍼런스를 참고하십시오.{TRIM_REFERENCE}',
+    'eng' : f'The trim ratio sholdbe set to a value greater than 0 and less than 0.5.\n\nSee the reference below for more information.{TRIM_REFERENCE}',
 }
 
 

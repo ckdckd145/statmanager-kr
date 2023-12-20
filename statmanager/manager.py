@@ -121,6 +121,28 @@ class Stat_Manager:
 
             method = 'bootstrap_df' # rearrange method for matching in the menu
         
+        
+        if 'ttest_ind_trim' in method:
+            trim_ratio = method.replace('ttest_ind_trim', "") 
+            
+            try:
+                if trim_ratio == "":
+                    print(notation_for_trim_ratio_when_zero[self.language_set])
+                    trim_ratio = 0.2
+                
+                else:
+                    trim_ratio = float(trim_ratio)
+                    
+                    if trim_ratio > 0.5 or trim_ratio <= 0:
+                        raise ValueError(valueerror_message_for_trim_ratio[self.language_set])
+                    else:
+                        pass
+            except:
+                raise KeyError(keyerror_message_for_trim[self.language_set])
+            
+            method = 'ttest_ind_trim'
+        
+        
         testtype = self.menu[method]['type']
         
         if selector == None:
@@ -253,7 +275,11 @@ class Stat_Manager:
             return result_object                       
         
         if testtype == 'between_group':
-            result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
+            
+            if method == 'ttest_ind_trim':
+                result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, trim = trim_ratio)
+            else:
+                result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object            
             
