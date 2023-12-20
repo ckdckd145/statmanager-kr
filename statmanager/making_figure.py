@@ -6,8 +6,8 @@ from scipy import stats
 import datetime as dt
 
 font_properties = {
-    'kor' : {'family' : 'Gulim', 'color': 'Black', 'weight': 'normal', 'size': 16},
-    'eng' : {'family': 'Times New Roman', 'color': 'Black', 'weight': 'normal', 'size': 16},
+    'kor' : 'Gulim',
+    'eng' : 'Times New Roman',
 }
 
 # make sure that all function should be finished with returning FigureInStatmanager object... Don't forget...
@@ -220,7 +220,7 @@ class FigureInStatmanager:
         
         self.language_set = language_set
         self.font_properties = font_properties[self.language_set]
-        
+        self.font_scale = 1.5
         self.xlabel = xlabel
         self.ylabel = ylabel
         self.title = title
@@ -229,12 +229,11 @@ class FigureInStatmanager:
         self.ax = figure
         self.style = style
         self.figsize = (10, 8)
-        plt.style.use(self.style)
         
         if figure is not None:
             self.apply_settings()
         
-    def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None, figsize=None):
+    def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None, figsize=None, font=None, font_scale=None):
         
         if xlabel is not None:
             self.xlabel = xlabel
@@ -256,7 +255,12 @@ class FigureInStatmanager:
 
         if figsize is not None:
             self.figsize = figsize
+            
+        if font is not None:
+            self.font_properties = font
         
+        if font_scale is not None:
+            self.font_scale = font_scale
         
         self.apply_settings()
         
@@ -265,13 +269,14 @@ class FigureInStatmanager:
     def apply_settings(self):
         
         plt.style.use(self.style)
+        sns.set(font = self.font_properties, font_scale = self.font_scale)
         
         try:
-            self.ax.set_xlabel(self.xlabel, fontdict = self.font_properties)
+            self.ax.set_xlabel(self.xlabel)
             
-            self.ax.set_ylabel(self.ylabel, fontdict = self.font_properties)
+            self.ax.set_ylabel(self.ylabel)
             
-            self.ax.set_title(self.title, fontdict = self.font_properties)
+            self.ax.set_title(self.title)
             
             if self.xticks is not None:
                 self.ax.set_xticks(self.xticks)
@@ -304,7 +309,7 @@ def pp_plot(series: pd.Series, language_set = 'kor'):
     ax = plt.subplot()
     ax.plot(theoretical_cdf, cdf, marker='o', linestyle = '', markersize=6)
     ax.plot([0, 1], [0, 1], color='red', linestyle='-', linewidth=2)
-    ax.text(x= 0.7, y= 0.2, s = f"R\u00B2 = {r_value:.4f}", style = 'italic', fontdict = font_properties[language_set])
+    ax.text(x= 0.7, y= 0.2, s = f"R\u00B2 = {r_value:.4f}", style = 'italic')
     ax.grid(False)
     
     return FigureInStatmanager(xlabel = 'Theoretical cumulative distribution', 
@@ -354,7 +359,7 @@ def plot_cdf(df, dv, language_set): # 'kstest'
     cdf = np.arange(1, len(data_sorted)+1) / len(data_sorted)
     norm_cdf = stats.norm.cdf(data_sorted, np.mean(data_sorted), np.std(data_sorted))
 
-    fig, ax = plt.subplots(figsize=(8, 4))
+    fig, ax = plt.subplots()
 
     sns.lineplot(x=data_sorted, y=cdf, label='Empirical CDF', ax=ax, linewidth=3, errorbar = None)
     sns.lineplot(x=data_sorted, y=norm_cdf, label='Normal CDF', ax=ax, linewidth=3, errorbar = None)
@@ -665,7 +670,7 @@ def roc_curve(df, vars, language_set):
     ax.set_xlim([0.0, 1.0])
     ax.set_ylim([0.0, 1.05])
 
-    ax.text(0.6, 0.2, f'AUC = {auc:.3f}', fontdict = font_properties[language_set])
+    ax.text(0.6, 0.2, f'AUC = {auc:.3f}')
     ax.grid(False)
     return FigureInStatmanager(xlabel = 'False Positive Rate',
                                ylabel = 'True Positive Rate',
