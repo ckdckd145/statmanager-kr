@@ -11,6 +11,7 @@ Correlation analysis: Spearman rho,Correlation analysis - Non-parametric test,sp
 Correlation analysis: Kendall's tau-b,Correlation analysis - Non-parametric test,kendallt,Variables to check correlation (list),,
 Indenpendent Samples T-test,Compare between groups (two) - Parametric test,ttest_ind,Dependent variable (str),Group variable (str),
 Dependent Samples T-test,Compare between times (two) - Parametric test,ttest_rel,Dependent variables (list),,
+Yuen's two-sample t-test (Independent samples T-test using unequal variance),Compare between groups (two) - Non-parametric test,ttest_ind_trim{trim_ratio},Dependent variable (str),Group variable (str),
 Mann-Whitney U Test (Wilcoxon Rank Sum Test),Compare between groups (two) - Non-parametric test,mannwhitneyu,Dependent variable (str),Group variable (str),
 Brunner-Munzel Test,Compare between groups (two) - Non-parametric test,brunner,Dependent variable (str),Group variable (str),
 Wilcoxon-Signed Rank Test,Compare between times (two) - Non-parametric test,wilcoxon,Dependent variables (list),,
