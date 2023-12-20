@@ -60,7 +60,6 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
 
 def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None, trim = None):
     
-    
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
@@ -97,12 +96,13 @@ def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_s
     trimed_series = [trimed_series1, trimed_series2]
     cohen_d = calculate_cohen(trimed_series)
     
-    describe_df = pd.DataFrame(columns = [group_names[0], group_names[1]], index = ['n', 'mean', 'median', 'min', 'max'])
+    describe_df = pd.DataFrame(columns = [group_names[0], group_names[1]], index = ['n', 'mean', 'median', 'std', 'min', 'max'])
     
     for n in range(len(trimed_series)):
         describe_df.loc['n', group_names[n]] = trimed_series[n].count().round(3)
         describe_df.loc['mean', group_names[n]] = trimed_series[n].mean().round(3)
         describe_df.loc['median', group_names[n]] = trimed_series[n].median().round(3)
+        describe_df.loc['std', group_names[n]] = trimed_series[n].std().round(3)
         describe_df.loc['min', group_names[n]] = trimed_series[n].min().round(3)
         describe_df.loc['max', group_names[n]] = trimed_series[n].max().round(3)
     

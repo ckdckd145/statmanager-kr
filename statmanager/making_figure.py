@@ -166,6 +166,10 @@ class StatmanagerResult:
                 result = bar_between(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, parametric = True)
                 return result
             
+            elif self.method == 'ttest_ind_trim':
+                result = bar_between_trim(df = self.df_results[0],  vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                return result
+            
             elif self.method == 'mannwhitneyu' or self.method == 'brunner' or self.method == 'kruskal':# or self.method == 'rm_ancova'  --> should be different
                 result = bar_between(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, parametric = False)
                 return result                
@@ -440,7 +444,7 @@ def bar_between (df, vars, group_vars, parametric, language_set):
         stat = np.median
         stat_value = 'Median'
         
-    ax = sns.barplot(data = df, y = vars, x = group_vars, estimator = stat, hue = group_vars)
+    ax = sns.barplot(data = df, y = vars, x = group_vars, estimator = stat, hue = group_vars, errorbar = 'ci', capsize=0.1)
     
     min_value = df[vars].min()
     max_value = df[vars].max()
@@ -455,6 +459,30 @@ def bar_between (df, vars, group_vars, parametric, language_set):
                                figure = ax,
                                language_set = language_set)
     
+
+def bar_between_trim (df: pd.DataFrame, vars, group_vars, language_set):
+    
+    plt.style.use('grayscale')
+    
+    categories = df.columns
+    means = df.loc['mean'].to_list()
+    stds = df.loc['std'].to_list()
+    
+    x = np.arange(len(categories)) # set the barplot location
+    
+    fig, ax = plt.subplots()
+    barplot = ax.bar(x, means, yerr=stds, align = 'center', alpha = 0.7, color=['Black', 'Grey'], capsize=10)
+    ax.grid(False)
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories)
+    
+    return FigureInStatmanager(xlabel = group_vars,
+                               ylabel = vars,
+                               title = f'Mean differences in {vars} by {group_vars}',
+                               figure = ax,
+                               language_set=language_set)
+
+
 def point_between_twogroup (df, vars, group_vars, language_set):
     
     plt.style.use('grayscale')
@@ -470,7 +498,7 @@ def point_between_twogroup (df, vars, group_vars, language_set):
     ax.grid(False)
     return FigureInStatmanager(xlabel = group_vars[0],
                                ylabel = vars,
-                               title = 'title',
+                               title = f'Mean difference in {vars} between {", ".join(group_vars)}',
                                figure = ax,
                                language_set = language_set)
     
