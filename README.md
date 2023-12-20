@@ -1,6 +1,5 @@
-![pypi](https://badge.fury.io/py/statmanager-kr.svg) 
-<hr>  
-
+ 
+![pypi](https://badge.fury.io/py/statmanager-kr.svg)
 ![logo](./doc/logo.png)
 
 # statmanager-kr
@@ -22,7 +21,7 @@ Currently, <b><u>KOREAN</u></b> and <b><u>ENGLISH</u></b> are supported.
 [English Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
 
 
-## Current Ver 1.8.1.1 :
+## Notifications :
 Source codes are available in the [Github respository](https://github.com/ckdckd145/statmanager-kr)  
 소스코드는 [깃헙 레포지토리](https://github.com/ckdckd145/statmanager-kr)에서 확인할 수 있습니다.  
 
