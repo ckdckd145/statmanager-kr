@@ -1,4 +1,4 @@
-![pypi](https://badge.fury.io/py/statmanager-kr.svg)
+![pypi](https://badge.fury.io/py/statmanager-kr.svg) 
 <hr>  
 
 ![logo](./doc/logo.png)
