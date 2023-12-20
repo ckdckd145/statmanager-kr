@@ -1,5 +1,5 @@
  
-![pypi](https://badge.fury.io/py/statmanager-kr.svg)
+[![pypi](https://badge.fury.io/py/statmanager-kr.svg)](https://badge.fury.io/py/statmanager-kr)
 ![logo](./doc/logo.png)
 
 # statmanager-kr
