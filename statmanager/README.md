@@ -1,4 +1,4 @@
-![logo](../statmanager/logo.png)
+![logo](https://github.com/ckdckd145/statmanager-kr/blob/main/doc/logo.png?raw=true)
 
 # statmanager-kr
 ### Open-source statistical package for Python based on the Pandas.    
@@ -19,7 +19,7 @@ Currently, <b><u>KOREAN</u></b> and <b><u>ENGLISH</u></b> are supported.
 [English Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
 
 
-## Current Ver 1.8.1.1 :
+## Notification :
 Source codes are available in the [Github respository](https://github.com/ckdckd145/statmanager-kr)  
 소스코드는 [깃헙 레포지토리](https://github.com/ckdckd145/statmanager-kr)에서 확인할 수 있습니다.  
 
@@ -33,7 +33,7 @@ Please use [Github Discussion](https://github.com/ckdckd145/statmanager-kr/discu
 #
 * [Quick Start with sample jupyter notebook file](https://github.com/ckdckd145/statmanager-kr/blob/main/test.ipynb) 
 * Available functions | 현재 사용 가능한 분석
-  * [Read detailed instructions](https://www.notion.so/cslee145/Documentation-74a610c12881402d96dc5d1654f97433?pvs=4#be93db7f4159419fa73eb324d6567793)  | [상세 사용법 열람](https://www.notion.so/cslee145/dded43262f784c70a37fddb11ec7c9d1?pvs=4#ef9a4aacd8b34b96bd7a4abdea4f5170)
+  * [Read detailed instructions](https://www.notion.so/cslee145/Documentation-74a610c12881402d96dc5d1654f97433?pvs=4#be93db7f4159419fa73eb324d6567793)  | [상세 사용법 열람](https://www.notion.so/cslee145/dded43262f784c70a37fddb11ec7c9d1?pvs=4#ef9a4aacd8b34b96bd7a4abdea4f5170)****
     1. Normality assumption | 정규성 가정
     2. Homoskedasticity assumption | 등분산성 가정
     3. Reliability | 신뢰도 **확인**
