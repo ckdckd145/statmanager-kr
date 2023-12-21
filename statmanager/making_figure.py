@@ -139,8 +139,12 @@ class StatmanagerResult:
 
         if method == 'auto':
             if self.method == 'kstest':
-                result = plot_cdf(df = self.df, dv = self.vars, language_set = self.language_set)
-                return result
+                if self.group_vars == None:
+                    result = plot_cdf(df = self.df, dv = self.vars, language_set = self.language_set)
+                    return result
+                else:
+                    result = multiple_plot_cdf(df = self.df, result_df = self.df_results[0], vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                    return result
             
             elif self.method == 'shapiro' or self.method == 'z_normal':
                 result = qq_plot(self.df[self.vars], language_set = self.language_set)
@@ -356,6 +360,19 @@ def hist_cumulative(df: pd.DataFrame, var, n, statistic = 'count', language_set 
     plt.grid(False)
     return result_ax
 
+def multiple_plot_cdf(df, result_df, vars, language_set, group_vars = None, ) :
+    for group in result_df.index:
+        if '&' in group:
+            key = tuple(group.split(' & '))
+        else:
+            key = group
+            
+        group_data = df.groupby(group_vars).get_group(key)
+    
+        cdf_plots = plot_cdf(group_data, vars, language_set=language_set)
+        cdf_plots.revise(title = key)
+    
+    return cdf_plots
 
 def plot_cdf(df, dv, language_set): # 'kstest'
     plt.style.use('grayscale')

@@ -245,7 +245,7 @@ class Stat_Manager:
             
         if testtype == 'normality': 
             
-            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname, group_vars = group_vars)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
             
