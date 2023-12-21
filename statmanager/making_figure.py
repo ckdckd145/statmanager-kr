@@ -416,7 +416,7 @@ def point_within (df, vars, language_set, parametric):
         stat = np.median
         stat_value = 'Median'
     
-    ax = sns.pointplot(data = melted_df, x = 'variable', y = 'value', errorbar = 'ci', estimator = stat)
+    ax = sns.pointplot(data = melted_df, x = 'variable', y = 'value', errorbar = 'ci', estimator = stat, capsize = 0.1)
     
     min_value = melted_df['value'].min()
     max_value = melted_df['value'].max()
@@ -487,7 +487,7 @@ def point_between_twogroup (df, vars, group_vars, language_set):
     
     plt.style.use('grayscale')
     
-    ax = sns.pointplot(data = df, y = vars, x = group_vars[0], hue = group_vars[1], errorbar = 'ci')
+    ax = sns.pointplot(data = df, y = vars, x = group_vars[0], hue = group_vars[1], errorbar = 'ci', capsize=0.1)
     
     min_value = df[vars].min()
     max_value = df[vars].max()
@@ -517,7 +517,7 @@ def mulitway_interaction_plot (df, vars, group_vars, language_set):
     ticks = np.linspace(min_value, max_value, ideal_ticks)
         
     g = sns.FacetGrid(df, col=facet_vars[0], row=facet_vars[1] if len(facet_vars) > 1 else None, margin_titles=True, palette='Greys')
-    g.map_dataframe(sns.pointplot, point_vars[0], vars, point_vars[1], palette = 'Greys')
+    g.map_dataframe(sns.pointplot, point_vars[0], vars, point_vars[1], palette = 'Greys', capsize=0.1)
 
     # Adding plot title and labels
     g.set_axis_labels(point_vars[0], vars)
@@ -525,10 +525,11 @@ def mulitway_interaction_plot (df, vars, group_vars, language_set):
     
     for ax in g.axes.flatten():
         ax.set_yticks(ticks)
+        ax.yaxis.grid(False)
     
     g.fig.subplots_adjust(top=0.8)
     g.fig.suptitle(f'Interaction Plot for {", ".join(group_vars)}')
-    plt.grid(False)
+    
     return FigureInStatmanager(xlabel = None,
                                ylabel = vars,
                                title = 'title',
@@ -554,7 +555,7 @@ def plot_rm_onegroup(df, vars, group_vars, language_set):
     melted_df = df.reset_index().melt(id_vars=index_col, value_vars=vars, var_name='time').set_index(index_col)
     df = df.drop(columns = vars).merge(melted_df, how = 'outer', on = index_col)
     # Create a line plot with interaction effect
-    ax = sns.pointplot(data=df, x='time', y='value', hue=group_vars)
+    ax = sns.pointplot(data=df, x='time', y='value', hue=group_vars, capsize=0.1)
 
     min_value = df['value'].min()
     max_value = df['value'].max()
@@ -597,7 +598,7 @@ def plot_rm_twogroup(df, vars, group_vars, language_set):
     else:
         g = sns.FacetGrid(df, col=point_vars[0], margin_titles=True, palette='Greys')
 
-    g.map_dataframe(sns.pointplot, point_vars[0] if facet_vars else 'time', 'value', point_vars[1], errorbar = 'ci', palette='Greys')
+    g.map_dataframe(sns.pointplot, point_vars[0] if facet_vars else 'time', 'value', point_vars[1], errorbar = 'ci', palette='Greys', capsize=0.1)
 
     # Adding plot title and labels
     g.set_axis_labels(point_vars[0] if facet_vars else 'time', 'Value')
@@ -605,6 +606,7 @@ def plot_rm_twogroup(df, vars, group_vars, language_set):
     
     for ax in g.axes.flatten():
         ax.set_yticks(ticks)
+        ax.yaxis.grid(False)
         
     g.fig.subplots_adjust(top=0.8)
     g.fig.suptitle(f'Interaction Plot for {", ".join(group_vars)}', fontsize=16)
