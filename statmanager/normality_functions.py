@@ -160,39 +160,142 @@ def kstest(df: pd.DataFrame, vars: str or list, lang_set : str, testname : str =
     return result_for_save   
 
 def shapiro(df: pd.DataFrame, vars: str or list, lang_set: str, testname: str = 'Shapiro-Wilks Test', group_vars = None): 
-    
-    n = len(df)
+    result_for_save = [] 
     dv = vars[0] if isinstance(vars, list) else vars
+    result_df = pd.DataFrame(columns = ['set', 'n', 'test statistic', 'p-value', 'conclusion']).set_index('set')
     
-    result_object = stats.shapiro(df[dv])
-    
-    s = result_object.statistic
-    p = result_object.pvalue
-    
-    # -- making reporting -- #
-    result_for_save = []        
-    
-    if n >= 30:
+    if group_vars == None:
+        n = len(df)
+        target_series = df[dv]
+        result_object = stats.shapiro(target_series)
         
-        warning = warning_message_for_normality['shapiro'][lang_set]
-        result_for_save.append(warning) 
-    
-    reporting = normality_test_result_reporting(dv, n, s, p)[lang_set]
-    result_for_save.append(reporting)
-    
-    if p <= .05 :
-        conclusion_key = 'under'
+        s = result_object.statistic
+        p = result_object.pvalue
         
+        if p <= .05 :
+            conclusion_key = 'under'
+            
+        else:
+            conclusion_key = 'up'
+            
+        conclusion = conclusion_for_normality_assumption[lang_set][conclusion_key]
+        
+        result_df.loc['all', : ] = [n, s, p, conclusion]       
+    
     else:
-        conclusion_key = 'up'
+        if isinstance(group_vars, list): # when group_vars were provided as list format
+            if len(group_vars) == 1:
+                group_vars = group_vars[0]
+                target_series = []
+                
+                for _ in df[group_vars].unique():
+                    series = df.groupby(group_vars).get_group(_)[dv]
+                    series.name = _
+                    target_series.append(series)
+                    
+                for _ in target_series:
+                    result_object = stats.shapiro(_)
+                    n = len(_)
+                    s = result_object.statistic
+                    p = result_object.pvalue
+                    
+                    if isinstance(_.name, tuple):
+                        name = " & ".join(_.name)
+                    else:
+                        name = _.name
+                    
+                    if p <= .05 :
+                        conclusion_key = 'under'
+                        
+                    else:
+                        conclusion_key = 'up'
+                        
+                    conclusion = conclusion_for_normality_assumption[lang_set][conclusion_key]
+                    
+                    result_df.loc[name , : ] = [n, s, p, conclusion]        
+            else: # if group_vars provided are more than one
+                combo_list = [df[group].unique() for group in group_vars]
+
+                combi = product(*combo_list)
+
+                target_series = []
+                
+                for combo in combi:
+                    try:
+                        series = df.groupby(group_vars).get_group(combo)[dv]
+                        series.name = combo
+                        target_series.append(series)
+                    
+                    except KeyError:
+                        continue
+                
+                for _ in target_series:
+                    result_object = stats.shapiro(_)
+                    n = len(_)
+                    s = result_object.statistic
+                    p = result_object.pvalue
+                    
+                    if isinstance(_.name, tuple):
+                        name = " & ".join(_.name)
+                    else:
+                        name = _.name
+                    if p <= .05 :
+                        conclusion_key = 'under'
+                        
+                    else:
+                        conclusion_key = 'up'
+                        
+                    conclusion = conclusion_for_normality_assumption[lang_set][conclusion_key]
+
+                    result_df.loc[name , : ] = [n, s, p, conclusion]
         
-    conclusion = conclusion_for_normality_assumption[lang_set][conclusion_key] 
-    result_for_save.append(conclusion)
+        else: # group_vars provided as str not list.
+            target_series = []
+            for _ in df[group_vars].unique():
+                series = df.groupby(group_vars).get_group(_)[dv]
+                series.name = _
+                target_series.append(series)
+                
+            for _ in target_series:
+                result_object = stats.shapiro(_)
+                n = len(_)
+                s = result_object.statistic
+                p = result_object.pvalue
+
+                if isinstance(_.name, tuple):
+                    name = " & ".join(_.name)
+                else:
+                    name = _.name
+                if p <= .05 :
+                    conclusion_key = 'under'
+                    
+                else:
+                    conclusion_key = 'up'
+                    
+                conclusion = conclusion_for_normality_assumption[lang_set][conclusion_key]            
+                result_df.loc[name , : ] = [n, s, p, conclusion]
     
-    #--print--#
+    for _ in result_df.columns:
+        if _ != 'conclusion':
+            result_df[_] = result_df[_].astype(float).round(3)
+        else:
+            continue    
+    
+    if result_df['n'].min() >= 30:
+        warning = warning_message_for_normality['shapiro'][lang_set]
+        result_for_save.append(warning)
+
+    result_for_save.append(result_df)
+    
     print(testname)
     for n in result_for_save:
-        print(n)
+        if isinstance(n, str):
+            print(n)
+        else:
+            try:
+                display(n)
+            except:
+                print(n)
     
     return result_for_save
 

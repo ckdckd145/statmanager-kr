@@ -72,8 +72,8 @@ warning_message_for_normality = {
         'eng' : "Warning: at least one case, the sample size is less than 30. Consider another analysis to check the normality assumption. ",
                 },
     'shapiro' : {
-        'kor' : "주의: 표본 수가 30보다 많습니다. 정규성 가정 충족 여부를 확인하기 위해 다른 분석을 고려하십시오. ",
-        'eng' : "Warning: The sample size is more than 30. Consider another analysis to check the normality assumption. ",
+        'kor' : "주의: 저어도 하나 이상의 경우에서 표본 수가 30보다 많습니다. 정규성 가정 충족 여부를 확인하기 위해 다른 분석을 고려하십시오. ",
+        'eng' : "Warning: at least one case, the sample size is more than 30. Consider another analysis to check the normality assumption. ",
     },
 }
 
