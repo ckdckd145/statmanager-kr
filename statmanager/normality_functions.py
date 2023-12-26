@@ -300,11 +300,121 @@ def shapiro(df: pd.DataFrame, vars: str or list, lang_set: str, testname: str = 
     return result_for_save
 
 def z_normal(df: pd.DataFrame, vars: str or list, lang_set: str, testname: str = 'z-skeweness & z-kurtosis test', group_vars = None):
-    n = len(df)
-    dv = vars[0] if isinstance(vars, list) else vars
     
-    series = df[dv]
+    dv = vars[0] if isinstance(vars, list) else vars
+    result_df = pd.DataFrame(columns = ['set', 'n', 'skewness', 'SE of skewness', 'z-skewness', 'kurtosis', 'SE of kurtosis', 'z-kurtosis', 'cutoff', 'conclusion']).set_index('set')
     result_for_save = []
+    
+    if group_vars == None:
+        n = len(df)
+        cutoff = select_cutoff_in_z_normal(n)
+        
+        target_series = df[dv]
+        skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, conclusion = calculating_in_z_normal(target_series, cutoff, lang_set)
+        
+        result_df.loc['all', :] = [n, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, cutoff, conclusion]
+    
+    else:  # when group_vars were provided
+        if isinstance(group_vars, list):
+            if len(group_vars) == 1:
+                group_vars = group_vars[0]
+                target_series = []
+                
+                for _ in df[group_vars].unique():
+                    series = df.groupby(group_vars).get_group(_)[dv]
+                    series.name = _
+                    target_series.append(series)
+                    
+                for _ in target_series:
+                    n = len(_)
+                    cutoff = select_cutoff_in_z_normal(n)
+                    skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, conclusion = calculating_in_z_normal(_, cutoff, lang_set)
+                    if isinstance(_.name, tuple):
+                        name = " & ".join(_.name)
+                    else:
+                        name = _.name
+                        
+                    result_df.loc[name, :] = [n, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, cutoff, conclusion]
+
+            else: #more than 1 group_vars were provided
+                combo_list = [df[group].unique() for group in group_vars]
+
+                combi = product(*combo_list)
+                target_series = []
+                for combo in combi:
+                    try:
+                        series = df.groupby(group_vars).get_group(combo)[dv]
+                        series.name = combo
+                        target_series.append(series)
+                    
+                    except KeyError:
+                        continue
+                    
+                for _ in target_series:
+                    n = len(_)
+                    cutoff = select_cutoff_in_z_normal(n)
+                    skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, conclusion = calculating_in_z_normal(_, cutoff, lang_set)
+                    if isinstance(_.name, tuple):
+                        name = " & ".join(_.name)
+                    else:
+                        name = _.name
+                        
+                    result_df.loc[name, :] = [n, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, cutoff, conclusion]                    
+        else: # group_vars were str format
+            target_series = []
+            
+            for _ in df[group_vars].unique():
+                series = df.groupby(group_vars).get_group(_)[dv]
+                series.name = _
+                target_series.append(series)
+                
+            for _ in target_series:
+                n = len(_)
+                cutoff = select_cutoff_in_z_normal(n)
+                skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, conclusion = calculating_in_z_normal(_, cutoff, lang_set)
+                if isinstance(_.name, tuple):
+                    name = " & ".join(_.name)
+                else:
+                    name = _.name
+                    
+                result_df.loc[name, :] = [n, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, cutoff, conclusion]
+
+    for _ in result_df.columns:
+        if _ != 'conclusion':
+            result_df[_] = result_df[_].astype(float).round(3)
+        else:
+            continue
+    
+    result_for_save.append(result_df)
+    result_for_save.append(reference_of_z_normal)
+    print(testname)
+    for n in result_for_save:
+        if isinstance(n, str):
+            print(n)
+        else:
+            try:
+                display(n)
+            except:
+                print(n)
+    
+    return result_for_save
+
+
+def select_cutoff_in_z_normal(n):
+    if n < 50:
+        cutoff = 1.96
+    
+    elif n < 200:
+        cutoff = 2.59
+    
+    elif n > 200:
+        cutoff = 3.13
+        
+    return cutoff
+
+
+def calculating_in_z_normal(series, cutoff, lang_set):
+    n = len(series)
     
     skewness = series.skew()
     skewness_se = np.sqrt(6 * n * (n - 1) / ((n - 2) * (n + 1) * (n + 3)))
@@ -315,32 +425,11 @@ def z_normal(df: pd.DataFrame, vars: str or list, lang_set: str, testname: str =
     z_skewness = (skewness/skewness_se).round(3)
     z_kurtosis = (kurtosis/kurtosis_se).round(3)
     
-    if n < 50:
-        cutoff = 1.96
-    elif n < 200:
-        cutoff = 2.59
-    elif n > 200:
-        cutoff = 3.13
-    
-    reporting = z_normal_result_reporting(dv, skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, n, cutoff)[lang_set]
-    
-    
-    z_skewness = abs(z_skewness)
-    z_kurtosis = abs(z_kurtosis)    
-    
-    if z_skewness < cutoff and z_kurtosis < cutoff:
+    if abs(z_skewness) < cutoff and abs(z_kurtosis) < cutoff:
         conclusion_key = 'up'
     else:
-        conclusion_key = 'down'
-        
+        conclusion_key = 'under'
+    
     conclusion = conclusion_for_normality_assumption[lang_set][conclusion_key]
     
-    result_for_save.append(reporting)
-    result_for_save.append(conclusion)
-    result_for_save.append(reference_of_z_normal)
-    
-    print(testname)
-    for n in result_for_save:
-        print(n)
-    
-    return result_for_save    
+    return skewness, skewness_se, z_skewness, kurtosis, kurtosis_se, z_kurtosis, conclusion
