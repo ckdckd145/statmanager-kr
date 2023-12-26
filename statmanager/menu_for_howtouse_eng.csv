@@ -1,7 +1,7 @@
 Analysis,Purpose,method,vars,group_vars,posthoc
-Kolmogorov-Smirnov Test,Check normality assumption,kstest,Variable to check for normality assumptions (str),,
-Shapiro-Wilks Test,Check normality assumption,shapiro,Variable to check for normality assumptions (str),,
-z-skeweness & z-kurtosis test,Check normality assumption,z_normal,Variable to check for normality assumptions (str),,
+Kolmogorov-Smirnov Test,Check normality assumption,kstest,Variable to check for normality assumptions (str),Group variable (str) or Omit,
+Shapiro-Wilks Test,Check normality assumption,shapiro,Variable to check for normality assumptions (str),Group variable (str) or Omit,
+z-skeweness & z-kurtosis test,Check normality assumption,z_normal,Variable to check for normality assumptions (str),Group variable (str) or Omit,
 Levene Test,Check homoskedasticity assumption,levene,Variable to check for homoskedasticity assumptions (str),Group variable (str),
 F-max Test,Check homoskedasticity assumption,fmax,Variable to check for homoskedasticity assumptions (str),Group variable (str),
 Chi-Square Test,Cross-tabulation analysis,chi2_contingency,Variables to check for frequency differences (list),,

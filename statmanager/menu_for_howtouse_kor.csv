@@ -1,7 +1,7 @@
 분석명,목적,method,vars,group_vars,posthoc
-Kolmogorov-Smirnov Test,정규성 검정,kstest,정규성을 검정할 변수 (str),,
-Shapiro-Wilks Test,정규성 검정,shapiro,정규성을 검정할 변수 (str),,
-z-skeweness & z-kurtosis test,정규성 검정,z_normal,정규성을 검정할 변수 (str),,
+Kolmogorov-Smirnov Test,정규성 검정,kstest,정규성을 검정할 변수 (str),기준이 될 집단 변수 (str) 혹은 생략,
+Shapiro-Wilks Test,정규성 검정,shapiro,정규성을 검정할 변수 (str),기준이 될 집단 변수 (str) 혹은 생략,
+z-skeweness & z-kurtosis test,정규성 검정,z_normal,정규성을 검정할 변수 (str),기준이 될 집단 변수 (str) 혹은 생략,
 Levene Test,등분산성 검정,levene,등분산성을 검정할 변수 (str),기준이 될 집단 변수 (str),
 F-max Test,등분산성 검정,fmax,등분산성을 검정할 변수 (str),기준이 될 집단 변수 (str),
 Chi-Square Test,빈도분석,chi2_contingency,빈도차이를 확인할 변수들 (list),,
