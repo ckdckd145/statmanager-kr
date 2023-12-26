@@ -1,5 +1,5 @@
  
-[![pypi](https://badge.fury.io/py/statmanager-kr.svg?kill_cache=1)](https://badge.fury.io/py/statmanager-kr)
+[![pypi](https://badge.fury.io/py/statmanager-kr.svg)](https://badge.fury.io/py/statmanager-kr)
 ![logo](./doc/logo.png)
 
 # statmanager-kr
@@ -19,7 +19,7 @@ Currently, <b><u>KOREAN</u></b> and <b><u>ENGLISH</u></b> are supported.
 ## Documentaion
 [한글 문서](https://cslee145.notion.site/cslee145/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01)   
 [English Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
-
+****
 
 ## Notifications :
 Source codes are available in the [Github respository](https://github.com/ckdckd145/statmanager-kr)  
