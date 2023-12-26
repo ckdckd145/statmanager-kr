@@ -38,7 +38,7 @@ Please use [Github Discussion](https://github.com/ckdckd145/statmanager-kr/discu
   * [Read detailed instructions](https://www.notion.so/cslee145/Documentation-74a610c12881402d96dc5d1654f97433?pvs=4#be93db7f4159419fa73eb324d6567793)  | [상세 사용법 열람](https://www.notion.so/cslee145/dded43262f784c70a37fddb11ec7c9d1?pvs=4#ef9a4aacd8b34b96bd7a4abdea4f5170)
     1. Normality assumption | 정규성 가정
     2. Homoskedasticity assumption | 등분산성 가정
-    3. Reliability | 신뢰도 **확인**
+    3. Reliability | 신뢰도 확인
     4. Frequency analysis  | 빈도분석
     5. Correlation analysis | 상관분석
     6. Comparison (2) | 차이비교 (2)
