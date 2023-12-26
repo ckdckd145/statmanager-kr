@@ -147,8 +147,13 @@ class StatmanagerResult:
                     return result
             
             elif self.method == 'shapiro' or self.method == 'z_normal':
-                result = qq_plot(self.df[self.vars], language_set = self.language_set)
-                return result
+                
+                if self.group_vars == None:
+                    result =  result = qq_plot(self.df[self.vars], language_set = self.language_set)
+                    return result
+                else:
+                    result = multiple_qq_plot(df = self.df, result_df = self.df_results[0], vars = self.vars, group_vars = self.group_vars, language_set=self.language_set)
+                    return result
             
             elif self.method == 'levene' or self.method == 'fmax':
                 result = boxplot_homoskedasticity(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
@@ -328,6 +333,7 @@ def pp_plot(series: pd.Series, language_set = 'kor'):
                                )
 
 def qq_plot(series: pd.Series, language_set = 'kor'):
+    plt.style.use('grayscale')
     ax = plt.subplot()
     stats.probplot(series, dist='norm', plot=ax, rvalue = True, fit = True)
     ax.grid(False)
@@ -360,19 +366,49 @@ def hist_cumulative(df: pd.DataFrame, var, n, statistic = 'count', language_set 
     plt.grid(False)
     return result_ax
 
+def multiple_qq_plot(df, result_df, vars, language_set, group_vars=None):
+    plt.style.use('grayscale')
+
+    def qqplot(data, **kwargs):
+        ax = plt.gca()  # 현재 축을 가져옵니다.
+        (osm, osr), (slope, intercept, r) = stats.probplot(data[vars], dist="norm")
+        ax.plot(osm, osr, 'o', color='black')  # 검은색 점으로 표시
+        ax.plot(osm, slope*osm + intercept, color='red')
+        ax.text(0.05, 0.95, f'R² = {r**2:.3f}', horizontalalignment='left', verticalalignment='top', transform=ax.transAxes)
+        ax.grid(False)
+
+    if isinstance(group_vars, list) and len(group_vars) > 1:
+        g = sns.FacetGrid(df, col = group_vars[0], row = group_vars[1], margin_titles=True, aspect = 1.5)
+    else:
+        g = sns.FacetGrid(df, col=group_vars, aspect = 1.5)
+    
+    for group in result_df.index:
+        if '&' in group:
+            key = tuple(group.split(' & '))
+        else:
+            key = group
+        
+        group_data = df[df[group_vars].isin([key])]
+        
+        g.map_dataframe(qqplot, data=group_data)
+
+    g.set_titles(col_template="{col_name}")
+    g.set_axis_labels("Theoretical quantiles", "Ordered Values")
+    
+    return g
+
 def multiple_plot_cdf(df, result_df, vars, language_set, group_vars = None, ) :
     for group in result_df.index:
         if '&' in group:
             key = tuple(group.split(' & '))
         else:
             key = group
-            
+                
         group_data = df.groupby(group_vars).get_group(key)
-    
+
         cdf_plots = plot_cdf(group_data, vars, language_set=language_set)
-        cdf_plots.revise(title = key)
-    
-    return cdf_plots
+        cdf_plots.revise(title = f"Kolmogorov-Smirnov Test: CDF Comparison (in {' & '.join(key) if isinstance(key, tuple) else key})")
+        
 
 def plot_cdf(df, dv, language_set): # 'kstest'
     plt.style.use('grayscale')
