@@ -18,8 +18,7 @@ def linear(df: pd.DataFrame, vars : list, lang_set, testname):
     model = api.OLS(y, x).fit()
     
     reporting_one = linear_regression_result_reporting_one (dv)[lang_set]
-    reporting_two = regression_result_reporting_ivs (iv
-                                                     )[lang_set]
+    reporting_two = regression_result_reporting_ivs (iv)[lang_set]
     
     # model_df1 = model.summary()
     # model_df2 = model.summary2(

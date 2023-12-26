@@ -204,7 +204,7 @@ class Stat_Manager:
             self.conditions_notification_texts = conditions_notification_texts
             
         if testtype == 'regression':
-            df = df.dropna(axis=0, how = 'any', subset = vars[1])
+            df = df.dropna(axis=0, how = 'any', subset = [vars[0]] + vars[1] )
         
         elif testtype == 'compare_ancova':
             
@@ -231,7 +231,6 @@ class Stat_Manager:
         
         n = len(df)
         
-        # saving for results
         self.method = method
         self.vars = vars
         self.group_vars = group_vars
