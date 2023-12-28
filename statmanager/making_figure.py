@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 import datetime as dt
+from itertools import product
 
 font_properties = {
     'kor' : 'Gulim',
@@ -431,11 +432,38 @@ def plot_cdf(df, dv, language_set): # 'kstest'
     
 def boxplot_homoskedasticity(df, vars, group_vars, language_set = 'kor'):
     plt.style.use('grayscale')
-    ax = sns.boxplot(x = group_vars, y = vars, data = df, hue = group_vars)    
+    
+    if isinstance(group_vars, list):
+        if len(group_vars) == 1:
+            ax = sns.boxplot(x = group_vars, y = vars, data = df, hue = group_vars)    
+            
+        else:
+            combi_list = [ df[group].unique() for group in group_vars ]
+            combi = product(*combi_list)
+            
+            df['group'] = None
+            
+            for combo in combi:
+                name = ' & '.join(combo)
+                conditions = [(df[var] == value) for var, value in zip(group_vars, combo)]
+                all_conditions = conditions[0]
+                for condition in conditions[1:]:
+                    all_conditions &= condition
+                    
+                df.loc[all_conditions, 'group'] = name
+            
+            ax = sns.boxplot(x = 'group', y = vars, data = df, hue = 'group', color = 'Gray')
+            labels = [item.get_text() for item in ax.get_xticklabels()]
+            ax.set_xticklabels(labels, rotation=90)
+        
+    else: # group_vars were provided as str format
+        ax = sns.boxplot(x = group_vars, y = vars, data = df, hue = group_vars)    
+        
+    
     ax.grid(False)
-    return FigureInStatmanager(xlabel = group_vars,
+    return FigureInStatmanager(xlabel = f"{' & '.join(group_vars) if isinstance(group_vars, list) and len(group_vars) > 1 else group_vars}",
                                ylabel = vars,
-                               title = f'Box plot for "{vars}"',
+                               title = f'Variance of {vars} by {group_vars if isinstance(group_vars, str) else ", ".join(group_vars)}',
                                figure = ax,
                                language_set = language_set)    
     

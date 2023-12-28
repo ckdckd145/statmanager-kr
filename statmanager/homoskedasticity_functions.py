@@ -2,28 +2,72 @@ import pandas as pd
 from scipy import stats
 from .messages_for_reporting import *
 from .making_figure import *
+from itertools import product
 
 def levene(df: pd.DataFrame, vars: str or list, group_vars: str or list, lang_set : str, testname = 'Levene Test'):
     result_for_save = []        
-    
     dv = vars[0] if isinstance(vars, list) else vars
-    group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     
-    group_names = df[group_vars].unique()
+    if isinstance(group_vars, list):
+        if len(group_vars) == 1:
+            group_vars = group_vars[0]
+            group_names = df[group_vars].unique()
+            series = []
+            
+            for _ in range(len(group_names)):
+                ser = df.loc[df[group_vars] == group_names[_], dv]
+                series.append(ser)
+            
+            result_object = stats.levene(*series)
+            s = result_object.statistic
+            p = result_object.pvalue
+            
+            conclusion_key = 'under' if p <= .05 else 'up'
+            conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
+            
+            reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
+            
+        else:
+            combo_list = [df[group].unique() for group in group_vars]
+            combi = product(*combo_list)
+            
+            series = []
+            group_names = []
+            for combo in combi:
+                try:
+                    ser = df.groupby(group_vars).get_group(combo)[dv]
+                    name = combo
+                    name = " & ".join(name) if isinstance(name, tuple) else name
+                    group_names.append(name)
+                    series.append(ser)
+                    
+                except KeyError:
+                    continue
+            result_object = stats.levene(*series)
+            s = result_object.statistic
+            p = result_object.pvalue
+            
+            conclusion_key = 'under' if p <= .05 else 'up'
+            conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
+            
+            reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
+            
+    else: # group_vars were provided as str format
+        group_names = df[group_vars].unique()
+        series = []
+        for _ in range(len(group_names)):
+            ser = df.loc[df[group_vars] == group_names[_], dv]
+            series.append(ser)
         
-    series = []
-    for _ in range(len(group_names)):
-        ser = df.loc[df[group_vars] == group_names[_], dv]
-        series.append(ser)
+        result_object = stats.levene(*series)
+        s = result_object.statistic
+        p = result_object.pvalue
         
-    result_object = stats.levene(*series)
-    s = result_object.statistic
-    p = result_object.pvalue
+        conclusion_key = 'under' if p <= .05 else 'up'
+        conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
+        
+        reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
     
-    reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
-    
-    conclusion_key = 'under' if p <= .05 else 'up'
-    conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
     
     result_for_save.append(reporting)
     result_for_save.append(conclusion)
