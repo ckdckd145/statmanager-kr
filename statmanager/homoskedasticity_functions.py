@@ -78,26 +78,70 @@ def levene(df: pd.DataFrame, vars: str or list, group_vars: str or list, lang_se
     return result_for_save
 
 def fmax(df: pd.DataFrame, vars: str or list, group_vars: str, lang_set : str, testname = 'Fmax Test'):
+    
+    
     result_for_save = [] 
     dv = vars[0] if isinstance(vars, list) else vars
-    group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     
-    group_names = df[group_vars].unique()
+    if isinstance(group_vars, list):
+        if len(group_vars) == 1:
+            group_vars = group_vars[0]
+            group_names = df[group_vars].unique()
+            group_n = len(group_names)     
+            max_variance = df.groupby(group_vars)[vars].var().max().round(3)
+            min_variance = df.groupby(group_vars)[vars].var().min().round(3)
+        
+            f_max = max_variance / min_variance
+            
+            reporting = fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
+            
+            conclusion_key = 'up' if f_max < 10 else 'under'
+            conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
+        
+        else:
+            combi_list = [ df[group].unique() for group in group_vars ]
+            combi = product(*combi_list)
+            
+            series = []
+            group_names = []
+            
+            for combo in combi:
+                try:
+                    ser = df.groupby(group_vars).get_group(combo)[dv]
+                    name = combo
+                    name = " & ".join(name) if isinstance(name, tuple) else name
+                    group_names.append(name)
+                    series.append(ser)
+                
+                except KeyError:
+                    continue
+            
+            group_n = len(group_names)
+            max_variance = df.groupby(group_vars)[vars].var().max().round(3)
+            min_variance = df.groupby(group_vars)[vars].var().min().round(3)
+            
+            f_max = max_variance / min_variance
+            
+            reporting = fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
+            
+            conclusion_key = 'up' if f_max < 10 else 'under'
+            conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
+            
+    else:
+        group_names = df[group_vars].unique()
+        group_n = len(group_names)     
+        max_variance = df.groupby(group_vars)[vars].var().max().round(3)
+        min_variance = df.groupby(group_vars)[vars].var().min().round(3)
     
-    df = df.loc[df[group_vars].isin(group_names)]
-    group_n = len(group_names)
+        f_max = max_variance / min_variance
+        
+        reporting = fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
+        
+        conclusion_key = 'up' if f_max < 10 else 'under'
+        conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
+        
     
-    max_variance = df.groupby(group_vars)[vars].var().max().round(3)
-    min_variance = df.groupby(group_vars)[vars].var().min().round(3)
-    
-    f_max = max_variance / min_variance
-    
-    reporting = fmax_result_reporting(dv, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
-    
-    conclusion_key = 'up' if f_max < 10 else 'under'
-    conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
     ref = reference_of_fmax
-    
     result_for_save.append(reporting)
     result_for_save.append(conclusion)
     result_for_save.append(ref)

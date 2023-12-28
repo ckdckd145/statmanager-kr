@@ -418,10 +418,10 @@ valueerror_message_for_trim_ratio = {
 }
 
 
-def fmax_result_reporting(dv, group_n, group_names, max_variance, min_variance, f_max):
+def fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max):
     reporting_result = {
-        'kor' : f"집단변수: {dv}\n집단 수 = {group_n}\n집단 구분 : {group_names}\n\n집단 중 최대 분산 = {max_variance:.3f}\n집단 중 최소 분산 = {min_variance:.3f}\nF-max statistic = {f_max:.3f}\n",
-        'eng' : f"Group variable: {dv}\nNo. of groups = {group_n}\nIncluded groups : {group_names}\n\nMax variance among groups = {max_variance:.3f}\nMin variance among groups = {min_variance:.3f}\nF-max statistic = {f_max:.3f}\n",
+        'kor' : f"변수: {dv}\n집단 변수: {group_vars}\n집단 수 = {group_n}\n집단 구분 : {group_names}\n\n집단 중 최대 분산 = {max_variance:.3f}\n집단 중 최소 분산 = {min_variance:.3f}\nF-max statistic = {f_max:.3f}\n",
+        'eng' : f"Variable: {dv}\nGroup variable : {group_vars}\nNo. of groups = {group_n}\nIncluded groups : {group_names}\n\nMax variance among groups = {max_variance:.3f}\nMin variance among groups = {min_variance:.3f}\nF-max statistic = {f_max:.3f}\n",
     }
     return reporting_result
 

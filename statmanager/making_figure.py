@@ -452,8 +452,10 @@ def boxplot_homoskedasticity(df, vars, group_vars, language_set = 'kor'):
                     
                 df.loc[all_conditions, 'group'] = name
             
-            ax = sns.boxplot(x = 'group', y = vars, data = df, hue = 'group', color = 'Gray')
+            ax = sns.boxplot(x = 'group', y = vars, data = df, hue = 'group', palette='dark:Gray')
             labels = [item.get_text() for item in ax.get_xticklabels()]
+            xt = ax.get_xticks()
+            ax.set_xticks(xt)
             ax.set_xticklabels(labels, rotation=90)
         
     else: # group_vars were provided as str format
