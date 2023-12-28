@@ -5,6 +5,7 @@ import pandas as pd
 from scipy import stats
 import datetime as dt
 from itertools import product
+import re 
 
 font_properties = {
     'kor' : 'Gulim',
@@ -177,7 +178,7 @@ class StatmanagerResult:
                 return result
             
             elif self.method == 'ttest_ind_trim':
-                result = bar_between_trim(df = self.df_results[0],  vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                result = bar_between_trim(df = self.df_results[0],  vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, result = self.result)
                 return result
             
             elif self.method == 'mannwhitneyu' or self.method == 'brunner' or self.method == 'kruskal':# or self.method == 'rm_ancova'  --> should be different
@@ -543,7 +544,7 @@ def bar_between (df, vars, group_vars, parametric, language_set):
                                language_set = language_set)
     
 
-def bar_between_trim (df: pd.DataFrame, vars, group_vars, language_set):
+def bar_between_trim (df: pd.DataFrame, vars, group_vars, language_set, result):
     
     plt.style.use('grayscale')
     
@@ -551,6 +552,13 @@ def bar_between_trim (df: pd.DataFrame, vars, group_vars, language_set):
     means = df.loc['mean'].to_list()
     stds = df.loc['std'].to_list()
     
+    warning = re.search('Warning', result[0])
+    
+    if warning: 
+        trim_ratio = ""
+    else:
+        trim_ratio = re.search(r'\b\d+(\.\d+)?%', result[0]).group()
+        trim_ratio = ' (Trim ratio :' + trim_ratio + ')'
     x = np.arange(len(categories)) # set the barplot location
     
     fig, ax = plt.subplots()
@@ -561,7 +569,7 @@ def bar_between_trim (df: pd.DataFrame, vars, group_vars, language_set):
     
     return FigureInStatmanager(xlabel = group_vars,
                                ylabel = vars,
-                               title = f'Mean differences in {vars} by {group_vars}',
+                               title = f'Mean differences in {vars} by {group_vars}{trim_ratio}',
                                figure = ax,
                                language_set=language_set)
 
@@ -790,3 +798,69 @@ def roc_curve(df, vars, language_set):
                                title = 'ROC curve',
                                figure = ax,
                                language_set=language_set)
+    
+    
+    
+
+# revise - change ver? 
+
+# def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None, figsize=None, font=None, font_scale=None):
+    
+#     if xlabel is not None:
+#         self.xlabel = xlabel
+    
+#     if ylabel is not None:
+#         self.ylabel = ylabel
+    
+#     if title is not None:
+#         self.title = title
+    
+#     if xticks is not None:
+#         self.xticks = xticks
+    
+#     if yticks is not None:
+#         self.yticks = yticks
+        
+#     if style is not None:
+#         self.style = style
+
+#     if figsize is not None:
+#         self.figsize = figsize
+        
+#     if font is not None:
+#         self.font_properties = font
+    
+#     if font_scale is not None:
+#         self.font_scale = font_scale
+    
+#     # Check if the object is an Axes or FacetGrid
+#     if isinstance(self.ax, sns.axisgrid.FacetGrid):
+#         # Apply settings to each Axes in the FacetGrid
+#         for ax in self.ax.axes.flatten():
+#             self.apply_settings_to_axis(ax)
+#     else:
+#         # Apply settings to a single Axes object
+#         self.apply_settings_to_axis(self.ax)
+    
+#     return self
+
+# def apply_settings_to_axis(self, ax):
+#     plt.style.use(self.style)
+#     sns.set(font=self.font_properties, font_scale=self.font_scale)
+
+#     try:
+#         if self.xlabel:
+#             ax.set_xlabel(self.xlabel)
+#         if self.ylabel:
+#             ax.set_ylabel(self.ylabel)
+#         if self.title:
+#             ax.set_title(self.title)
+#         if self.xticks is not None:
+#             ax.set_xticks(self.xticks)
+#         if self.yticks is not None:
+#             ax.set_yticks(self.yticks)
+#         if self.figsize:
+#             ax.figure.set_size_inches(self.figsize[0], self.figsize[1])
+#         ax.grid(False)  # Turn off grid
+#     except:
+#         pass  # In case the object does not support a particular setting

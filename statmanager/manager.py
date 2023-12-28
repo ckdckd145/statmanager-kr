@@ -133,7 +133,7 @@ class Stat_Manager:
                 else:
                     trim_ratio = float(trim_ratio)
                     
-                    if trim_ratio > 0.5 or trim_ratio <= 0:
+                    if trim_ratio >= 0.5 or trim_ratio <= 0:
                         raise ValueError(valueerror_message_for_trim_ratio[self.language_set])
                     else:
                         pass

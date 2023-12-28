@@ -15,6 +15,8 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
     
     dv = vars[0] if isinstance(vars, list) else vars
     
+    group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
+    
     group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
@@ -60,11 +62,13 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
 def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, trim = None):
     
     result_for_save = []
+    trim_not_working = False
     
     dv = vars[0] if isinstance(vars, list) else vars
     
     group_names = df[group_vars].unique()
-
+    group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
+    
     df = df.loc[df[group_vars].isin(group_names)]
     
     series = []
@@ -82,16 +86,20 @@ def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_s
     # trimmed_data
     
     df_trimed = df[[dv, group_vars]]
-    score1 = np.sort(df_trimed.loc[df_trimed[group_vars] == group_names[0], vars])
-    score2 = np.sort(df_trimed.loc[df_trimed[group_vars] == group_names[1], vars])
-    
+    score1 = np.sort(df_trimed.loc[df_trimed[group_vars] == group_names[0], dv])
+    score2 = np.sort(df_trimed.loc[df_trimed[group_vars] == group_names[1], dv])
+
     g_score1 = int(len(score1) * trim)
     g_score2 = int(len(score2) * trim)
     
-    trimed_series1 = pd.Series(score1[g_score1 : -g_score1])
-    trimed_series2 = pd.Series(score2[g_score2 : -g_score2])
-    
-    trimed_series = [trimed_series1, trimed_series2]
+    if g_score1 != 0 and g_score2 != 0:
+        trimed_series1 = pd.Series(score1[g_score1 : -g_score1])
+        trimed_series2 = pd.Series(score2[g_score2 : -g_score2])
+        trimed_series = [trimed_series1, trimed_series2]
+    else:
+        trimed_series = series
+        trim_not_working = True
+        add_notation = notation_for_not_trim[lang_set]
     cohen_d = calculate_cohen(trimed_series)
     
     describe_df = pd.DataFrame(columns = [group_names[0], group_names[1]], index = ['n', 'mean', 'median', 'std', 'min', 'max'])
@@ -103,9 +111,15 @@ def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_s
         describe_df.loc['std', group_names[n]] = trimed_series[n].std().round(3)
         describe_df.loc['min', group_names[n]] = trimed_series[n].min().round(3)
         describe_df.loc['max', group_names[n]] = trimed_series[n].max().round(3)
+
     
     notation = notation_for_trim_ttest(trim)[lang_set]
+    
+    if trim_not_working:
+        notation = notation + add_notation
+    
     reporting_one = compare_btwgroup_result_reporting_one(dv, group_vars, group_names)[lang_set]
+    
     reporting_two = ttest_ind_result_reporting_two (s, p, dof, ci, cohen_d)[lang_set]
     result_for_save.append(notation)
     result_for_save.append(reporting_one)
@@ -131,7 +145,7 @@ def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
-    
+    group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
@@ -176,7 +190,7 @@ def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
-    
+    group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
@@ -216,7 +230,7 @@ def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, te
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
-    
+    group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
@@ -264,7 +278,7 @@ def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, te
     
 def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
-    
+    group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     dv = vars[0] if isinstance(vars, list) else vars
     
     group_names = df[group_vars].unique()

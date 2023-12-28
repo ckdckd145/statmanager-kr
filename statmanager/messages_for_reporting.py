@@ -342,12 +342,17 @@ def nway_ancova_result_reporting (dv, group_vars, covars):
 
 def notation_for_trim_ttest(trim):
     result ={
-        'kor' : f"Note: 백분율을 기준으로 상위 및 하위 {trim * 100}% 데이터를 자르고 분석이 진행됩니다.\n",
-        'eng' : f"Note: The analysis will trim the top and bottom {trim * 100}% data based on percentage.\n",
+        'kor' : f"Note: 백분율을 기준으로 상위 및 하위 {(trim * 100):.2f}% 데이터를 자르고 분석이 진행됩니다.\n",
+        'eng' : f"Note: The analysis will trim the top and bottom {(trim * 100):.2f}% data based on percentage.\n",
     }
 
     return result
-    
+
+notation_for_not_trim = {
+    'kor' : '\nWarning: 제공된 trim ratio를 적용하였을 때 잘리는 데이터가 없습니다.\n기존 데이터 세트에 대한 독립표본 t검정이 적용됩니다.\n',
+    'eng' : '\nWarning: No data is truncated when the provided trim ratio is applied.\nAn independent sample t-test on the existing data set is conducted.\n'
+}
+
 def compare_btwgroup_result_reporting_one (dv, group_vars, group_names):
     
     reporting_result_one = {
@@ -409,7 +414,7 @@ notation_message_for_returning_bootstrap_df = {
 
 notation_for_trim_ratio_when_zero = {
     'kor' : f"trim ratio가 입력되지 않아, 기본 값인 0.2로 분석이 진행됩니다.\ntrim ratio는 0 ~ 0.5 사이의 수치가 권고됩니다.\n자세한 내용은 아래 레퍼런스를 참고하십시오.\n\n{TRIM_REFERENCE}",
-    'eng' : f"The trim ratio wasn't entered, so the analysis proceeds with set the trim ratio as 0.2.\nThe trim ratio is recommended to be set ranging from 0 to 0.5\nCSee the reference below for more information.\n\nP{TRIM_REFERENCE}",
+    'eng' : f"The trim ratio wasn't entered, so the analysis proceeds with set the trim ratio as 0.2.\nThe trim ratio is recommended to be set ranging from 0 to 0.5\nSee the reference below for more information.\n\n{TRIM_REFERENCE}",
 }
 
 valueerror_message_for_trim_ratio = {
