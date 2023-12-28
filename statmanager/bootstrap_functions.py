@@ -10,7 +10,7 @@ confidence_cutoff = {
     0.99 : [0.5, 99.5],
 }
 
-def percentile_method(df: pd.DataFrame, vars: list or str, group_vars: str, lang_set :str, resampling_no : int, testname = 'Bootstrapping Percentile method', group_names = None):
+def percentile_method(df: pd.DataFrame, vars: list or str, group_vars: str, lang_set :str, resampling_no : int, testname = 'Bootstrapping Percentile method'):
     
     testname = f"{testname} {resampling_no} \n"
     result_for_save = []
@@ -53,8 +53,7 @@ def percentile_method(df: pd.DataFrame, vars: list or str, group_vars: str, lang
     else: #between groups
         dv = vars[0] if isinstance(vars, list) else vars
         
-        if group_names == None:
-            group_names = df[group_vars].unique()
+        group_names = df[group_vars].unique()
         
         if len(group_names) > 2:
             raise ValueError(valueerror_message_for_bootstrap[lang_set])

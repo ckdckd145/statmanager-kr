@@ -7,16 +7,12 @@ from statsmodels.formula.api import ols
 
 # RULE :  args for 'vars' --> [dv, [covar]]
 
-def oneway_ancova(df:pd.DataFrame, vars: list, lang_set, testname, posthoc, posthoc_method, group_vars = None, group_names = None):
+def oneway_ancova(df:pd.DataFrame, vars: list, lang_set, testname, posthoc, posthoc_method, group_vars = None):
     
     result_for_save = []
     
+    group_names = df[group_vars].unique()
     
-    if group_names == None:
-        group_names = df[group_vars].unique()
-    
-    else:
-        df = df[df[group_vars].isin(group_names)]
     
     dv = vars[0]
     covars = vars[1]
@@ -112,7 +108,7 @@ def oneway_ancova(df:pd.DataFrame, vars: list, lang_set, testname, posthoc, post
     return result_for_save 
     
 
-def rm_ancova(df:pd.DataFrame, vars: list, group_vars, lang_set, testname, posthoc, posthoc_method, group_names = None):
+def rm_ancova(df:pd.DataFrame, vars: list, group_vars, lang_set, testname, posthoc, posthoc_method):
     
     result_for_save = []
     

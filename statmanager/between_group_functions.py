@@ -10,13 +10,12 @@ from statsmodels.formula.api import ols
 
 AGG_FORMULA = ['count', 'mean', 'median', 'std', 'min', 'max'] # .round(3).rename(columns = {'count' : 'n'})
 
-def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None):
+def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
     
-    if group_names == None:
-        group_names = df[group_vars].unique()
+    group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
     
@@ -58,14 +57,13 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
                 
     return result_for_save
 
-def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None, trim = None):
+def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, trim = None):
     
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
     
-    if group_names == None:
-        group_names = df[group_vars].unique()
+    group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
     
@@ -129,13 +127,12 @@ def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_s
     
     
     
-def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None):
+def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
     
-    if group_names == None:
-        group_names = df[group_vars].unique()
+    group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
     
@@ -175,13 +172,12 @@ def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set
                 
     return result_for_save
 
-def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None):
+def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
     
-    if group_names == None:
-        group_names = df[group_vars].unique()
+    group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
     
@@ -216,13 +212,12 @@ def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
                 
     return result_for_save
 
-def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None):
+def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
     
-    if group_names == None:
-        group_names = df[group_vars].unique()
+    group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
     
@@ -267,13 +262,12 @@ def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, te
                 
     return result_for_save    
     
-def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None):
+def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
     
-    if group_names == None:
-        group_names = df[group_vars].unique()
+    group_names = df[group_vars].unique()
 
     df = df.loc[df[group_vars].isin(group_names)]
     

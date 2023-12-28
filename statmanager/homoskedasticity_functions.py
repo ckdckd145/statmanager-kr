@@ -3,14 +3,13 @@ from scipy import stats
 from .messages_for_reporting import *
 from .making_figure import *
 
-def levene(df: pd.DataFrame, vars: str or list, group_vars: str or list, lang_set : str, testname = 'Levene Test', group_names: list = None):
+def levene(df: pd.DataFrame, vars: str or list, group_vars: str or list, lang_set : str, testname = 'Levene Test'):
     result_for_save = []        
     
     dv = vars[0] if isinstance(vars, list) else vars
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     
-    if group_names == None:
-        group_names = df[group_vars].unique()
+    group_names = df[group_vars].unique()
         
     series = []
     for _ in range(len(group_names)):
@@ -34,13 +33,12 @@ def levene(df: pd.DataFrame, vars: str or list, group_vars: str or list, lang_se
         
     return result_for_save
 
-def fmax(df: pd.DataFrame, vars: str or list, group_vars: str, lang_set : str, testname = 'Fmax Test', group_names: list = None):
+def fmax(df: pd.DataFrame, vars: str or list, group_vars: str, lang_set : str, testname = 'Fmax Test'):
     result_for_save = [] 
     dv = vars[0] if isinstance(vars, list) else vars
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     
-    if group_names == None:
-        group_names = df[group_vars].unique()
+    group_names = df[group_vars].unique()
     
     df = df.loc[df[group_vars].isin(group_names)]
     group_n = len(group_names)

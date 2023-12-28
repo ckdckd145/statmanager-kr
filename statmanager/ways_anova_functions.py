@@ -16,7 +16,7 @@ import copy
 AGG_FORMULA = ['count', 'mean', 'median', 'std', 'min', 'max'] # .round(3).rename(columns = {'count' : 'n'})
 
 
-def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None, selector = None):
+def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, selector = None):
     result_for_save = []
     
     df, interaction_columns = create_interaction_columns(df, group_vars)
@@ -65,7 +65,7 @@ def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, test
     result_for_save.append(anova_table)
     
     if posthoc:
-        posthoc_results = posthoc_ways(df = df, dv = dv, group_vars = group_vars, group_names = group_names, parametric = True, posthoc_method = posthoc_method, interaction_columns = interaction_columns, lang_set = lang_set)
+        posthoc_results = posthoc_ways(df = df, dv = dv, group_vars = group_vars, parametric = True, posthoc_method = posthoc_method, interaction_columns = interaction_columns, lang_set = lang_set)
         result_for_save.extend(posthoc_results)
         
     print(testname)
@@ -82,7 +82,7 @@ def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, test
     
     
     
-def f_nway_rm(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, group_names : list = None, selector = None):
+def f_nway_rm(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, selector = None):
     result_for_save = []
     
     group_vars_for_reporting = copy.copy(group_vars)
@@ -138,7 +138,7 @@ def f_nway_rm(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
     result_for_save.append(anova_table)
 
     if posthoc:
-        posthoc_results = posthoc_ways(df = df, dv = dv, group_vars = group_vars, group_names = group_names, parametric = True, posthoc_method = posthoc_method, interaction_columns = interaction_columns, lang_set = lang_set)
+        posthoc_results = posthoc_ways(df = df, dv = dv, group_vars = group_vars, parametric = True, posthoc_method = posthoc_method, interaction_columns = interaction_columns, lang_set = lang_set)
         result_for_save.extend(posthoc_results)
         
     print(testname)

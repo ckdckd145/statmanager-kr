@@ -72,7 +72,7 @@ class Stat_Manager:
         self.menu = menu
         self.menu.update(figure_functions)
         
-    def progress(self, method: str, vars: list, group_vars: str = None, group_names: list = None, posthoc: bool = False, posthoc_method: str = 'bonf', selector: dict = None):
+    def progress(self, method: str, vars: list, group_vars: str = None, posthoc: bool = False, posthoc_method: str = 'bonf', selector: dict = None):
         """
         Please check the documentation : https://cslee145.notion.site/statmanager-kr-Documentation-c9d0886f29ea461d9d0f44449a145f8a?pvs=4
         
@@ -236,82 +236,82 @@ class Stat_Manager:
         self.group_vars = group_vars
         self.df = df
         
-        if testtype == 'frequency_analysis': 
+        if testtype == 'frequency_analysis': # done
             
             result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object            
             
-        if testtype == 'normality': 
+        if testtype == 'normality':  # done
             
             result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname, group_vars = group_vars)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
             
-        if testtype == 'homoskedasticity': 
-            result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname)
+        if testtype == 'homoskedasticity': # done
+            result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
         
-        if testtype == 'bootstrap':
-            result, figure_object = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, resampling_no = resampling_no, lang_set = self.language_set, testname = testname)
+        if testtype == 'bootstrap': # done
+            result, figure_object = testfunc(df = df, vars = vars, group_vars = group_vars, resampling_no = resampling_no, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object, figure_object
         
-        if testtype == 'within_group':
+        if testtype == 'within_group': # done 
             result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
             
-        if testtype == 'anova_nways' :
-            result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, selector = self.selector)
+        if testtype == 'anova_nways' : # done
+            result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, selector = self.selector)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object                       
             
-        if testtype == 'compare_ancova':
-            result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
+        if testtype == 'compare_ancova': #done
+            result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object                       
         
-        if testtype == 'between_group':
+        if testtype == 'between_group': # done
             
             if method == 'ttest_ind_trim':
-                result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, trim = trim_ratio)
+                result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, trim = trim_ratio)
             else:
-                result = testfunc(df = df, vars = vars, group_vars = group_vars, group_names = group_names, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
+                result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object            
             
-        if testtype == 'correlation':
+        if testtype == 'correlation': # done
             
             result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
     
-        if testtype == 'regression':
+        if testtype == 'regression': # done
             
             result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object 
 
-        if testtype == 'reliability':
+        if testtype == 'reliability': # done
             
             result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
     
-        if testtype == 'making_figure':
+        if testtype == 'making_figure': # done
             
             if method == 'pp_plot' or method == 'qq_plot':
                 
                 figure_object = testfunc(series = self.df[self.vars], language_set = self.language_set)
                 return figure_object
             
-            if 'hist' in method:
+            if 'hist' in method: 
                 
                 figure_object = testfunc(df = self.df, var = self.vars, n = n, language_set = self.language_set)
                 return figure_object
-
+ 
             if 'boxplot' in method:
                 
                 figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
