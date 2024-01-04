@@ -7,13 +7,11 @@ import datetime as dt
 from itertools import product
 import re 
 
-font_properties = {
-    'kor' : 'Gulim',
-    'eng' : 'Times New Roman',
-}
+font_properties = 'Times New Roman'
 
-# make sure that all function should be finished with returning FigureInStatmanager object... Don't forget...
 
+sns.set(font = font_properties, font_scale = 1.5, style = None, rc = None, palette=None)
+plt.style.use('grayscale')
 
 TODAY = dt.datetime.now().strftime('%Y-%m-%d')
 NOW_TIME = dt.datetime.now().strftime("%H:%M:%S")
@@ -36,6 +34,8 @@ class StatmanagerResult:
         self.testname = testname
         
         self.df_results = []
+        
+        
         for _ in result:
             if type(_) == pd.DataFrame:
                 self.df_results.append(_)
@@ -142,63 +142,63 @@ class StatmanagerResult:
         if method == 'auto':
             if self.method == 'kstest':
                 if self.group_vars == None:
-                    result = plot_cdf(df = self.df, dv = self.vars, language_set = self.language_set)
+                    result = plot_cdf(df = self.df, dv = self.vars)
                     return result
                 else:
-                    result = multiple_plot_cdf(df = self.df, result_df = self.df_results[0], vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                    result = multiple_plot_cdf(df = self.df, vars = self.vars, group_vars = self.group_vars)
                     return result
             
             elif self.method == 'shapiro' or self.method == 'z_normal':
                 
                 if self.group_vars == None:
-                    result =  result = qq_plot(self.df[self.vars], language_set = self.language_set)
+                    result =  result = qq_plot(self.df[self.vars])
                     return result
                 else:
-                    result = multiple_qq_plot(df = self.df, result_df = self.df_results[0], vars = self.vars, group_vars = self.group_vars, language_set=self.language_set)
+                    result = multiple_qq_plot(df = self.df, result_df = self.df_results[0], vars = self.vars, group_vars = self.group_vars)
                     return result
             
             elif self.method == 'levene' or self.method == 'fmax':
-                result = boxplot_homoskedasticity(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                result = boxplot_homoskedasticity(df = self.df, vars = self.vars, group_vars = self.group_vars)
                 return result
             
             elif self.method == 'pearsonr' or self.method == 'spearmanr' or self.method == 'kendallt':
-                result = correlation_heatmap(self.df_results[1], language_set = self.language_set, testname = self.method)
+                result = correlation_heatmap(self.df_results[1], testname = self.method)
                 return result
             
             elif self.method == 'ttest_rel' or self.method == 'f_oneway_rm':
-                result = point_within(df = self.df, vars = self.vars, language_set = self.language_set, parametric = True)
+                result = point_within(df = self.df, vars = self.vars, parametric = True)
                 return result
             
             elif self.method == 'wilcoxon' or self.method == 'friedman':
-                result = point_within(df = self.df, vars = self.vars, language_set = self.language_set, parametric = False)
+                result = point_within(df = self.df, vars = self.vars, parametric = False)
                 return result
             
             elif self.method == 'ttest_ind' or self.method == 'f_oneway': # or self.method == 'oneway_ancova'  --> should be different
-                result = bar_between(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, parametric = True)
+                result = bar_between(df = self.df, vars = self.vars, group_vars = self.group_vars, parametric = True)
                 return result
             
             elif self.method == 'ttest_ind_trim':
-                result = bar_between_trim(df = self.df_results[0],  vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, result = self.result)
+                result = bar_between_trim(df = self.df_results[0],  vars = self.vars, group_vars = self.group_vars, result = self.result)
                 return result
             
             elif self.method == 'mannwhitneyu' or self.method == 'brunner' or self.method == 'kruskal':# or self.method == 'rm_ancova'  --> should be different
-                result = bar_between(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, parametric = False)
+                result = bar_between(df = self.df, vars = self.vars, group_vars = self.group_vars, parametric = False)
                 return result                
             
             elif self.method == 'f_nway':
-                result = f_nway_plot(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                result = f_nway_plot(df = self.df, vars = self.vars, group_vars = self.group_vars)
                 return result
             
             elif self.method == 'f_nway_rm':
-                result = f_nway_rm_plot(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                result = f_nway_rm_plot(df = self.df, vars = self.vars, group_vars = self.group_vars)
                 return result
             
             elif self.method == 'linearr':
-                result = residual_plot(df = self.df, vars = self.vars, language_set = self.language_set)
+                result = residual_plot(df = self.df, vars = self.vars)
                 return result
             
             elif self.method == 'logisticr':
-                result = roc_curve (df = self.df, vars = self.vars, language_set = self.language_set)
+                result = roc_curve (df = self.df, vars = self.vars)
                 return result
         
         else:
@@ -208,113 +208,192 @@ class StatmanagerResult:
             
             if method == 'pp_plot' or method == 'qq_plot':
                 
-                figure_object = testfunc(series = self.df[self.vars], language_set = self.language_set)
+                figure_object = testfunc(series = self.df[self.vars])
                 return figure_object
             
             if 'hist' in method:
                 
-                figure_object = testfunc(df = self.df, var = self.vars, n = n, language_set = self.language_set)
+                figure_object = testfunc(df = self.df, var = self.vars, n = n)
                 return figure_object
 
             if 'boxplot' in method:
                 
-                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars)
                 return figure_object
             
             if method == 'point_within':
                 
-                figure_object = testfunc(df = self.df, vars = self.vars, language_set = self.language_set, parametric = True)
+                figure_object = testfunc(df = self.df, vars = self.vars, parametric = True)
                 return figure_object
             
             if method == 'bar_between':
-                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, parametric = True)
+                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, parametric = True)
                 return figure_object
 
-class FigureInStatmanager:
-    def __init__(self, xlabel, ylabel, title, xticks=None, yticks=None, figure=None, style='grayscale', language_set = 'kor'):
+# class FigureInStatmanager:
+#     def __init__(self, xlabel, ylabel, title, xticks=None, yticks=None, figure=None, language_set = 'kor'):
         
-        self.language_set = language_set
-        self.font_properties = font_properties[self.language_set]
-        self.font_scale = 1.5
-        self.xlabel = xlabel
-        self.ylabel = ylabel
-        self.title = title
-        self.xticks = xticks
-        self.yticks = yticks
-        self.ax = figure
-        self.style = style
-        self.figsize = (10, 8)
+#         self.language_set = language_set
+#         self.font_properties = font_properties[self.language_set]
+#         self.font_scale = 1.5
+#         self.xlabel = xlabel
+#         self.ylabel = ylabel
+#         self.title = title
+#         self.xticks = xticks
+#         self.yticks = yticks
+#         self.ax = figure
+#         self.style = 'grayscale'
+#         self.figsize = (10, 8)
         
-        if figure is not None:
-            self.apply_settings()
+#         sns.set(font = self.font_properties, font_scale = self.font_scale, style = None, rc = None, palette=None)
         
-    def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None, figsize=None, font=None, font_scale=None):
-        
-        if xlabel is not None:
-            self.xlabel = xlabel
-        
-        if ylabel is not None:
-            self.ylabel = ylabel
-        
-        if title is not None:
-            self.title = title
-        
-        if xticks is not None:
-            self.xticks = xticks
-        
-        if yticks is not None:
-            self.yticks = yticks
+#         if figure is not None:
+#             if isinstance(self.ax, sns.axisgrid.FacetGrid):
+#                 self.ax.fig.suptitle(self.title)
+#                 self.ax.fig.set_size_inches(self.figsize[0], self.figsize[1])
+                
+#                 for ax in self.ax.axes.flatten():
+#                     self.apply_settings_to_axis(ax)
+#             else:
+#                 self.apply_settings()
             
-        if style is not None:
-            self.style = style
+#     def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None, figsize=None, font=None, font_scale=None):
+        
+#         if xlabel is not None:
+#             self.xlabel = xlabel
+        
+#         if ylabel is not None:
+#             self.ylabel = ylabel
+        
+#         if title is not None:
+#             self.title = title
+        
+#         if xticks is not None:
+#             self.xticks = xticks
+        
+#         if yticks is not None:
+#             self.yticks = yticks
+            
+#         if style is not None:
+#             self.style = style
 
-        if figsize is not None:
-            self.figsize = figsize
+#         if figsize is not None:
+#             self.figsize = figsize
             
-        if font is not None:
-            self.font_properties = font
+#         if font is not None:
+#             self.font_properties = font
         
-        if font_scale is not None:
-            self.font_scale = font_scale
+#         if font_scale is not None:
+#             self.font_scale = font_scale
         
-        self.apply_settings()
+#         sns.set(font = self.font_properties, font_scale = self.font_scale, style = None, rc = None, palette = None)
+#         # Check if the object is an Axes or FacetGrid
+#         if isinstance(self.ax, sns.axisgrid.FacetGrid):
+#             if self.title:
+#                 self.ax.fig.suptitle(self.title)
+                
+#             if self.figsize:
+#                 self.ax.fig.set_size_inches(self.figsize[0], self.figsize[1])
+#             for ax in self.ax.axes.flatten():
+#                 sns.set(font = self.font_properties, font_scale = self.font_scale, style = None, rc = None, palette = None)
+#                 self.apply_settings_to_axis(ax)
+#         else:
+#             # Apply settings to a single Axes object
+#             self.apply_settings()
         
-        return self
-
-    def apply_settings(self):
-        
-        plt.style.use(self.style)
-        sns.set(font = self.font_properties, font_scale = self.font_scale)
-        
-        try:
-            self.ax.set_xlabel(self.xlabel)
-            
-            self.ax.set_ylabel(self.ylabel)
-            
-            self.ax.set_title(self.title)
-            
-            if self.xticks is not None:
-                self.ax.set_xticks(self.xticks)
-            
-            if self.yticks is not None:
-                self.ax.set_yticks(self.yticks)
-            
-            if self.figsize is not None:
-                self.ax.figure.set_size_inches(self.figsize[0], self.figsize[1])
-            
-        except:
-            pass
+#         return self
     
-    def show(self):
-        plt.show(False)
+#     def apply_settings_to_axis(self, ax):
         
-        return self
+#         sns.set(font=self.font_properties, font_scale=self.font_scale, style = None, rc = None, palette = None)
+        
+#         if not self.style == 'grayscale':
+#             plt.style.use(self.style)
+        
+#         try:
+#             if self.xlabel:
+#                 ax.set_xlabel(self.xlabel)
+#             if self.ylabel:
+#                 ax.set_ylabel(self.ylabel)
+#             if self.xticks is not None:
+#                 ax.set_xticks(self.xticks)
+#             if self.yticks is not None:
+#                 ax.set_yticks(self.yticks)
+#             ax.grid(False)  
+        
+#         except:
+#             pass  # In case the object does not support a particular setting
+
+        
+    # def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None, figsize=None, font=None, font_scale=None):
+        
+    #     if xlabel is not None:
+    #         self.xlabel = xlabel
+        
+    #     if ylabel is not None:
+    #         self.ylabel = ylabel
+        
+    #     if title is not None:
+    #         self.title = title
+        
+    #     if xticks is not None:
+    #         self.xticks = xticks
+        
+    #     if yticks is not None:
+    #         self.yticks = yticks
+            
+    #     if style is not None:
+    #         self.style = style
+
+    #     if figsize is not None:
+    #         self.figsize = figsize
+            
+    #     if font is not None:
+    #         self.font_properties = font
+        
+    #     if font_scale is not None:
+    #         self.font_scale = font_scale
+        
+    #     self.apply_settings()
+        
+    #     return self
+
+    # def apply_settings(self):
+        
+    #     sns.set(font = self.font_properties, font_scale = self.font_scale, style = None, rc = None, palette = None)
+        
+    #     if not self.style == 'grayscale':
+    #         plt.style.use(self.style)
+        
+    #     try:
+    #         self.ax.set_xlabel(self.xlabel)
+            
+    #         self.ax.set_ylabel(self.ylabel)
+            
+    #         self.ax.set_title(self.title)
+            
+    #         if self.xticks is not None:
+    #             self.ax.set_xticks(self.xticks)
+            
+    #         if self.yticks is not None:
+    #             self.ax.set_yticks(self.yticks)
+            
+    #         if self.figsize is not None:
+    #             self.ax.figure.set_size_inches(self.figsize[0], self.figsize[1])
+            
+    #     except:
+    #         pass
     
-    def save():
-        pass
+    # def show(self):
+    #     plt.show(False)
+        
+    #     return self
+    
+    # def save():
+    #     pass
 
 
-def pp_plot(series: pd.Series, language_set = 'kor'):
+def pp_plot(series: pd.Series):
     sorted_data = series.sort_values()
     cdf = np.arange(1, len(sorted_data)+1) / len(sorted_data)
     
@@ -326,16 +405,21 @@ def pp_plot(series: pd.Series, language_set = 'kor'):
     ax.plot([0, 1], [0, 1], color='red', linestyle='-', linewidth=2)
     ax.text(x= 0.7, y= 0.2, s = f"R\u00B2 = {r_value:.4f}", style = 'italic')
     ax.grid(False)
+    ax.set_title('p-p plot')
+    ax.set_xlabel('Theoretical cumulative distribution')
+    ax.set_ylabel('Empirical cumulative distribution')
+    ax.figure.set_size_inches(10, 8)
     
-    return FigureInStatmanager(xlabel = 'Theoretical cumulative distribution', 
-                               ylabel = 'Empirical cumulative distribution',
-                               title = 'p-p plot',
-                               figure = ax,
-                               language_set = language_set,
-                               )
+    return ax
+    
+    # return FigureInStatmanager(xlabel = 'Theoretical cumulative distribution', 
+    #                            ylabel = 'Empirical cumulative distribution',
+    #                            title = 'p-p plot',
+    #                            figure = ax,
+    #                            language_set = language_set,
+    #                            )
 
-def qq_plot(series: pd.Series, language_set = 'kor'):
-    plt.style.use('grayscale')
+def qq_plot(series: pd.Series):
     ax = plt.subplot()
     stats.probplot(series, dist='norm', plot=ax, rvalue = True, fit = True)
     ax.grid(False)
@@ -347,34 +431,44 @@ def qq_plot(series: pd.Series, language_set = 'kor'):
     ax.get_lines()[0].set_markeredgecolor('Black')
     ax.get_lines()[0].set_markersize(6)
     ax.grid(False)
-    return FigureInStatmanager(xlabel = 'Theoretical quantiles',
-                               ylabel = 'Ordered Values',
-                               title = 'q-q plot',
-                               figure = ax,
-                               language_set = language_set)
+    ax.set_xlabel('Theoretical quantiles')
+    ax.set_ylabel('Ordered Values')
+    ax.set_title('q-q plot')
+    ax.figure.set_size_inches(10, 8)
+    
+    return ax 
+    # return FigureInStatmanager(xlabel = 'Theoretical quantiles',
+    #                            ylabel = 'Ordered Values',
+    #                            title = 'q-q plot',
+    #                            figure = ax,
+    #                            language_set = language_set)
 
-def hist(df: pd.DataFrame, var, n, statistic = 'count', language_set = 'kor', cumulate = False):
+def hist(df: pd.DataFrame, var, n, statistic = 'count', cumulate = False):
     ax = sns.histplot(data = df, x = var, stat = statistic, cumulative = cumulate, element="bars", kde=True)
+    ax.set_xlabel(f'Value of {var}')
+    ax.set_ylabel('Frequency')
+    ax.set_title(f"Histogram of {var} (n = {n})")
+    ax.grid(False)
+    ax.figure.set_size_inches(10, 8)
+    return ax 
     
-    return FigureInStatmanager(xlabel = f'Value of {var}',
-                               ylabel = statistic,
-                               title = f"Histogram of {var} (n = {n})",
-                               figure = ax,
-                               language_set = language_set)
+    # return FigureInStatmanager(xlabel = f'Value of {var}',
+    #                            ylabel = statistic,
+    #                            title = f"Histogram of {var} (n = {n})",
+    #                            figure = ax,
+    #                            language_set = language_set)
 
-def hist_cumulative(df: pd.DataFrame, var, n, statistic = 'count', language_set = 'kor'):
+def hist_cumulative(df: pd.DataFrame, var, n, statistic = 'count', ):
+    result_ax = hist(df = df, var = var, n = n, statistic = statistic, cumulate = True)
     
-    result_ax = hist(df = df, var = var, n = n, statistic = statistic, language_set = language_set, cumulate = True)
-    plt.grid(False)
     return result_ax
 
-def multiple_qq_plot(df, result_df, vars, language_set, group_vars=None):
-    plt.style.use('grayscale')
+def multiple_qq_plot(df, result_df, vars, group_vars=None): 
 
     def qqplot(data, **kwargs):
-        ax = plt.gca()  # 현재 축을 가져옵니다.
+        ax = plt.gca()  
         (osm, osr), (slope, intercept, r) = stats.probplot(data[vars], dist="norm")
-        ax.plot(osm, osr, 'o', color='black')  # 검은색 점으로 표시
+        ax.plot(osm, osr, 'o', color='black') 
         ax.plot(osm, slope*osm + intercept, color='red')
         ax.text(0.05, 0.95, f'R² = {r**2:.3f}', horizontalalignment='left', verticalalignment='top', transform=ax.transAxes)
         ax.grid(False)
@@ -399,21 +493,54 @@ def multiple_qq_plot(df, result_df, vars, language_set, group_vars=None):
     
     return g
 
-def multiple_plot_cdf(df, result_df, vars, language_set, group_vars = None, ) :
-    for group in result_df.index:
-        if '&' in group:
-            key = tuple(group.split(' & '))
-        else:
-            key = group
+def multiple_plot_cdf(df,  vars, group_vars) :
+    if not isinstance(vars, list):
+        vars = [vars]
+    if not isinstance(group_vars, list):
+        group_vars = [group_vars]
+
+    plot_data = pd.DataFrame()
+
+    for var in vars:
+        for _, group_df in df.groupby(group_vars):
+            sorted_data = np.sort(group_df[var])
+            cdf = np.arange(1, len(sorted_data) + 1) / len(sorted_data)
+            norm_cdf = stats.norm.cdf(sorted_data, np.mean(sorted_data), np.std(sorted_data))
+
+            temp_df = pd.DataFrame({
+                var: sorted_data,
+                'Empirical CDF': cdf,
+                'Normal CDF': norm_cdf
+            })
+
+            for group_var in group_vars:
+                temp_df[group_var] = group_df[group_var].iloc[0]
+
+            plot_data = pd.concat([plot_data, temp_df])
+
+    g = sns.FacetGrid(plot_data, col=group_vars[0], row=group_vars[1] if len(group_vars) > 1 else None, height=5, aspect=1.5)
+    g = g.map(plt.plot, var, 'Empirical CDF', color='black', label='Empirical CDF')
+    g = g.map(plt.plot, var, 'Normal CDF', color='grey', label='Normal CDF')
+
+    g.add_legend()
+    g.set_titles('{col_name} & {row_name}' if len(group_vars) > 1 else '{col_name}')
+    g.set_axis_labels(var, 'CDF')
+    plt.subplots_adjust(top=0.8)
+    g.fig.suptitle('Kolmogorov-Smirnov Test: CDF Comparison')
+
+    return g
+    # for group in result_df.index:
+    #     if '&' in group:
+    #         key = tuple(group.split(' & '))
+    #     else:
+    #         key = group
                 
-        group_data = df.groupby(group_vars).get_group(key)
+    #     group_data = df.groupby(group_vars).get_group(key)
 
-        cdf_plots = plot_cdf(group_data, vars, language_set=language_set)
-        cdf_plots.revise(title = f"Kolmogorov-Smirnov Test: CDF Comparison (in {' & '.join(key) if isinstance(key, tuple) else key})")
+    #     cdf_plots = plot_cdf(group_data, vars)
+    #     cdf_plots.set_title(f"Kolmogorov-Smirnov Test: CDF Comparison (in {' & '.join(key) if isinstance(key, tuple) else key})")
         
-
-def plot_cdf(df, dv, language_set): # 'kstest'
-    plt.style.use('grayscale')
+def plot_cdf(df, dv): # 'kstest'
     data_sorted = np.sort(df[dv])
     cdf = np.arange(1, len(data_sorted)+1) / len(data_sorted)
     norm_cdf = stats.norm.cdf(data_sorted, np.mean(data_sorted), np.std(data_sorted))
@@ -422,17 +549,23 @@ def plot_cdf(df, dv, language_set): # 'kstest'
 
     sns.lineplot(x=data_sorted, y=cdf, label='Empirical CDF', ax=ax, linewidth=3, errorbar = None)
     sns.lineplot(x=data_sorted, y=norm_cdf, label='Normal CDF', ax=ax, linewidth=3, errorbar = None)
-    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0]) # CDF Yticks
+    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0]) 
     ax.grid(False)
-    return FigureInStatmanager(xlabel = dv,
-                               ylabel = 'CDF',
-                               title = 'Kolmogorov-Smirnov Test: CDF Comparison',
-                               figure = ax,
-                               language_set = language_set)
+    ax.set_xlabel(dv)
+    ax.set_ylabel('CDF')
+    ax.set_title('Kolmogorov-Smirnov Test: CDF Comparison')
+    ax.figure.set_size_inches(10, 8)
+    
+    return ax 
+    
+    # return FigureInStatmanager(xlabel = dv,
+    #                            ylabel = 'CDF',
+    #                            title = 'Kolmogorov-Smirnov Test: CDF Comparison',
+    #                            figure = ax,
+    #                            language_set = language_set)
     
     
-def boxplot_homoskedasticity(df, vars, group_vars, language_set = 'kor'):
-    plt.style.use('grayscale')
+def boxplot_homoskedasticity(df, vars, group_vars):
     
     if isinstance(group_vars, list):
         if len(group_vars) == 1:
@@ -461,18 +594,24 @@ def boxplot_homoskedasticity(df, vars, group_vars, language_set = 'kor'):
         
     else: # group_vars were provided as str format
         ax = sns.boxplot(x = group_vars, y = vars, data = df, hue = group_vars)    
-        
-    
+
     ax.grid(False)
-    return FigureInStatmanager(xlabel = f"{' & '.join(group_vars) if isinstance(group_vars, list) and len(group_vars) > 1 else group_vars}",
-                               ylabel = vars,
-                               title = f'Variance of {vars} by {group_vars if isinstance(group_vars, str) else ", ".join(group_vars)}',
-                               figure = ax,
-                               language_set = language_set)    
+    ax.figure.set_size_inches(10, 8)
+    ax.set_xlabel(f"{' & '.join(group_vars) if isinstance(group_vars, list) and len(group_vars) > 1 else group_vars}")
+    ax.set_ylabel(vars)
+    ax.set_title(f'Variance of {vars} by {group_vars if isinstance(group_vars, str) else ", ".join(group_vars)}')
+    ax.figure.set_size_inches(10, 8)
+    
+    return ax 
+    
+    # return FigureInStatmanager(xlabel = f"{' & '.join(group_vars) if isinstance(group_vars, list) and len(group_vars) > 1 else group_vars}",
+    #                            ylabel = vars,
+    #                            title = f'Variance of {vars} by {group_vars if isinstance(group_vars, str) else ", ".join(group_vars)}',
+    #                            figure = ax,
+    #                            language_set = language_set)    
     
     
-def correlation_heatmap(df_result:pd.DataFrame, testname, language_set = 'kor'):
-    plt.style.use('grayscale')
+def correlation_heatmap(df_result:pd.DataFrame, testname):
     
     coefficient_name = {
         'pearsonr' : "Pearson's r",
@@ -482,14 +621,17 @@ def correlation_heatmap(df_result:pd.DataFrame, testname, language_set = 'kor'):
     
     ax = sns.heatmap(df_result.abs(), annot=df_result, fmt = '.3f', cmap ='gray')
     ax.grid(False)
-    return FigureInStatmanager(xlabel = None,
-                               ylabel = None,
-                               title = f'Heatmap for correlation coefficients ({coefficient_name[testname]})',
-                               figure = ax,
-                               language_set= language_set)
+    ax.set_title(f'Heatmap for correlation coefficients ({coefficient_name[testname]})')
+    ax.figure.set_size_inches(10, 8)
+    
+    return ax 
+    # return FigureInStatmanager(xlabel = None,
+    #                            ylabel = None,
+    #                            title = f'Heatmap for correlation coefficients ({coefficient_name[testname]})',
+    #                            figure = ax,
+    #                            language_set= language_set)
 
-def point_within (df, vars, language_set, parametric):
-    plt.style.use('grayscale')
+def point_within (df, vars, parametric):
     index_col = df.index.name
     melted_df = df.reset_index().melt(id_vars = index_col, value_vars = vars)
     
@@ -511,15 +653,18 @@ def point_within (df, vars, language_set, parametric):
     ax.set_xlabel(None)
     ax.set_ylabel(None)
     ax.grid(False)
-    return FigureInStatmanager(xlabel = None,
-                               ylabel = None,
-                               title = f'{stat_value} difference between {", ".join(vars)}',
-                               figure = ax,
-                               language_set = language_set)
-
-def bar_between (df, vars, group_vars, parametric, language_set):
+    ax.set_title(f'{stat_value} difference between {", ".join(vars)}')
+    ax.figure.set_size_inches(10, 8)
     
-    plt.style.use('grayscale')
+    return ax 
+    
+    # return FigureInStatmanager(xlabel = None,
+    #                            ylabel = None,
+    #                            title = f'{stat_value} difference between {", ".join(vars)}',
+    #                            figure = ax,
+    #                            language_set = language_set)
+
+def bar_between (df, vars, group_vars, parametric):
     
     if parametric:
         stat = np.mean
@@ -537,16 +682,21 @@ def bar_between (df, vars, group_vars, parametric, language_set):
     ticks = np.linspace(min_value, max_value, ideal_ticks)
     ax.set_yticks(ticks)    
     ax.grid(False)
-    return FigureInStatmanager(xlabel = group_vars,
-                               ylabel = vars,
-                               title = f'{stat_value} differences in {vars} by {group_vars}',
-                               figure = ax,
-                               language_set = language_set)
+    ax.set_xlabel(group_vars)
+    ax.set_ylabel(vars)
+    ax.set_title(f'{stat_value} differences in {vars} by {group_vars}')
+    ax.figure.set_size_inches(10, 8)
+    
+    return ax
+    
+    # return FigureInStatmanager(xlabel = group_vars,
+    #                            ylabel = vars,
+    #                            title = f'{stat_value} differences in {vars} by {group_vars}',
+    #                            figure = ax,
+    #                            language_set = language_set)
     
 
-def bar_between_trim (df: pd.DataFrame, vars, group_vars, language_set, result):
-    
-    plt.style.use('grayscale')
+def bar_between_trim (df: pd.DataFrame, vars, group_vars, result):
     
     categories = df.columns
     means = df.loc['mean'].to_list()
@@ -566,18 +716,21 @@ def bar_between_trim (df: pd.DataFrame, vars, group_vars, language_set, result):
     ax.grid(False)
     ax.set_xticks(x)
     ax.set_xticklabels(categories)
+    ax.set_xlabel(group_vars)
+    ax.set_ylabel(vars)
+    ax.set_title(f'Mean differences in {vars} by {group_vars}{trim_ratio}')
+    ax.figure.set_size_inches(10, 8)
     
-    return FigureInStatmanager(xlabel = group_vars,
-                               ylabel = vars,
-                               title = f'Mean differences in {vars} by {group_vars}{trim_ratio}',
-                               figure = ax,
-                               language_set=language_set)
+    return ax
+    
+    # return FigureInStatmanager(xlabel = group_vars,
+    #                            ylabel = vars,
+    #                            title = f'Mean differences in {vars} by {group_vars}{trim_ratio}',
+    #                            figure = ax,
+    #                            language_set=language_set)
 
 
-def point_between_twogroup (df, vars, group_vars, language_set):
-    
-    plt.style.use('grayscale')
-    
+def point_between_twogroup (df, vars, group_vars):
     ax = sns.pointplot(data = df, y = vars, x = group_vars[0], hue = group_vars[1], errorbar = 'ci', capsize=0.1)
     
     min_value = df[vars].min()
@@ -587,17 +740,22 @@ def point_between_twogroup (df, vars, group_vars, language_set):
     ticks = np.linspace(min_value, max_value, ideal_ticks)
     ax.set_yticks(ticks)  
     ax.grid(False)
-    return FigureInStatmanager(xlabel = group_vars[0],
-                               ylabel = vars,
-                               title = f'Mean difference in {vars} between {", ".join(group_vars)}',
-                               figure = ax,
-                               language_set = language_set)
+    ax.set_xlabel(group_vars[0])
+    ax.set_ylabel(vars)
+    ax.set_title(f'Mean difference in {vars} between {", ".join(group_vars)}')
+    ax.figure.set_size_inches(10, 8)
     
-def mulitway_interaction_plot (df, vars, group_vars, language_set):
+    return ax
+        
+    # return FigureInStatmanager(xlabel = group_vars[0],
+    #                            ylabel = vars,
+    #                            title = f'Mean difference in {vars} between {", ".join(group_vars)}',
+    #                            figure = ax,
+    #                            language_set = language_set)
+    
+def mulitway_interaction_plot (df, vars, group_vars):
     if len(group_vars) < 3:
         raise ValueError("group_vars should contain at least three variables for multi-way interaction plot.")
-    
-    plt.style.use('grayscale')
     point_vars = group_vars[:2]
     facet_vars = group_vars[2:]       
 
@@ -621,27 +779,27 @@ def mulitway_interaction_plot (df, vars, group_vars, language_set):
     g.fig.subplots_adjust(top=0.8)
     g.fig.suptitle(f'Interaction Plot for {", ".join(group_vars)}')
     
-    return FigureInStatmanager(xlabel = None,
-                               ylabel = vars,
-                               title = 'title',
-                               figure = g,
-                               language_set = language_set)
+    return g
     
-def f_nway_plot(df, vars, group_vars, language_set):
+    # return FigureInStatmanager(xlabel = point_vars[0],
+    #                            ylabel = vars,
+    #                            title = f'Interaction Plot for {", ".join(group_vars)}',
+    #                            figure = g,
+    #                            language_set = language_set)
     
-    plt.style.use('grayscale')
+def f_nway_plot(df, vars, group_vars):
     
     if len(group_vars) == 2:
-        result = point_between_twogroup(df = df, vars = vars, group_vars = group_vars, language_set = language_set)
+        result = point_between_twogroup(df = df, vars = vars, group_vars = group_vars)
         return result
     
     elif len(group_vars)>= 3:
-        result = mulitway_interaction_plot(df = df, vars = vars, group_vars = group_vars, language_set = language_set)
+        result = mulitway_interaction_plot(df = df, vars = vars, group_vars = group_vars)
         return result
     
 
 
-def plot_rm_onegroup(df, vars, group_vars, language_set):
+def plot_rm_onegroup(df, vars, group_vars):
     index_col = df.index.name
     melted_df = df.reset_index().melt(id_vars=index_col, value_vars=vars, var_name='time').set_index(index_col)
     df = df.drop(columns = vars).merge(melted_df, how = 'outer', on = index_col)
@@ -658,13 +816,20 @@ def plot_rm_onegroup(df, vars, group_vars, language_set):
     # Enhancing the plot
     plt.legend(title=group_vars)
     ax.grid(False)
-    return FigureInStatmanager(xlabel = 'time',
-                               ylabel = 'value',
-                               title = f'Interaction Plot for {group_vars}',
-                               figure = ax,
-                               language_set = language_set)
+    ax.set_xlabel('time')
+    ax.set_ylabel('value')
+    ax.set_title(f"Interaction Plot for {group_vars}")
+    ax.figure.set_size_inches(10, 8)
+    
+    return ax
+    
+    # return FigureInStatmanager(xlabel = 'time',
+    #                            ylabel = 'value',
+    #                            title = f'Interaction Plot for {group_vars}',
+    #                            figure = ax,
+    #                            language_set = language_set)
 
-def plot_rm_twogroup(df, vars, group_vars, language_set):
+def plot_rm_twogroup(df, vars, group_vars):
     if len(group_vars) < 2:
         raise ValueError("group_vars should contain at least two variables for interaction plot.")
 
@@ -702,25 +867,26 @@ def plot_rm_twogroup(df, vars, group_vars, language_set):
     g.fig.subplots_adjust(top=0.8)
     g.fig.suptitle(f'Interaction Plot for {", ".join(group_vars)}', fontsize=16)
     plt.grid(False)
-    return FigureInStatmanager(xlabel = None,
-                               ylabel = None,
-                               title = None,
-                               figure = g,
-                               language_set = language_set)
+    
+    return g
+    
+    # return FigureInStatmanager(xlabel = None,
+    #                            ylabel = None,
+    #                            title = None,
+    #                            figure = g,
+    #                            language_set = language_set)
 
-def f_nway_rm_plot(df, vars, group_vars, language_set):
-    plt.style.use('grayscale')
+def f_nway_rm_plot(df, vars, group_vars):
     
     if isinstance(group_vars, list) and len(group_vars) >= 2:
-        result = plot_rm_twogroup (df = df, vars = vars, group_vars = group_vars, language_set = language_set)
+        result = plot_rm_twogroup (df = df, vars = vars, group_vars = group_vars)
         return result
     else:
-        result = plot_rm_onegroup (df = df, vars = vars, group_vars = group_vars, language_set = language_set)
+        result = plot_rm_onegroup (df = df, vars = vars, group_vars = group_vars)
         return result        
     
-def residual_plot (df, vars, language_set):
+def residual_plot (df, vars):
     from statsmodels import api
-    plt.style.use('grayscale')
     dv = vars[0]
     iv = vars[1] 
 
@@ -739,17 +905,22 @@ def residual_plot (df, vars, language_set):
     ax.scatter(prediction, residuals, alpha=0.5)
     ax.axhline(y=0, color='r', linestyle='--')
     ax.grid(False)
-    return FigureInStatmanager(xlabel = 'Predicted Values',
-                               ylabel = 'Residuals',
-                               title = 'Residual plot',
-                               figure = ax,
-                               language_set=language_set)
+    ax.set_xlabel('Predicted Values')
+    ax.set_ylabel('Residuals')
+    ax.set_title('Residual plot')
+    ax.figure.set_size_inches(10, 8)
     
-def roc_curve(df, vars, language_set):
+    return ax
+    
+    # return FigureInStatmanager(xlabel = 'Predicted Values',
+    #                            ylabel = 'Residuals',
+    #                            title = 'Residual plot',
+    #                            figure = ax,
+    #                            language_set=language_set)
+    
+def roc_curve(df, vars):
     from statsmodels import api
     
-    plt.style.use('grayscale')
-
     dv = vars[0]
     iv = vars[1] 
     
@@ -793,74 +964,15 @@ def roc_curve(df, vars, language_set):
 
     ax.text(0.6, 0.2, f'AUC = {auc:.3f}')
     ax.grid(False)
-    return FigureInStatmanager(xlabel = 'False Positive Rate',
-                               ylabel = 'True Positive Rate',
-                               title = 'ROC curve',
-                               figure = ax,
-                               language_set=language_set)
+    ax.set_xlabel('False Positive Rate')
+    ax.set_ylabel('True Positive Rate')
+    ax.set_title('ROC Curve')
+    ax.figure.set_size_inches(10, 8)
     
+    return ax
     
-    
-
-# revise - change ver? 
-
-# def revise(self, xlabel=None, ylabel=None, title=None, xticks=None, yticks=None, style=None, figsize=None, font=None, font_scale=None):
-    
-#     if xlabel is not None:
-#         self.xlabel = xlabel
-    
-#     if ylabel is not None:
-#         self.ylabel = ylabel
-    
-#     if title is not None:
-#         self.title = title
-    
-#     if xticks is not None:
-#         self.xticks = xticks
-    
-#     if yticks is not None:
-#         self.yticks = yticks
-        
-#     if style is not None:
-#         self.style = style
-
-#     if figsize is not None:
-#         self.figsize = figsize
-        
-#     if font is not None:
-#         self.font_properties = font
-    
-#     if font_scale is not None:
-#         self.font_scale = font_scale
-    
-#     # Check if the object is an Axes or FacetGrid
-#     if isinstance(self.ax, sns.axisgrid.FacetGrid):
-#         # Apply settings to each Axes in the FacetGrid
-#         for ax in self.ax.axes.flatten():
-#             self.apply_settings_to_axis(ax)
-#     else:
-#         # Apply settings to a single Axes object
-#         self.apply_settings_to_axis(self.ax)
-    
-#     return self
-
-# def apply_settings_to_axis(self, ax):
-#     plt.style.use(self.style)
-#     sns.set(font=self.font_properties, font_scale=self.font_scale)
-
-#     try:
-#         if self.xlabel:
-#             ax.set_xlabel(self.xlabel)
-#         if self.ylabel:
-#             ax.set_ylabel(self.ylabel)
-#         if self.title:
-#             ax.set_title(self.title)
-#         if self.xticks is not None:
-#             ax.set_xticks(self.xticks)
-#         if self.yticks is not None:
-#             ax.set_yticks(self.yticks)
-#         if self.figsize:
-#             ax.figure.set_size_inches(self.figsize[0], self.figsize[1])
-#         ax.grid(False)  # Turn off grid
-#     except:
-#         pass  # In case the object does not support a particular setting
+    # return FigureInStatmanager(xlabel = 'False Positive Rate',
+    #                            ylabel = 'True Positive Rate',
+    #                            title = 'ROC curve',
+    #                            figure = ax,
+    #                            language_set=language_set)
