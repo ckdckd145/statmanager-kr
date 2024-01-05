@@ -24,6 +24,7 @@ Friedman Test,Compare between times (more than two times) - Non-parametric test,
 N-way ANOVA,Compare between factors - Parametric test,f_nway,Dependent variable (str),Group variables or factors (list),True: Proceed the posthoc anaylsis
 N-way Mixed Repeated Measures ANOVA,Compare between factors including time - Parametric test,f_nway_rm,Dependent variables (list),Group variables or factors (list),True: Proceed the posthoc anaylsis
 Linear Regression,Regression analysis,linearr,"['dependent variable', ['independent variable1', 'independent variable2', ...., ] ]",,
+Hierarchical Linear Regression,Regression analysis,hier_linearr,"['dependent variable', ['independent variable1', 'independent variable2', ...., ], ['independent variable8' ,...,], [,..,] ]",,
 Logistic Regression,Regression analysis,logisticr,"['dependent variable', ['independent variable1', 'independent variable2', ...., ] ]",,
 One-way ANCOVA,Compare between groups (more than two groups) - Parametric test,oneway_ancova,"['dependent variable', ['covariate1', 'covariate2', ...., ] ]",Group variable (str),True: Proceed the posthoc anaylsis
 Repeated Measures ANCOVA,Compare between times (more than two times) - Parametric test,rm_ancova,"['dependent variable1', 'dependent variable2', ... ['covariate1', 'covariate2', ...., ]]",,True: Proceed the posthoc anaylsis

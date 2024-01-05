@@ -24,6 +24,7 @@ Friedman Test,차이비교 (집단 내 3시점 이상)-비모수검정,friedman,
 N-way ANOVA,차이비교-모수검정,f_nway,차이를 확인할 변수 (str),기준이 될 집단 변수들 (list),True: posthoc 진행
 N-way Mixed Repeated Measures ANOVA,차이비교-모수검정,f_nway_rm,차이를 확인할 변수들 (list),기준이 될 집단 변수들 (list),True: posthoc 진행
 Linear Regression,회귀분석,linearr,"['종속변수', ['독립변수1', '독립변수2', ...., ] ]",,
+Hierarchical Linear Regression,회귀분석,hier_linearr,"['종속변수', ['독립변수1', '독립변수2',..,], ['독립변수9', ...,], [..] ]",,
 Logistic Regression,회귀분석,logisticr,"['종속변수', ['독립변수1', '독립변수2', ...., ] ]",,
 One-way ANCOVA,차이비교 (3집단 이상)-모수검정,oneway_ancova,"['종속변수', ['공변량1', '공변량2', ...., ] ]",기준이 될 집단 변수 (str),True: posthoc 진행
 Repeated Measures ANCOVA,차이비교 (집단 내 3시점 이상)-모수검정,rm_ancova,"['종속변수1', '종속변수2', ... ['공변량1', '공변량2', ...., ]]",,True: posthoc 진행
