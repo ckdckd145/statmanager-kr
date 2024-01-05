@@ -193,7 +193,7 @@ class StatmanagerResult:
                 result = f_nway_rm_plot(df = self.df, vars = self.vars, group_vars = self.group_vars)
                 return result
             
-            elif self.method == 'linearr':
+            elif 'linearr' in self.method:
                 result = residual_plot(df = self.df, vars = self.vars)
                 return result
             
@@ -888,7 +888,13 @@ def f_nway_rm_plot(df, vars, group_vars):
 def residual_plot (df, vars):
     from statsmodels import api
     dv = vars[0]
-    iv = vars[1] 
+    
+    iv = []
+    if len(vars) > 2:
+        for i in range(1, len(vars)):
+            iv += vars[i]
+    else:
+        iv = vars[1] 
 
     y = df[dv]
     x = df[iv]

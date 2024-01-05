@@ -146,6 +146,11 @@ menu = {
         'type' : 'regression',
         'testfunc' : linear,
     },
+    'hier_linearr' : {
+        'name' : 'Hierarchical Linear Regression',
+        'type' : 'regression',
+        'testfunc' : hierarchical_linear,
+        },
     'logisticr' : {
         'name' : 'Logistic Regression',
         'type' : 'regression',

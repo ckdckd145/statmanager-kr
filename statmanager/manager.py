@@ -204,7 +204,15 @@ class Stat_Manager:
             self.conditions_notification_texts = conditions_notification_texts
             
         if testtype == 'regression':
-            df = df.dropna(axis=0, how = 'any', subset = [vars[0]] + vars[1] )
+            
+            variables = []
+            for variable in vars:
+                if isinstance(variable, str):
+                    variables.append(variable)
+                else:
+                    variables = variables + variable
+            
+            df = df.dropna(axis=0, how = 'any', subset = variables)
         
         elif testtype == 'compare_ancova':
             
@@ -304,26 +312,26 @@ class Stat_Manager:
             
             if method == 'pp_plot' or method == 'qq_plot':
                 
-                figure_object = testfunc(series = self.df[self.vars], language_set = self.language_set)
+                figure_object = testfunc(series = self.df[self.vars])
                 return figure_object
             
             if 'hist' in method: 
                 
-                figure_object = testfunc(df = self.df, var = self.vars, n = n, language_set = self.language_set)
+                figure_object = testfunc(df = self.df, var = self.vars, n = n)
                 return figure_object
  
             if 'boxplot' in method:
                 
-                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set)
+                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars)
                 return figure_object
             
             if method == 'point_within':
                 
-                figure_object = testfunc(df = self.df, vars = self.vars, language_set = self.language_set, parametric = True)
+                figure_object = testfunc(df = self.df, vars = self.vars, parametric = True)
                 return figure_object
             
             if method == 'bar_between':
-                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, language_set = self.language_set, parametric = True)
+                figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, parametric = True)
                 return figure_object
     
     def showing(self, result):
