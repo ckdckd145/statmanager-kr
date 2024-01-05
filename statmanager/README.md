@@ -78,7 +78,7 @@ Using "Jupyter Notebook" is <b>STRONGLY RECOMMENDED</b> (Of course, statmanager-
 * Contributor   
     * Changseok Lee   
       * Email: ckdckd145@gmail.com   
-      * [Linkedin](www.linkedin.com/in/cslee0052)   
+      * [Linkedin](https://www.linkedin.com/in/cslee0052)  
       * [Github](https://github.com/ckdckd145)
 
 
