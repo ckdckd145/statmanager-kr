@@ -20,24 +20,40 @@ def linear(df: pd.DataFrame, vars : list, lang_set, testname):
     reporting_one = linear_regression_result_reporting_one (dv)[lang_set]
     reporting_two = regression_result_reporting_ivs (iv)[lang_set]
     
-    # model_df1 = model.summary()
-    # model_df2 = model.summary2(
     
     model_df1 = model.summary2().tables[0]
-    model_df1.columns = ['index', 'value', 'index_', 'value']
-    model_df1 = model_df1.set_index('index')
+    # model_df1.columns = ['index', 'value', 'index_', 'value']
+    # model_df1 = model_df1.set_index('index')
     model_df2 = model.summary2().tables[1].round(3)
+    model_df2.columns = ['coefficient', 'standard error', 't', 'p-value', '95% CI Low', '95% CI High']
     model_df3 = model.summary2().tables[2].round(3)
-    model_df3.columns = ['index', 'value', 'index_', 'value']
-    model_df3 = model_df3.set_index('index')
+    # model_df3.columns = ['index', 'value', 'index_', 'value']
+    # model_df3 = model_df3.set_index('index')
     warning_message = "\n".join(model.summary2().extra_txt)    
     
+    data1 = model_df1[[0, 1]]
+    data2 = model_df1[[2, 3]]
+    data3 = model_df3[[0, 1]]
+    data4 = model_df3[[2, 3]]
+    
+    key = data1[0].to_list() + data2[2].to_list() + data3[0].to_list() + data4[2].to_list()
+    value = data1[1].to_list() + data2[3].to_list() + data3[1].to_list() + data4[3].to_list()
+    
+    reframed_model_df = {}
+    for j in range(len(key)):
+        key_v = key[j]
+        value_v = value[j]
+        
+        reframed_model_df[key_v] = value_v
+        
+    reframed_model_df = pd.DataFrame(reframed_model_df, index = ['Summary']).T.round(4)
 
     result_for_save.append(reporting_one)
     result_for_save.append(reporting_two)
-    result_for_save.append(model_df1)
+    result_for_save.append(reframed_model_df)
+    # result_for_save.append(model_df1)
     result_for_save.append(model_df2)
-    result_for_save.append(model_df3)
+    # result_for_save.append(model_df3)
     result_for_save.append(warning_message)
 
 
@@ -95,6 +111,7 @@ def hierarchical_linear (df: pd.DataFrame, vars : list, lang_set, testname):
         model = models[n]
         model_df1 = model.summary2().tables[0]
         model_df2 = model.summary2().tables[1]
+        model_df2.columns = ['coefficient', 'standard error', 't', 'p-value', '95% CI Low', '95% CI High']
         model_df2.columns = pd.MultiIndex.from_product([[f'Step {n+1}'], model_df2.columns])
         model_df3 = model.summary2().tables[2]
         warning_message = "\n".join(model.summary2().extra_txt)
@@ -114,7 +131,7 @@ def hierarchical_linear (df: pd.DataFrame, vars : list, lang_set, testname):
             value_v = value[j]
             
             reframed_model_df[key_v] = value_v
-            
+        
         reframed_model_df = pd.DataFrame(reframed_model_df, index = [f'Step {n+1}']).T # df in statistics . model_df2 = coeff df
         model_statistic_dfs.append(reframed_model_df)
         variable_coeff_dfs.append(model_df2)
@@ -189,8 +206,9 @@ def logistic(df: pd.DataFrame, vars : list, lang_set, testname):
     iv = vars[1] # should be list "in the list"
     
     y = df[dv]
-
-    if len(y.unique()) == 2:    
+    
+    if len(y.unique()) == 2:   
+        mapper = ""
         y = pd.get_dummies(data = y, drop_first=True, dtype='int', prefix='dummy_',prefix_sep='_')
         x = df[iv]
         x = pd.get_dummies(data = x, drop_first=True, dtype='int', prefix='dummy_',prefix_sep='_' )
@@ -199,21 +217,37 @@ def logistic(df: pd.DataFrame, vars : list, lang_set, testname):
         model = api.Logit(y, x).fit()
         
         model_df1 = model.summary2().tables[0]
-        model_df1.columns = ['index', 'value', 'index_', 'value']
-        model_df1 = model_df1.set_index('index')       
+        data1 = model_df1[[0, 1]]
+        data2 = model_df1[[2, 3]]
+        
+        key = data1[0].to_list() + data2[2].to_list()
+        value = data1[1].to_list() + data2[3].to_list()
+        
+        reframed_model_df = {}
+        for j in range(len(key)):
+            key_v = key[j]
+            value_v = value[j]
+            
+            reframed_model_df[key_v] = value_v
+        reframed_model_df = pd.DataFrame(reframed_model_df, index = ['Summary']).T.round(4)
+        
+        # model_df1.columns = ['index', 'value', 'index_', 'value']
+        # model_df1 = model_df1.set_index('index')       
         model_df2 = model.summary2().tables[1].round(3)
+        model_df2.columns = ['coefficient', 'standard error', 't', 'p-value', '95% CI Low', '95% CI High']
         
         odds_ratio = np.exp(model.params)
         odds_ratio = pd.DataFrame(odds_ratio)
         odds_ratio.rename(columns= {0 : 'OR (Odds ratio)'}, inplace = True)
         
         results_temp = []
-        results_temp.append(model_df1)
+        results_temp.append(reframed_model_df)
+        # results_temp.append(model_df1)
         results_temp.append(model_df2)
         results_temp.append(odds_ratio)
         
     elif len(y.unique()) > 2:
-        # y = pd.get_dummies(data = y, drop_first=True, dtype='int', prefix='dummy_',prefix_sep='_')
+        
         mapper = {}
         
         results_temp = []
@@ -237,12 +271,28 @@ def logistic(df: pd.DataFrame, vars : list, lang_set, testname):
         for n in range(len(model_dfs)):
             if n == 0:
                 modeldf = model_dfs[n]
-                modeldf.columns = ['index', 'value', 'index_', 'value']
-                modeldf = modeldf.set_index('index').round(3)
-                results_temp.append(modeldf)
+                
+                data1 = modeldf[[0,1]]
+                data2 = modeldf[[2,3]]
+                
+                key = data1[0].to_list() + data2[2].to_list()
+                value = data1[1].to_list() + data2[3].to_list()
+                
+                reframed_model_df = {}
+                for j in range(len(key)):
+                    key_v = key[j]
+                    value_v = value[j]
+                    
+                    reframed_model_df[key_v] = value_v
+                reframed_model_df = pd.DataFrame(reframed_model_df, index = ['Summary']).T.round(4)
+
+                # modeldf.columns = ['index', 'value', 'index_', 'value']
+                # modeldf = modeldf.set_index('index').round(3)
+                results_temp.append(reframed_model_df)
             else:
                 modeldf = model_dfs[n].round(3)
                 modeldf = modeldf.reset_index(drop=True).set_index(f"{dv} = {n-1}")
+                modeldf.columns = ['coefficient', 'standard error', 't', 'p-value', '95% CI Low', '95% CI High']
                 results_temp.append(modeldf)
         
         switched_mapper = {value : key for key, value in mapper.items()}
