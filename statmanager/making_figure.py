@@ -173,7 +173,7 @@ class StatmanagerResult:
                 result = point_within(df = self.df, vars = self.vars, parametric = False)
                 return result
             
-            elif self.method == 'ttest_ind' or self.method == 'f_oneway': # or self.method == 'oneway_ancova'  --> should be different
+            elif self.method == 'ttest_ind' or self.method == 'f_oneway' or self.method == 'ttest_ind_welch': # or self.method == 'oneway_ancova'  --> should be different
                 result = bar_between(df = self.df, vars = self.vars, group_vars = self.group_vars, parametric = True)
                 return result
             

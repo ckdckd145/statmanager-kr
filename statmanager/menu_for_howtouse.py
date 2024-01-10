@@ -186,8 +186,12 @@ menu = {
         'type' : 'between_group',
         'testfunc' : ttest_ind_yuen,
     },
+    'ttest_ind_welch' : {
+        'name' : "Welch's Two-Sample T-test (Independent samples t-test using unequal variance)",
+        'type' : 'between_group',
+        'testfunc' : ttest_ind_unequal,
+    },
     }
-
 
 figure_functions = {
     'pp_plot' : {

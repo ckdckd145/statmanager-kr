@@ -10,7 +10,7 @@ from statsmodels.formula.api import ols
 
 AGG_FORMULA = ['count', 'mean', 'median', 'std', 'min', 'max'] # .round(3).rename(columns = {'count' : 'n'})
 
-def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
+def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, equal = True):
     result_for_save = []
     
     dv = vars[0] if isinstance(vars, list) else vars
@@ -31,7 +31,7 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
         series.append(ser)
         
 
-    result_object = stats.ttest_ind(*series)
+    result_object = stats.ttest_ind(*series, equal_var = equal)
 
     s = result_object.statistic
     p = result_object.pvalue
@@ -58,6 +58,10 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
                 print(n)
                 
     return result_for_save
+
+def ttest_ind_unequal (df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
+    result = ttest_ind(df = df, vars = vars , group_vars=group_vars, lang_set = lang_set, testname = testname, equal = False)
+    return result
 
 def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, trim = None):
     
