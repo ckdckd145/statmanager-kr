@@ -257,19 +257,13 @@ def logistic(df: pd.DataFrame, vars : list, lang_set, testname):
     else:
         raise ValueError
     
-    # model_df1 = model.summary()
-    # model_df2 = model.summary2()
-    
-    reporting_one = logistic_regression_result_reporting_one(dv)[lang_set]
+    reporting_one = logistic_regression_result_reporting_one(dv, mapper)[lang_set]
     reporting_two = regression_result_reporting_ivs (iv)[lang_set]
     
     result_for_save.append(reporting_one)
     result_for_save.append(reporting_two)
     
     result_for_save.extend(results_temp)
-    # result_for_save.append(model_df1)
-    # result_for_save.append(model_df2)
-    # result_for_save.append(odds_ratio)
     
     print(testname)
     for n in result_for_save:

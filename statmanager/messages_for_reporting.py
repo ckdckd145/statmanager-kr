@@ -508,10 +508,10 @@ def frequency_analysis_result_reporting_two_fisher (s, p):
     return result
 
 
-def logistic_regression_result_reporting_one(dv):
+def logistic_regression_result_reporting_one(dv, mapper):
     result = {
-        'kor' : f"종속변수: {dv}\n",
-        'eng' : f"\nDependent variable: {dv}\n",
+        'kor' : f"\n종속변수: {dv}\n{mapper}\n",
+        'eng' : f"\nDependent variable: {dv}\n{mapper}\n",
     }
     
     return result
