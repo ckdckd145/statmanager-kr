@@ -15,7 +15,7 @@ authors:
 affiliations:
  - name: DYPHI Research Institute, DYPHI Inc., Daejeon, Korea
    index: 1
-date: 13 August 2017
+date: 15 January 2024
 bibliography: paper.bib
 ---
 
