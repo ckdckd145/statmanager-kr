@@ -73,12 +73,55 @@ sm.progress(method = 'ttest_ind', vars = 'weight', group_vars = 'sex') # 3. Runn
 
 ```python
 #Omit the import syntax
-
+df = pd.read_csv(r'../testdata.csv', index_col = 'name')  
 sm = Stat_Manager(df)
 
 # check the differences in income by condition 
 sm.progress(method = 'f_oneway', vars = 'income', group_vars = 'condition', posthoc = True) 
 ```
+
+# Keys and Related Informations
+The method-specific information required to use the `.progress()` method can be found by using the `.howtouse()` method. The detailed information is summarized in the table below:
+
+Key | Analysis | Required Parameters | Optional Parameters
+-- | -- | -- | --
+`kstest` | Kolmogorov-Smirnov Test | `vars` | `group_vars`
+`shapiro` | Shapiro-Wilks Test | `vars` | `group_vars`
+`z_normal` | Z-skeweness & z-kurtosis test | `vars` | `group_vars`
+`levene` | Levene Test | `vars`, `group_vars` | 
+`fmax` | Fmax Test | `vars`, `group_vars` | 
+`chi2_contingency` | Chi-squared Test | `vars` | 
+`fisher` | Fisher's Exact Test | `vars` | 
+`pearsonr` | Pearson's r | `vars` | 
+`spearmanr` | Spearman's rho | `vars` | 
+`kendallt` | Kendall's tau | `vars` |  
+`ttest_ind`| Independent Samples T-test | `vars`, `group_vars` | 
+`ttest_rel`| Dependent Samples T-test | `vars`
+`ttest_ind_trim` | Yuen's Two Samples T-test | `vars`, `group_vars` | 
+`ttest_ind_welch`| Welch's Two Samples T-test | `vars`, `group_vars` | 
+`mannwhitneyu` | Mann-Whitney U Test | `vars`, `group_vars` | 
+`brunner` | Brunner-Munzel Test | `vars`, `group_vars` | 
+`wilcoxon`| Wilcoxon-Signed Rank Test | `vars` |
+`bootstrap` | Boostrap Percentile Method | `vars` | `group_vars`
+`f_oneway` | One-way ANOVA | `vars`, `group_vars` | `posthoc`, `posthoc_method`
+`f_oneway_rm` | One-way Repeated Measures ANOVA | `vars` | `posthoc`, `posthoc_method`
+`kruskal` | Kruskal-Wallis Test | `vars`, `group_vars` | `posthoc`, `posthoc_method`
+`friedman`| Friedman Test | `vars` | `posthoc`, `posthoc_method`
+`f_nway`| N-way ANOVA | `vars`, `group_vars` | `posthoc`, `posthoc_method`
+`f_nway_rm`| N-way Mixed Repeated Measures ANOVA | `vars`, `group_vars` | `posthoc`, `posthoc_method`
+`linearr` | Linear Regression | `vars` | 
+`hier_linearr` | Hierarchical Linear Regression | `vars` | 
+`logisticr` | Logistic Regression | `vars` |
+`oneway_ancova` | One-way ANCOVA | `vars`, `group_vars` |
+`rm_ancova` | One-way Repeated Measures ANCOVA | `vars` |
+`cronbach` | Calculating Cronbach's Alpha | `vars` |
+
+Also, the `statmanager-kr` provide two posthoc methods. It can be conducted by providing key of `posthoc_method` parameter as belows:
+
+Key of `posthoc_method` | Method 
+-- | --
+`bonf` | Bonferroni Correction
+`tukey` | Tukey HSD
 
 # Acknowledgements
 
