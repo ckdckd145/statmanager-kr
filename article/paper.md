@@ -80,7 +80,7 @@ sm = Stat_Manager(df)
 sm.progress(method = 'f_oneway', vars = 'income', group_vars = 'condition', posthoc = True) 
 ```
 
-# Keys and Related Informations
+## Keys and Related Informations
 The method-specific information required to use the `.progress()` method can be found by using the `.howtouse()` method. The detailed information is summarized in the table below:
 
 Key | Analysis | Required Parameters | Optional Parameters
