@@ -7,10 +7,8 @@ tags:
   - null-hypothesis
   - user-friendly
 authors:
-  - name: Changseok
-    surname: Lee
+  - name: Changseok Lee
     orcid: 0000-0002-8825-5571
-    equal-contrib: true
     affiliation: 1
 affiliations:
  - name: DYPHI Research Institute, DYPHI Inc., Daejeon, Korea
