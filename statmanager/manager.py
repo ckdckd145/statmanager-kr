@@ -29,7 +29,9 @@ class Stat_Manager:
     def __init__(self, dataframe: pd.DataFrame, id: str = None, language: str = 'kor'):
         self.df = dataframe
         self.df_original = dataframe
+        self.df_analysis = None
         self.filtered_df = None
+        self.conditions = None
         self.result = None
         self.selector = None
         
@@ -76,7 +78,7 @@ class Stat_Manager:
         """
         Please check the documentation : https://cslee145.notion.site/statmanager-kr-Documentation-c9d0886f29ea461d9d0f44449a145f8a?pvs=4
         
-        """
+        """        
         method = method.lower()
         posthoc_method = posthoc_method.lower()
 
@@ -147,9 +149,11 @@ class Stat_Manager:
         
         if selector == None:
             self.selector = None
-            df = self.df_original
+            self.df_analysis = self.df_original
+            #df = self.df_original
             self.filtered_df = None          
-            conditions = None
+            self.conditions = None
+            #conditions = None
             self.conditions_notification_texts = None
         
         else:
@@ -157,9 +161,15 @@ class Stat_Manager:
             if type(selector) != dict:
                 raise TypeError(error_message_for_selector_type(doclink = self.link)[self.language_set])
             
-            df = self.df
+            #always init the selector and related variables for repeated running
+            self.selector = None
+            self.df_analysis = self.df_original
+            self.filtered_df = None          
+            self.conditions = None
+            self.conditions_notification_texts = None
+            
             self.selector = selector
-            self.filtered_df = None 
+            
             conditions  = []
             conditions_notification = []
             
@@ -167,40 +177,41 @@ class Stat_Manager:
                 if isinstance(value, dict):  
                     for op, op_value in value.items():
                         if op == '<=':
-                            conditions.append(df[key] <= op_value)
+                            conditions.append(self.df_analysis[key] <= op_value)
                             conditions_notification.append(f"{key} <= {op_value}")
                         elif op == '>=':
-                            conditions.append(df[key] >= op_value)
+                            conditions.append(self.df_analysis[key] >= op_value)
                             conditions_notification.append(f"{key} >= {op_value}")
                         elif op == '<':
-                            conditions.append(df[key] < op_value)
+                            conditions.append(self.df_analysis[key] < op_value)
                             conditions_notification.append(f"{key} < {op_value}")
                         elif op == '>':
-                            conditions.append(df[key] > op_value)
+                            conditions.append(self.df_analysis[key] > op_value)
                             conditions_notification.append(f"{key} > {op_value}")
                         elif op == '=' or op == '==':
-                            conditions.append(df[key] == op_value)
+                            conditions.append(self.df_analysis[key] == op_value)
                             conditions_notification.append(f"{key} == {op_value}")
                         elif op == '!=':
-                            conditions.append(df[key] != op_value)
+                            conditions.append(self.df_analysis[key] != op_value)
                             conditions_notification.append(f"{key} != {op_value}")
 
                 else: 
-                    conditions.append(df[key] == value)
+                    conditions.append(self.df_analysis[key] == value)
                     conditions_notification.append(f"{key} == {value}")
             
             combined_condition = conditions[0]
             
-            if len(conditions) == 1: #selector 하나만 붙인 경우에는 그냥 진행 
+            if len(conditions) == 1: # when the selector is only one 
                 pass
             
-            else: # selector가 2개 이상인 경우 
+            else: # when the selector are more than one
                 for cond in conditions[1:]:
                     combined_condition &= cond
                     
-            df = df.loc[combined_condition]
-            self.filtered_df = df
+            self.df_analysis = self.df_analysis.loc[combined_condition]
+            self.filtered_df = self.df_analysis
             conditions_notification_texts = "\n".join(conditions_notification)
+            self.conditions = conditions
             self.conditions_notification_texts = conditions_notification_texts
             
         if testtype == 'regression':
@@ -212,21 +223,21 @@ class Stat_Manager:
                 else:
                     variables = variables + variable
             
-            df = df.dropna(axis=0, how = 'any', subset = variables)
+            self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = variables)
         
         elif testtype == 'compare_ancova':
             
             if method == 'oneway_ancova':
-                df = df.dropna(axis=0, how = 'any', subset = [vars[0]] + vars[1])
+                self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = [vars[0]] + vars[1])
                 
             elif method == 'rm_anocva':
-                df = df.dropna(axis=0, how = 'any', subset = vars[-1] + vars[-1])
+                self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = vars[-1] + vars[-1])
         
         elif testtype == 'correlation':
             pass
         
         else:
-            df = df.dropna(axis=0, how = 'any', subset = vars)
+            self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = vars)
         
         testfunc = self.menu[method]['testfunc']
         testname = self.menu[method]['name']
@@ -237,74 +248,77 @@ class Stat_Manager:
             testname = selector_notation[self.language_set]
 
         
-        n = len(df)
+        n = len(self.df_analysis)
         
         self.method = method
         self.vars = vars
         self.group_vars = group_vars
-        self.df = df
+        self.df = self.df_analysis
+        
         
         if testtype == 'frequency_analysis': # done
             
-            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
+            
             return result_object            
             
         if testtype == 'normality':  # done
             
-            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname, group_vars = group_vars)
+            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname, group_vars = group_vars)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
             
         if testtype == 'homoskedasticity': # done
-            result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname)
+            result = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
         
         if testtype == 'bootstrap': # done
-            result, figure_object = testfunc(df = df, vars = vars, group_vars = group_vars, resampling_no = resampling_no, lang_set = self.language_set, testname = testname)
+            result, figure_object = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, resampling_no = resampling_no, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object, figure_object
         
         if testtype == 'within_group': # done 
-            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
+            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
             
         if testtype == 'anova_nways' : # done
-            result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, selector = self.selector)
+            result = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, selector = self.selector)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object                       
             
         if testtype == 'compare_ancova': #done
-            result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
+            result = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object                       
         
         if testtype == 'between_group': # done
             
             if method == 'ttest_ind_trim':
-                result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, trim = trim_ratio)
+                result = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, trim = trim_ratio)
             else:
-                result = testfunc(df = df, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
+                result = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
             result_object = self.saving_for_result(result = result, testname = testname)
+            
             return result_object            
             
         if testtype == 'correlation': # done
             
-            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
     
         if testtype == 'regression': # done
             
-            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object 
 
         if testtype == 'reliability': # done
             
-            result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname)
+            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
     
@@ -333,7 +347,7 @@ class Stat_Manager:
             if method == 'bar_between':
                 figure_object = testfunc(df = self.df, vars = self.vars, group_vars = self.group_vars, parametric = True)
                 return figure_object
-    
+
     def showing(self, result):
         try:
             display(result)
@@ -415,7 +429,6 @@ class Stat_Manager:
             return self
     
     def saving_for_result(self, result: list, testname: str):
-        
         return StatmanagerResult(method = self.method, vars = self.vars, group_vars=self.group_vars, result = result, selector = self.selector, testname = testname, df = self.df, lang_set = self.language_set)
     
     def change_dataframe(self, dataframe:pd.DataFrame, id :str = None):
