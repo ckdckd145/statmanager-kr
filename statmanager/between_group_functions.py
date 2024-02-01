@@ -12,6 +12,7 @@ AGG_FORMULA = ['count', 'mean', 'median', 'std', 'min', 'max'] # .round(3).renam
 
 def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, equal = True):
     result_for_save = []
+    result_df = pd.DataFrame(columns = ['dependent variable', 't-value', 'degree of freedom', 'p-value', '95% CI', "Cohen'd"]).set_index('dependent variable')
     
     dv = vars[0] if isinstance(vars, list) else vars
     
@@ -21,8 +22,7 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
 
     df = df.loc[df[group_vars].isin(group_names)]
     
-    
-    describe_df = df.groupby(group_vars)[vars].agg(AGG_FORMULA).round(3).rename(columns = {'count' : 'n'}).T
+    describe_df = df.groupby(group_vars)[dv].agg(AGG_FORMULA).round(3).rename(columns = {'count' : 'n'}).T
     describe_df.columns.name = None
     
     series = []
@@ -39,12 +39,19 @@ def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, t
     ci = result_object.confidence_interval() 
     cohen_d = calculate_cohen(series)
     
-    reporting_one = compare_btwgroup_result_reporting_one(dv, group_vars, group_names)[lang_set]
-    reporting_two = ttest_ind_result_reporting_two (s, p, dof, ci, cohen_d)[lang_set]
     
+    result_df.loc[dv, :] = [s, dof, p, f"[{ci.low:.3f}, {ci.high:.3f}]", cohen_d]
+    
+    for _ in result_df.columns:
+        if _ != '95% CI':
+            result_df[_] = result_df[_].astype(float).round(3)
+        else:
+            continue
+    reporting_one = compare_btwgroup_result_reporting_one(dv, group_vars, group_names)[lang_set]
+    # reporting_two = ttest_ind_result_reporting_two (s, p, dof, ci, cohen_d)[lang_set]
     result_for_save.append(reporting_one)
     result_for_save.append(describe_df)
-    result_for_save.append(reporting_two)
+    result_for_save.append(result_df)
     
     print(testname)
     
