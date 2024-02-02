@@ -11,6 +11,7 @@ AGG_FORMULA = ['count', 'mean', 'median', 'std', 'min', 'max']
 
 def ttest_rel(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
+    result_df = pd.DataFrame(columns = ['variables', 't-value', 'degree of freedom', 'p-value', '95% CI', "Cohen's d"]).set_index('variables')
     
     n = len(df)
     
@@ -29,12 +30,20 @@ def ttest_rel(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, 
     ci = result_object.confidence_interval()
     cohen_d = calculate_cohen(series)
     
+    result_df.loc[f"{vars}", : ] = [s, dof, p, f"[{ci.low:.3f}, {ci.high:.3f}]", cohen_d]
+    
+    for _ in result_df.columns:
+        if _ != '95% CI':
+            result_df[_] = result_df[_].astype(float).round(3)
+        else:
+            continue
+    
     reporting_one = ttest_rel_and_wilcoxon_result_reporting_one(vars, n)[lang_set]
-    reporting_two = ttest_rel_result_reporting_two(s, dof, p, ci, cohen_d)[lang_set]
+    #reporting_two = ttest_rel_result_reporting_two(s, dof, p, ci, cohen_d)[lang_set]
     
     result_for_save.append(reporting_one)
     result_for_save.append(describe_df)
-    result_for_save.append(reporting_two)
+    result_for_save.append(result_df)
     
     print(testname)
     for n in result_for_save:
@@ -50,6 +59,7 @@ def ttest_rel(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, 
     
 def wilcoxon(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save =[]
+    result_df = pd.DataFrame(columns = ['variables', 'Test-Statistic', 'Z-value', 'p-value', 'Rank-biserial correlation']).set_index('variables')
     
     n = len(df)
     
@@ -67,12 +77,18 @@ def wilcoxon(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, p
     z = result_object.zstatistic
     rank_biserial_correlation = z / np.sqrt(n)
     
+    result_df.loc[f"{vars}", : ] = [s, z, p, rank_biserial_correlation]
+    
+    for _ in result_df.columns:
+        result_df[_] = result_df[_].astype(float).round(3)
+    
+    
     reporting_one = ttest_rel_and_wilcoxon_result_reporting_one(vars, n)[lang_set]
-    reporting_two = wilcoxon_result_reporting_two (s, z, p, rank_biserial_correlation)[lang_set]
+    # reporting_two = wilcoxon_result_reporting_two (s, z, p, rank_biserial_correlation)[lang_set]
     
     result_for_save.append(reporting_one)
     result_for_save.append(describe_df)
-    result_for_save.append(reporting_two)
+    result_for_save.append(result_df)
 
     print(testname)
     for n in result_for_save:
@@ -88,6 +104,7 @@ def wilcoxon(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, p
 
 def friedman(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = False, posthoc_method = 'bonf'):
     result_for_save =[]
+    result_df = pd.DataFrame(columns = ['variables', 'correcting for ties', 'p-value']).set_index('variables')
     
     n = len(df)
     
@@ -102,12 +119,17 @@ def friedman(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = F
     s = result_object.statistic
     p = result_object.pvalue
     
+    result_df.loc[f"{vars}"] = [s, p]
+    
+    for _ in result_df.columns:
+        result_df[_] = result_df[_].astype(float).round(3)
+    
     reporting_one = friedman_and_f_oneway_rm_result_reporting(vars)[lang_set]
-    reporting_two = friedman_result_reporting_two(s, p)[lang_set]
+    # reporting_two = friedman_result_reporting_two(s, p)[lang_set]
     
     result_for_save.append(reporting_one)
     result_for_save.append(describe_df)
-    result_for_save.append(reporting_two)
+    result_for_save.append(result_df)
     
     if posthoc:
         posthoc_table = posthoc_within(df, vars, parametric = False, posthoc_method = posthoc_method)
