@@ -308,6 +308,8 @@ def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, te
     
 def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
+    result_df = pd.DataFrame(columns = ['dependent variable', 'H-value', 'degree of freedom', 'p-value']).set_index('dependent variable')
+    
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     dv = vars[0] if isinstance(vars, list) else vars
     
@@ -328,12 +330,16 @@ def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
     p = result_object.pvalue
     dof = len(group_names) -1
     
+    result_df.loc[f"{vars}", : ] = [s, dof, p]
+    for _ in result_df.columns:
+        result_df[_] = result_df[_].astype(float).round(3)
+    
     reporting_one = compare_btwgroup_result_reporting_one(dv, group_vars, group_names)[lang_set]
-    reporting_two = kruskal_result_reporting_two(s, p, dof)[lang_set]
+    # reporting_two = kruskal_result_reporting_two(s, p, dof)[lang_set]
     
     result_for_save.append(reporting_one)
     result_for_save.append(describe_df)
-    result_for_save.append(reporting_two)
+    result_for_save.append(result_df)
     
     if posthoc:
         posthoc_table = posthoc_between(df = df, vars = vars, group_vars = group_vars, group_names = group_names, parametric = False, posthoc_method = posthoc_method)
@@ -350,5 +356,5 @@ def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
                 display(n)
             except:
                 print(n)
-                
+    
     return result_for_save 
