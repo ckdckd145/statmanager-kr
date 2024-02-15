@@ -14,16 +14,31 @@ def oneway_ancova(df:pd.DataFrame, vars: list, lang_set, testname, posthoc, post
     group_names = df[group_vars].unique()
     
     
-    dv = vars[0]
-    covars = vars[1]
-    iv = group_vars
+    dv = vars[0] # str
+    covars = vars[1] # list
     
-    decribe_vars = [dv] + covars 
+    iv = group_vars # str
     
-    formula_for_olsmodel = custom_join_for_ancova(vars = vars, group_vars = group_vars, method = 'oneway_ancova')
+    covar_df = pd.get_dummies(df[covars], drop_first=True, dtype='float', prefix = 'dummy_')
+    
+    new_covars = []
+    for covar in covars:
+        if covar in covar_df.columns:
+            covar_df = covar_df.drop(columns = covar)
+            new_covars.append(covar)
+    new_covars += covar_df.columns.to_list()
+    
+    df = df.merge(covar_df, left_index=True, right_index = True, how = 'left')
+    
+    vars_for_custom_join = [dv, new_covars]
+    
+    describe_vars = [dv] + new_covars
+    
+    formula_for_olsmodel = custom_join_for_ancova(vars = vars_for_custom_join, group_vars = group_vars, method = 'oneway_ancova')
+    print(formula_for_olsmodel)
     olsmodel = ols(formula_for_olsmodel, data = df).fit()    
     
-    describe_df = df.groupby(group_vars)[decribe_vars].agg(['count', 'mean', 'median', 'std']).rename(
+    describe_df = df.groupby(group_vars)[describe_vars].agg(['count', 'mean', 'median', 'std']).rename(
                     columns = {
                         'count' : 'n',
                         'std' : 'sd'
@@ -37,15 +52,14 @@ def oneway_ancova(df:pd.DataFrame, vars: list, lang_set, testname, posthoc, post
     
     
     raw_coef_table = pd.DataFrame(olsmodel.summary().tables[1].data, columns = ['index','coef', 'std err', 't', 'p', '0.025', '0.975'])[1:].set_index('index')
-                
-                
+
     pair_coef_table = raw_coef_table.loc[['Intercept']]
-    covar_coef_table = raw_coef_table.loc[covars]
-    drop_col_for_coef_table = ['Intercept'] + covars
+    covar_coef_table = raw_coef_table.loc[new_covars]
+    drop_col_for_coef_table = ['Intercept'] + new_covars
 
     for n in range(len(group_names)):
                     
-        formula_for_coef = custom_join_for_ancova(vars = vars, group_vars = group_vars, method = 'oneway_ancova', purpose = 'coef', keys = n)
+        formula_for_coef = custom_join_for_ancova(vars = vars_for_custom_join, group_vars = group_vars, method = 'oneway_ancova', purpose = 'coef', keys = n)
         model_for_coef = ols(formula_for_coef, data = df).fit()
         working_table_for_coef = pd.DataFrame(model_for_coef.summary().tables[1].data, columns = ['index','coef', 'std err', 't', 'p', '0.025', '0.975'])[1:].set_index('index')
         working_table_for_coef.drop(index = drop_col_for_coef_table, inplace=True)
