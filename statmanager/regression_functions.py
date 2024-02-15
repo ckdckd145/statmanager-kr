@@ -12,7 +12,7 @@ def linear(df: pd.DataFrame, vars : list, lang_set, testname):
     
     y = df[dv]
     x = df[iv]
-    x = pd.get_dummies(data = x, drop_first=True, dtype='int', prefix='dummy_',prefix_sep='_' )
+    x = pd.get_dummies(data = x, drop_first=True, dtype='int', prefix='dummy',prefix_sep='_' )
     
     x = api.add_constant(x)
     model = api.OLS(y, x).fit()
@@ -89,7 +89,7 @@ def hierarchical_linear (df: pd.DataFrame, vars : list, lang_set, testname):
     for n in range(number_of_steps):
         if n == 0 :
             x = df[steps[n]]
-            x = pd.get_dummies(data = x ,drop_first=True, dtype = 'int', prefix = 'dummy_', prefix_sep='_')
+            x = pd.get_dummies(data = x ,drop_first=True, dtype = 'int', prefix = 'dummy', prefix_sep='_')
             x = api.add_constant(x)
             model = api.OLS(y, x).fit()
             models.append(model)
@@ -98,7 +98,7 @@ def hierarchical_linear (df: pd.DataFrame, vars : list, lang_set, testname):
             for _ in range(n + 1):
                 ivs += steps[_]
             x = df[ivs]
-            x = pd.get_dummies(data = x ,drop_first=True, dtype = 'int', prefix = 'dummy_', prefix_sep='_')
+            x = pd.get_dummies(data = x ,drop_first=True, dtype = 'int', prefix = 'dummy', prefix_sep='_')
             x = api.add_constant(x)
             model = api.OLS(y, x).fit()
             models.append(model)
@@ -209,9 +209,9 @@ def logistic(df: pd.DataFrame, vars : list, lang_set, testname):
     
     if len(y.unique()) == 2:   
         mapper = ""
-        y = pd.get_dummies(data = y, drop_first=True, dtype='int', prefix='dummy_',prefix_sep='_')
+        y = pd.get_dummies(data = y, drop_first=True, dtype='int', prefix='dummy',prefix_sep='_')
         x = df[iv]
-        x = pd.get_dummies(data = x, drop_first=True, dtype='int', prefix='dummy_',prefix_sep='_' )
+        x = pd.get_dummies(data = x, drop_first=True, dtype='int', prefix='dummy',prefix_sep='_' )
         
         x = api.add_constant(x)
         model = api.Logit(y, x).fit()
@@ -259,7 +259,7 @@ def logistic(df: pd.DataFrame, vars : list, lang_set, testname):
         
         y = y.map(mapper)
         x = df[iv]
-        x = pd.get_dummies(data = x, drop_first=True, dtype='int', prefix='dummy_',prefix_sep='_' )
+        x = pd.get_dummies(data = x, drop_first=True, dtype='int', prefix='dummy',prefix_sep='_' )
         
         x = api.add_constant(x)
         model = api.MNLogit(y, x).fit()
