@@ -27,6 +27,20 @@ LINK = LINK_DOC
 
 class Stat_Manager:
     def __init__(self, dataframe: pd.DataFrame, id: str = None, language: str = 'kor'):
+        """ This is a mandatory class that must be created in order to use statmanager-kr.   
+        If you haven't read the officical documentation, it is recommended to check this: [Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
+
+        Parameters:
+            dataframe (pandas.DataFrame):   
+                - The pandas.DataFrame to which statistical analysis will conducted.   
+                - The DataFrame must follow a wide-range shape.   
+                
+            id (str, optional): Defaults to None.   
+                - If the DataFrame has no index columns, specify the index.   
+                
+            language (str, optional): Defaults to 'kor'.   
+                - Language settings. Supported Languages are English ('eng') and Korean ('kor').   
+        """
         self.df = dataframe
         self.df_original = dataframe
         self.df_analysis = None
@@ -76,9 +90,97 @@ class Stat_Manager:
         
     def progress(self, method: str, vars: list, group_vars: str = None, posthoc: bool = False, posthoc_method: str = 'bonf', selector: dict = None):
         """
-        Please check the documentation : https://cslee145.notion.site/statmanager-kr-Documentation-c9d0886f29ea461d9d0f44449a145f8a?pvs=4
-        
-        """        
+        Method to apply the statistical anaylsis based on the key argument provided to method parameter.   
+        The results of the analysis will printed in format of str and pandas.DataFrame.   
+        Also, an object of StatmanagerResult class will returned.   
+        For more information of addtional methods for StatmanagerResult, see the 'Returns' sections below.   
+           
+        If you haven't read the officical documentation, it is recommended to check this: [Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
+           
+        Parameters:
+            method (str): Key value of statistical analysis   
+                - 'kstest': Kolmogorov-Smirnov Test, Required: vars, Optional: group_vars
+                - 'shapiro': Shapiro-Wilks Test, Required: vars, Optional: group_vars
+                - 'z_normal': Z-skeweness & z-kurtosis test, Required: vars, Optional: group_vars
+                - 'levene': Levene Test, Required: vars, group_vars
+                - 'fmax': Fmax Test, Required: vars, group_vars
+                - 'chi2_contingency': Chi-squared Test, Required: vars
+                - 'fisher': Fisher's Exact Test, Required: vars
+                - 'pearsonr': Pearson's r, Required: vars
+                - 'spearmanr': Spearman's rho, Required: vars
+                - 'kendallt': Kendall's tau, Required: vars
+                - 'ttest_ind': Independent Samples T-test, Required: vars, group_vars
+                - 'ttest_rel': Dependent Samples T-test, Required: vars
+                - 'ttest_ind_trim': Yuen's Two Samples T-test, Required: vars, group_vars
+                - 'ttest_ind_welch': Welch's Two Samples T-test, Required: vars, group_vars
+                - 'mannwhitneyu': Mann-Whitney U Test, Required: vars, group_vars
+                - 'brunner': Brunner-Munzel Test, Required: vars, group_vars
+                - 'wilcoxon': Wilcoxon-Signed Rank Test, Required: vars
+                - 'bootstrap': Bootstrap Percentile Method, Required: vars, Optional: group_vars
+                - 'f_oneway': One-way ANOVA, Required: vars, group_vars, Optional: posthoc, posthoc_method
+                - 'f_oneway_rm': One-way Repeated Measures ANOVA, Required: vars, Optional: posthoc, posthoc_method
+                - 'kruskal': Kruskal-Wallis Test, Required: vars, group_vars, Optional: posthoc, posthoc_method
+                - 'friedman': Friedman Test, Required: vars, Optional: posthoc, posthoc_method
+                - 'f_nway': N-way ANOVA, Required: vars, group_vars, Optional: posthoc, posthoc_method
+                - 'f_nway_rm': N-way Mixed Repeated Measures ANOVA, Required: vars, group_vars, Optional: posthoc, posthoc_method
+                - 'linearr': Linear Regression, Required: vars
+                - 'hier_linearr': Hierarchical Linear Regression, Required: vars
+                - 'logisticr': Logistic Regression, Required: vars
+                - 'oneway_ancova': One-way ANCOVA, Required: vars, group_vars
+                - 'rm_ancova': One-way Repeated Measures ANCOVA, Required: vars
+                - 'cronbach': Calculating Cronbach's Alpha, Required: vars
+            
+            vars (str or list): Dependent Variables
+                - Provide dependent variable
+                
+            group_vars (str or list, optional): Group variables
+                - Must be provided when applying between group functions. 
+            
+            posthoc (bool, optional): Whether to conduct posthoc analysis
+                - Defaults to False.
+                - Posthoc analysis will conducted when True 
+                - Only for ANOVA, ANCOVA 
+                
+            posthoc_method (str, optional): Method for posthoc analysis 
+                - Defaults to 'bonf'
+                - Bonferroni correction ('bonf') and Tukey HSD ('tukey') are supported   
+                
+            selector (dict, optional): 
+                - Defaults to None
+                - Use it if only data that meets certain conditions should be analyzed. 
+                - For more informations, run .howtouse('selector')
+                
+                - if a == b: Use {'a': 'b'} → Pandas: df.loc[df['a'] == 'b'], Python: if a == b:
+                - if a != b: Use {'a': {'!=', 'b'}} → Pandas: df.loc[df['a'] != 'b'], Python: if a != b:
+                - if a > b: Use {'a': {'>', 'b'}} → Pandas: df.loc[df['a'] > 'b'], Python: if a > b:
+                - if a >= b: Use {'a': {'>=', 'b'}} → Pandas: df.loc[df['a'] >= 'b'], Python: if a >= b:
+                - if a < b: Use {'a': {'<', 'b'}} → Pandas: df.loc[df['a'] < 'b'], Python: if a < b:
+                - if a <= b: Use {'a': {'<=', 'b'}} → Pandas: df.loc[df['a'] <= 'b'], Python: if a <= b:
+
+        Returns:
+            Object of StatmanagerResult Class.   
+            The additional methods supported through chain method invocation are as follows:
+            
+            .figure()
+                - Generating Figure (Seaborn.Axes)
+            
+            .show()
+                - Reprinting the results
+                - Useful when the object of StatmanagerResult Class are declared in certain variable
+            
+            .save()
+                - method for saving the results
+                
+                Parameters:
+                    filename (str)
+                        - Specify the filename
+                        - Do not include extensions such as .txt or .xlsx
+                    
+                    fileformat (str) 
+                        - Default to 'txt'
+                        - file format : 'txt' and 'xlsx' are supported
+            
+        """
         method = method.lower()
         posthoc_method = posthoc_method.lower()
 
