@@ -25,7 +25,7 @@ VERSION = __version__
 
 LINK = LINK_DOC
 
-class Stat_Manager:
+class Stat_Manager: 
     def __init__(self, dataframe: pd.DataFrame, id: str = None, language: str = 'kor'):
         """ This is a mandatory class that must be created in order to use statmanager-kr.   
         If you haven't read the officical documentation, it is recommended to check this: [Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
@@ -179,7 +179,6 @@ class Stat_Manager:
                     fileformat (str) 
                         - Default to 'txt'
                         - file format : 'txt' and 'xlsx' are supported
-            
         """
         method = method.lower()
         posthoc_method = posthoc_method.lower()
