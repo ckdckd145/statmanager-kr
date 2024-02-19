@@ -17,6 +17,31 @@ TODAY = dt.datetime.now().strftime('%Y-%m-%d')
 NOW_TIME = dt.datetime.now().strftime("%H:%M:%S")
 
 class StatmanagerResult:
+    """
+    Summary
+    ----
+    This is the Class that is automatically created when the analysis is run through an object of the `Stat_Manager` class. 
+    This class supports several methods that can be applied to the results of the applied statistical analysis. 
+    
+    
+    Functions
+    ----
+    `.show()`
+        - Method to re-print the result of statistical analysis conducted
+    
+    `.save()`
+        - Method to save the result of statistical analysis conducted
+    
+    `.figure()`
+        - Method to generate the figure presenting the results of statistical analysis conducted
+    
+    Note
+    ----
+    All of the functions of `StatamanagerReuslt` can be used as method chaining
+    
+    """
+    
+    
     def __init__(self, method, vars, result, testname, group_vars = None, selector = None, df = None, lang_set = None):
         
         self.df = df
@@ -41,6 +66,36 @@ class StatmanagerResult:
                 self.df_results.append(_)
         
     def show(self, only_result = False):
+        """
+        Summary
+        ----
+        Method to re-print the result of statistical analysis conducted.   
+        It's useful to declare the results of your analysis in a specific variable, and then re-check the results when needed. 
+
+        Run
+        ----
+        It is recommended to use after declaring the result to specific variable.   
+        For more details, see the example in the 'Sample Code' section.
+        
+        Sample Code
+        ----
+        ```
+        # declaring the result into specific varialble 
+        result_of_ttest = sm.progress(method = 'ttest_ind', vars = ...)
+        
+        ...
+        ...
+        
+        # run when re-checking is needed
+        result_of_ttest.show()
+        ```
+        
+
+        Result
+        ----
+        The results of the statistical analysis conducted as well as the informations about the arguments and parameters when the analysis were conducted.
+        """
+        
         
         if only_result == False:
         
@@ -72,7 +127,27 @@ class StatmanagerResult:
         
         return self
     
-    def save(self, filename, file_format ='txt'):
+    def save(self, filename: str, file_format: str ='txt'):
+        """
+        Summary
+        ----
+        Method to save the results of statistical analysis conducted into .txt or .xlsx file. 
+        
+
+        Parameters
+        ----
+        filename (str): filename
+            - The filename without the format (.txt, .xlsx)
+            - It is also possible to specify a directory, such as `r"./resultdata/result_"`
+            
+        file_format (str): file format
+            - Default to 'txt'
+            - 'txt' and 'xlsx' are supported
+
+        Result
+        ----
+        If the path is not specified in the filename parameter, the resulting file will be saved in the same path as the code file (.py or .ipynb) from which the analysis was run. 
+        """
 
         if file_format == 'txt':
             content = []
@@ -138,7 +213,25 @@ class StatmanagerResult:
     
     
     def figure(self, method = 'auto'):
+        """
+        Summary
+        ----
+        Method to generate the figure presenting the results of the analysis conducted.
+        
+        Run
+        ----
+        Just run as method chaining.    
+        For example, if `sm.progress(method = 'ttest_ind', vars = ...).figure()` conducted, statmanager-kr will show the results of independent samples t-test and the related figure.
 
+        Returns
+        ----
+        Object of `matplotlib.axes.Axes' 
+            
+        Note
+        ----
+        By applying methods to `Axes` object from the `seaborn` or `matplotlib` libraries, it's possible to freely manipulate the properties of the figure.         
+        """
+        
         if method == 'auto':
             if self.method == 'kstest':
                 if self.group_vars == None:
