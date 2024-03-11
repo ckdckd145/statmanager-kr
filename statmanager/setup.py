@@ -8,7 +8,7 @@ with open(r'statmanager\README.md', encoding='utf-8') as f:
 
 setup(
     name='statmanager-kr',
-    version='1.8.1.7',
+    version='1.8.1.8',
     license='MIT',
     long_description=description_markdown,
     long_description_content_type='text/markdown',
