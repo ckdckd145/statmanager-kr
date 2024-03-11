@@ -159,7 +159,7 @@ def rm_anova(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = F
     result_object = AnovaRM(data = reset_df, depvar = 'value', subject = index_col, within = ['variable']).fit()
     
     anova_table = result_object.anova_table.rename(columns = {'Pr > F' : 'p-value'})
-    anova_table['partial etq squared'] = calculate_etasquared(df, vars)
+    anova_table['partial eta squared'] = calculate_etasquared(df, vars)
     anova_table = anova_table.round(3)
     
     describe_df = df[vars].agg(AGG_FORMULA).round(3).rename(index = {'count' : 'n'})
