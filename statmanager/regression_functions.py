@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from .messages_for_reporting import *
 from .making_figure import *
 from statsmodels import api
@@ -17,8 +16,6 @@ def linear(df: pd.DataFrame, vars : list, lang_set, testname):
     
     x = api.add_constant(x)
     model = api.OLS(y, x).fit()
-    df_for_model = pd.concat([x, y], axis = 1)
-    y_std = np.std(df_for_model[dv])
     
     reporting_one = linear_regression_result_reporting_one (dv)[lang_set]
     reporting_two = regression_result_reporting_ivs (iv)[lang_set]
@@ -28,19 +25,11 @@ def linear(df: pd.DataFrame, vars : list, lang_set, testname):
     # model_df1.columns = ['index', 'value', 'index_', 'value']
     # model_df1 = model_df1.set_index('index')
     model_df2 = model.summary2().tables[1].round(3)
-    model_df2.columns = ['unstandadrized coefficient', 'standard error', 't', 'p-value', '95% CI Low', '95% CI High']
+    model_df2.columns = ['coefficient', 'standard error', 't', 'p-value', '95% CI Low', '95% CI High']
     model_df3 = model.summary2().tables[2].round(3)
     # model_df3.columns = ['index', 'value', 'index_', 'value']
     # model_df3 = model_df3.set_index('index')
     warning_message = "\n".join(model.summary2().extra_txt)    
-    
-    for index in model_df2.index:
-        x_std = np.std(df_for_model[index])
-        coef = model_df2.loc[index, 'unstandadrized coefficient']
-        stand_coef = coef * (x_std/y_std)
-        model_df2.loc[index, 'standardized coefficient beta'] = stand_coef
-    
-    model_df2 = model_df2[['unstandadrized coefficient', 'standard error', 'standardized coefficient beta', 'p-value', '95% CI Low', '95% CI High']]
     
     data1 = model_df1[[0, 1]]
     data2 = model_df1[[2, 3]]
@@ -97,15 +86,12 @@ def hierarchical_linear (df: pd.DataFrame, vars : list, lang_set, testname):
     y = df[dv]
     
     models = []
-    df_for_models = []
     for n in range(number_of_steps):
         if n == 0 :
             x = df[steps[n]]
             x = pd.get_dummies(data = x ,drop_first=True, dtype = 'int', prefix = 'dummy', prefix_sep='_')
             x = api.add_constant(x)
             model = api.OLS(y, x).fit()
-            df_for_model = pd.concat([x, y], axis = 1)
-            df_for_models.append(df_for_model)
             models.append(model)
         else:
             ivs = []
@@ -115,8 +101,6 @@ def hierarchical_linear (df: pd.DataFrame, vars : list, lang_set, testname):
             x = pd.get_dummies(data = x ,drop_first=True, dtype = 'int', prefix = 'dummy', prefix_sep='_')
             x = api.add_constant(x)
             model = api.OLS(y, x).fit()
-            df_for_model = pd.concat([x, y], axis = 1)
-            df_for_models.append(df_for_model)            
             models.append(model)
     
     model_statistic_dfs = []
@@ -125,21 +109,9 @@ def hierarchical_linear (df: pd.DataFrame, vars : list, lang_set, testname):
     
     for n in range(number_of_steps):
         model = models[n]
-        
-        df_for_model_ = df_for_models[n]
-        y_std = np.std(df_for_model_[dv])
-        
         model_df1 = model.summary2().tables[0]
         model_df2 = model.summary2().tables[1]
-        model_df2.columns = ['unstandadrized coefficient', 'standard error', 't', 'p-value', '95% CI Low', '95% CI High']
-        
-        for index in model_df2.index:
-            x_std = np.std(df_for_model_[index])
-            coef = model_df2.loc[index, 'unstandadrized coefficient']
-            stand_coef = coef * (x_std/y_std)
-            model_df2.loc[index, 'standardized coefficient beta'] = stand_coef
-        
-        model_df2 = model_df2[['unstandadrized coefficient', 'standard error', 'standardized coefficient beta', 'p-value', '95% CI Low', '95% CI High']]
+        model_df2.columns = ['coefficient', 'standard error', 't', 'p-value', '95% CI Low', '95% CI High']
         model_df2.columns = pd.MultiIndex.from_product([[f'Step {n+1}'], model_df2.columns])
         model_df3 = model.summary2().tables[2]
         warning_message = "\n".join(model.summary2().extra_txt)

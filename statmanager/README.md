@@ -73,19 +73,14 @@ Using "Jupyter Notebook" is <b>STRONGLY RECOMMENDED</b> (Of course, statmanager-
 
 
 
-# Development: Changseok Lee
+# Development
 
-<a href="https://www.github.com/ckdckd145" target="_blanck">
-  <img src="https://img.shields.io/badge/Github-github?style=flat&logo=Github&color=black"
-</a>
-<a href="https://www.linkedin.com/in/cslee0052" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn%20Profile-kakao?style=flat&logo=LinkedIn&logoColor=white&color=black">
-</a>
-</a>
-<a href="mailto:ckdckd145@gmail.com" target="_blank">
-    <img src="https://img.shields.io/badge/Gmail-gmail?style=flat&logo=Gmail&logoColor=white&color=black">
-</a>
-</center>
+* Contributor   
+    * Changseok Lee   
+      * Email: ckdckd145@gmail.com   
+      * [Linkedin](https://www.linkedin.com/in/cslee0052)  
+      * [Github](https://github.com/ckdckd145)
+
 
 
 
