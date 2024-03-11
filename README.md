@@ -1,7 +1,8 @@
  
-[![pypi](https://badge.fury.io/py/statmanager-kr.svg?kill_cache?kill=cache)](https://badge.fury.io/py/statmanager-kr)
+[![pypi](https://badge.fury.io/py/statmanager-kr.svg)](https://badge.fury.io/py/statmanager-kr)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/ckdckd145/statmanager-kr/blob/main/LICENSE)
 ![logo](./doc/logo.png)
+
 
 # statmanager-kr
 ### Open-source statistical package for Python based on the Pandas.    
@@ -20,7 +21,7 @@ Currently, <b><u>KOREAN</u></b> and <b><u>ENGLISH</u></b> are supported.
 ## Documentaion
 [한글 문서](https://cslee145.notion.site/cslee145/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01)   
 [English Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
-****
+
 
 ## Notifications :
 Source codes are available in the [Github respository](https://github.com/ckdckd145/statmanager-kr)  
@@ -76,14 +77,19 @@ Using "Jupyter Notebook" is <b>STRONGLY RECOMMENDED</b> (Of course, statmanager-
 
 
 
-# Development
+# Development: Changseok Lee
 
-* Contributor   
-    * Changseok Lee   
-      * Email: ckdckd145@gmail.com   
-      * [Linkedin](https://www.linkedin.com/in/cslee0052)   
-      * [Github](https://github.com/ckdckd145)
-
+<a href="https://www.github.com/ckdckd145" target="_blanck">
+  <img src="https://img.shields.io/badge/Github-github?style=flat&logo=Github&color=black"
+</a>
+<a href="https://www.linkedin.com/in/cslee0052" target="_blank">
+    <img src="https://img.shields.io/badge/LinkedIn%20Profile-kakao?style=flat&logo=LinkedIn&logoColor=white&color=black">
+</a>
+</a>
+<a href="mailto:ckdckd145@gmail.com" target="_blank">
+    <img src="https://img.shields.io/badge/Gmail-gmail?style=flat&logo=Gmail&logoColor=white&color=black">
+</a>
+</center>
 
 
 
