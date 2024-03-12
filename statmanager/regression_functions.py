@@ -40,7 +40,7 @@ def linear(df: pd.DataFrame, vars : list, lang_set, testname):
         stand_coef = coef * (x_std/y_std)
         model_df2.loc[index, 'standardized coefficient beta'] = stand_coef
     
-    model_df2 = model_df2[['unstandadrized coefficient', 'standard error', 'standardized coefficient beta', 'p-value', '95% CI Low', '95% CI High']]
+    model_df2 = model_df2[['unstandadrized coefficient', 'standard error', 'standardized coefficient beta', 't', 'p-value', '95% CI Low', '95% CI High']]
     
     data1 = model_df1[[0, 1]]
     data2 = model_df1[[2, 3]]
@@ -139,7 +139,7 @@ def hierarchical_linear (df: pd.DataFrame, vars : list, lang_set, testname):
             stand_coef = coef * (x_std/y_std)
             model_df2.loc[index, 'standardized coefficient beta'] = stand_coef
         
-        model_df2 = model_df2[['unstandadrized coefficient', 'standard error', 'standardized coefficient beta', 'p-value', '95% CI Low', '95% CI High']]
+        model_df2 = model_df2[['unstandadrized coefficient', 'standard error', 'standardized coefficient beta', 't','p-value', '95% CI Low', '95% CI High']]
         model_df2.columns = pd.MultiIndex.from_product([[f'Step {n+1}'], model_df2.columns])
         model_df3 = model.summary2().tables[2]
         warning_message = "\n".join(model.summary2().extra_txt)
