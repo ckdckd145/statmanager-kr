@@ -27,9 +27,9 @@ def linear(df: pd.DataFrame, vars : list, lang_set, testname):
     model_df1 = model.summary2().tables[0]
     # model_df1.columns = ['index', 'value', 'index_', 'value']
     # model_df1 = model_df1.set_index('index')
-    model_df2 = model.summary2().tables[1].round(3)
+    model_df2 = model.summary2().tables[1]
     model_df2.columns = ['unstandadrized coefficient', 'standard error', 't', 'p-value', '95% CI Low', '95% CI High']
-    model_df3 = model.summary2().tables[2].round(3)
+    model_df3 = model.summary2().tables[2]
     # model_df3.columns = ['index', 'value', 'index_', 'value']
     # model_df3 = model_df3.set_index('index')
     warning_message = "\n".join(model.summary2().extra_txt)    
@@ -164,8 +164,8 @@ def hierarchical_linear (df: pd.DataFrame, vars : list, lang_set, testname):
         model_statistic_dfs.append(reframed_model_df)
         variable_coeff_dfs.append(model_df2)
     
-    model_statistic_dfs_result = pd.concat(model_statistic_dfs, axis = 1).round(3) # for showing
-    variable_coeff_dfs_result = pd.concat(variable_coeff_dfs, axis = 1).round(3) # for showing
+    model_statistic_dfs_result = pd.concat(model_statistic_dfs, axis = 1) # for showing
+    variable_coeff_dfs_result = pd.concat(variable_coeff_dfs, axis = 1) # for showing
     
     results = []
     
