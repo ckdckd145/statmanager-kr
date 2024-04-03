@@ -41,7 +41,7 @@ class StatmanagerResult:
     
     """
     
-    
+     
     def __init__(self, method, vars, result, testname, group_vars = None, selector = None, df = None, lang_set = None):
         
         self.df = df
@@ -535,6 +535,7 @@ def point_within (df, vars, parametric):
     
     ticks = np.linspace(min_value, max_value, ideal_ticks)
     ax.set_yticks(ticks)
+    ax.set_ylim(bottom = min_value, top = max_value)
     ax.set_xlabel(None)
     ax.set_ylabel(None)
     ax.grid(False)
@@ -559,7 +560,8 @@ def bar_between (df, vars, group_vars, parametric):
     ideal_ticks = 6
     
     ticks = np.linspace(min_value, max_value, ideal_ticks)
-    ax.set_yticks(ticks)    
+    ax.set_yticks(ticks)
+    ax.set_ylim(bottom = min_value, top = max_value)    
     ax.grid(False)
     ax.set_xlabel(group_vars)
     ax.set_ylabel(vars)
@@ -710,8 +712,8 @@ def plot_rm_twogroup(df, vars, group_vars):
         ax.set_yticks(ticks)
         ax.yaxis.grid(False)
         
-    g.fig.subplots_adjust(top=0.8)
-    g.fig.suptitle(f'Interaction Plot for {", ".join(group_vars)}', fontsize=16)
+    g.figure.subplots_adjust(top=0.8)
+    g.figure.suptitle(f'Interaction Plot for {", ".join(group_vars)}', fontsize=16)
     plt.grid(False)
     
     return g
