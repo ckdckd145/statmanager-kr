@@ -65,6 +65,9 @@ Please use [Github Discussion](https://github.com/ckdckd145/statmanager-kr/discu
 * seaborn
 * XlsxWriter
 
+It is recommended to use the <b>latest versions</b> of these libraries and packages to avoid unexpected errors. 
+예상치 못한 오류를 방지하기 위하여, 위 패키지 및 라이브러리는 항상 최신 버전으로 업데이트할 것을 권고합니다. 
+
 #### Recommendation
 Using "Jupyter Notebook" is <b>STRONGLY RECOMMENDED</b> (Of course, statmanager-kr works just as well in a Python environment)   
 "주피터 노트북(Jupyter Notebook)" 사용을 <b>강력하게 권고</b>합니다. 물론, Python 환경에서도 statmanager-kr은 문제없이 작동합니다.  
