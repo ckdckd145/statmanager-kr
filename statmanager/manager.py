@@ -564,11 +564,20 @@ class Stat_Manager:
         
         else: # keyword == None. ( when user just run .howtouse() )
             
-            print(NOTATION_FOR_HOWTOUSE[self.language_set])
+            # Prinintg sample code for using .progress() methods
+            print(SAMPLECODE_FOR_HOWTOUSE[self.language_set])
+            
+            # Printing notations for each analysis 
+            print(NOTATION_FOR_HOWTOUSE[self.language_set]) 
+            
+            # Printing guidebook for each analysis (menu_for_howtouse_eng.csv, menu_for_howtouse_kor.csv)
             self.showing(self.menu_for_howtouse.set_index(search_logic['menu_for_howtouse']['index_for_howtouse']))
             self.showing(self.figure_for_howtouse.set_index(search_logic['figure_for_howtouse']['index_for_howtouse']))
             
+            # Printing notations for selector parameter
             print(NOTATION_FOR_HOWTOUSE_SELECTOR[self.language_set])
+            
+            # Printing guidbook for using selector parameter (selector_for_howtouse_eng.csv, selector_for_howtouse_kor.csv)
             self.showing(self.selector_for_howtouse)
             
             return self

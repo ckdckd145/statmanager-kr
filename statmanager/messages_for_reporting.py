@@ -1,7 +1,7 @@
 
 LINK_DOC ={
-    'kor' : '*****\n↓↓ 상세한 정보는 Documentation link를 확인하세요! ↓↓\nhttps://cslee145.notion.site/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01&pvs=4 \n*****\n',
-    'eng' : '*****\n↓↓ Check for the more details in documentation! ↓↓\nhttps://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4 \n*****\n'
+    'kor' : '*****\n↓↓ 상세한 정보는 공식 문서를 확인하세요! ↓↓\nhttps://cslee145.notion.site/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01&pvs=4 \n*****\n',
+    'eng' : '*****\n↓↓ Check for the more details in official documentation! ↓↓\nhttps://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4 \n*****\n'
 }
 
 
@@ -114,8 +114,13 @@ notation_message_for_cronbach_alpha = {
     'eng' : "Note: Missing values are automatically deleted. \n",
 }
 
+SAMPLECODE_FOR_HOWTOUSE = {
+    'kor' : ".progress()를 통해 원하는 통계분석을 실행할 수 있습니다. \n\n예. 성별(sex)에 따른 연령(age) 차이 검정을 위해 독립표본 T검정을 실시하는 경우:\nsm.progress(method = 'ttest_ind', vars = 'sex', group_vars = 'age').figure()\n",
+    'eng' : "Statistical analysis can be applied using .progress(). \n\nExample. Independent samples t-test to test for differences in age by sex:\nsm.progress(method = 'ttest_ind', vars = 'sex', group_vars = 'age').figure()\n"
+}
+
 NOTATION_FOR_HOWTOUSE = {
-    'kor' : '.howtouse()에 분석과 관련해 검색할 키워드를 입력하세요.\n\n예시 1. ANOVA의 적용 방법이 궁금한 경우 sm.howtouse("ANOVA")\n예시 2. 정규성 검정이 궁금한 경우 sm.howtouse("정규성")\n예시 3. 비모수 검정이 궁금한 경우 sm.howtouse("비모수")\n\n데이터 필터링 방법을 확인하고 싶다면 sm.howtouse("selector")를 입력하세요! \n\n아래 표는 statmanager-kr에 구현된 통계분석 방법별로 구현 방법을 요약한 것입니다. \n통계분석 방법 외, 그림이나 그래프를 그리는 기능을 확인하려면 sm.howtouse("figure")를 검색하세요! ',
+    'kor' : '.howtouse()에 분석에 대한 검색어를 입력함으로써 구체적인 사용 방법에 대한 도움을 얻을 수 있습니다.\n\n예시 1. ANOVA의 적용 방법이 궁금한 경우 sm.howtouse("ANOVA")\n예시 2. 정규성 검정이 궁금한 경우 sm.howtouse("정규성")\n예시 3. 비모수 검정이 궁금한 경우 sm.howtouse("비모수")\n\n데이터 필터링 방법을 확인하고 싶다면 sm.howtouse("selector")를 입력하세요! \n\n아래 표는 statmanager-kr에 구현된 통계분석 방법별로 실행 방법을 요약한 것입니다. \n통계분석 방법 외, 그림이나 그래프를 그리는 기능을 확인하려면 sm.howtouse("figure")를 검색하세요! ',
     'eng' : 'In .howtouse(), enter the keywords you want to search for the analysis:\n\nExample 1. If you want to know how to apply ANOVA, sm.howtouse("ANOVA")\nExample 2. If you want to know how to test normality, sm.howtouse("normality")\nExample 3. If you want to know how to test nonparametric, sm.howtouse("Non-parametric")\n\nIf you want to know how to filter your data, enter sm.howtouse("selector")! \n\nThe table below summarizes the implementation methods for each statistical analysis method applied to statmanager-kr. \n Search sm.howtouse("figure") for the function to draw pictures and graphs! '
 }
 
