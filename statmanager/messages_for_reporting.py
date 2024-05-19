@@ -90,12 +90,12 @@ conclusion_for_normality_assumption = {
 
 conclusion_for_homoskedasticity_assumption = {
     'kor': {
-        'under' : '결론: 등분산성 가정 미충족',
-        'up' : '결론: 등분산성 가정 충족' ,
+        'under' : '등분산성 가정 미충족',
+        'up' : '등분산성 가정 충족' ,
         },
     'eng': {
-        'under' : 'Conclusion : The homoskedasticity assumption is not met',
-        'up' : 'Conclusion : The homoskedasticity assumption is met',
+        'under' : 'The homoskedasticity assumption is not met',
+        'up' : 'The homoskedasticity assumption is met',
         },
 }
 

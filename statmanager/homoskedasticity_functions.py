@@ -4,9 +4,11 @@ from .messages_for_reporting import *
 from .making_figure import *
 from itertools import product
 
-def levene(df: pd.DataFrame, vars: str or list, group_vars: str or list, lang_set : str, testname = 'Levene Test'):
+def levene(df: pd.DataFrame, vars: str | list, group_vars: str | list, lang_set : str, testname = 'Levene Test'):
     result_for_save = []        
     dv = vars[0] if isinstance(vars, list) else vars
+    result_df = pd.DataFrame(columns = ['set', 'test statistic', 'p-value', 'conclusion']).set_index('set')
+    
     
     if isinstance(group_vars, list):
         if len(group_vars) == 1:
@@ -25,8 +27,9 @@ def levene(df: pd.DataFrame, vars: str or list, group_vars: str or list, lang_se
             conclusion_key = 'under' if p <= .05 else 'up'
             conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
             
-            reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
-            
+            result_df.loc[str(group_names), :] = [s, p, conclusion]
+            # reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
+
         else:
             combo_list = [df[group].unique() for group in group_vars]
             combi = product(*combo_list)
@@ -49,8 +52,8 @@ def levene(df: pd.DataFrame, vars: str or list, group_vars: str or list, lang_se
             
             conclusion_key = 'under' if p <= .05 else 'up'
             conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
-            
-            reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
+            result_df.loc[str(group_names), :] = [s, p, conclusion]
+            # reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
             
     else: # group_vars were provided as str format
         group_names = df[group_vars].unique()
@@ -66,20 +69,32 @@ def levene(df: pd.DataFrame, vars: str or list, group_vars: str or list, lang_se
         conclusion_key = 'under' if p <= .05 else 'up'
         conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
         
-        reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
+        result_df.loc[str(group_names), :] = [s, p, conclusion]
+        # reporting = homoskedasticity_test_result_reporting(group_vars, group_names, s, p)[lang_set]
     
+    for _ in result_df.columns:
+        if _ != 'conclusion':
+            result_df[_] = result_df[_].astype(float).round(3)
+        else:
+            continue
     
-    result_for_save.append(reporting)
-    result_for_save.append(conclusion)
+    result_for_save.append(result_df)
     
+    print(testname)
     for n in result_for_save:
-        print(n)
-        
-    return result_for_save
+        if isinstance(n, str):
+            print(n)
+        else:
+            try:
+                display(n)
+            except:
+                print(n)
+                
+    return result_for_save  
 
-def fmax(df: pd.DataFrame, vars: str or list, group_vars: str, lang_set : str, testname = 'Fmax Test'):
+def fmax(df: pd.DataFrame, vars: str | list, group_vars: str, lang_set : str, testname = 'Fmax Test'):
     
-    
+    result_df = pd.DataFrame(columns = ['set', 'Max variance', 'Min variance', 'F-max statistic', 'conclusion']).set_index('set')
     result_for_save = [] 
     dv = vars[0] if isinstance(vars, list) else vars
     
@@ -93,11 +108,13 @@ def fmax(df: pd.DataFrame, vars: str or list, group_vars: str, lang_set : str, t
         
             f_max = max_variance / min_variance
             
-            reporting = fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
+            # reporting = fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
             
             conclusion_key = 'up' if f_max < 10 else 'under'
             conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
-        
+
+            result_df.loc[str(group_names), : ] = [max_variance, min_variance, f_max, conclusion]
+            
         else:
             combi_list = [ df[group].unique() for group in group_vars ]
             combi = product(*combi_list)
@@ -122,11 +139,11 @@ def fmax(df: pd.DataFrame, vars: str or list, group_vars: str, lang_set : str, t
             
             f_max = max_variance / min_variance
             
-            reporting = fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
+            # reporting = fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
             
             conclusion_key = 'up' if f_max < 10 else 'under'
             conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
-            
+            result_df.loc[str(group_names), : ] = [max_variance, min_variance, f_max, conclusion]
     else:
         group_names = df[group_vars].unique()
         group_n = len(group_names)     
@@ -135,19 +152,32 @@ def fmax(df: pd.DataFrame, vars: str or list, group_vars: str, lang_set : str, t
     
         f_max = max_variance / min_variance
         
-        reporting = fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
+        # reporting = fmax_result_reporting(dv, group_vars, group_n, group_names, max_variance, min_variance, f_max)[lang_set]
         
         conclusion_key = 'up' if f_max < 10 else 'under'
         conclusion = conclusion_for_homoskedasticity_assumption[lang_set][conclusion_key]
-        
+        result_df.loc[str(group_names), : ] = [max_variance, min_variance, f_max, conclusion]
+    
+    
+    for _ in result_df.columns:
+        if _ != 'conclusion':
+            result_df[_] = result_df[_].astype(float).round(3)
+        else:
+            continue
     
     ref = reference_of_fmax
-    result_for_save.append(reporting)
-    result_for_save.append(conclusion)
+    result_for_save.append(result_df)
+    # result_for_save.append(conclusion)
     result_for_save.append(ref)
     
     print(testname)
     for n in result_for_save:
-        print(n)
-        
-    return result_for_save
+        if isinstance(n, str):
+            print(n)
+        else:
+            try:
+                display(n)
+            except:
+                print(n)
+                
+    return result_for_save  

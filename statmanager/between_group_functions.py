@@ -10,7 +10,7 @@ from statsmodels.formula.api import ols
 
 AGG_FORMULA = ['count', 'mean', 'median', 'std', 'min', 'max'] # .round(3).rename(columns = {'count' : 'n'})
 
-def ttest_ind(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, equal = True):
+def ttest_ind(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, equal = True):
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 't-value', 'degree of freedom', 'p-value', '95% CI', "Cohen'd"]).set_index('dependent variable')
     
