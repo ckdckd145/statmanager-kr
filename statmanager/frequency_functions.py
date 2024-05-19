@@ -5,6 +5,7 @@ from .making_figure import *
 
 def chi2(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Chi-Squared Test'):
     
+    result_df = pd.DataFrame(columns = ['set', 'Chi Squared', 'p-value', 'degree of freedom']).set_index('set')
     result_for_save = []
     cross_df = pd.crosstab(df[vars[0]], df[vars[1]])
     cross_df.columns.name = None
@@ -21,13 +22,23 @@ def chi2(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Chi-Squared Te
     num_under_five_expected_frequency = (expected_frequency_df < 5).sum().sum()
     
     percentage_of_under_five_values = num_under_five_expected_frequency / number_of_cells
+    result_df.loc[str(vars), : ] = [s, p, dof]
     
     # -- #
-    reporting = frequency_analysis_result_reporting_one(vars)[lang_set]
-    reporting_two = frequency_analysis_result_reporting_two(s, p, dof)[lang_set]
+    # reporting = frequency_analysis_result_reporting_one(vars)[lang_set]
+    reporting_two = frequency_analysis_result_reporting_two()[lang_set]
     reporting_three = f"{percentage_df_word[lang_set]}\n{percentage_of_under_five_values_word[lang_set]} = {round(percentage_of_under_five_values * 100, 2):.2f}%\n"
     
-    result_for_save.append(reporting)
+    
+    for _ in result_df.columns:
+        try:
+            result_df[_] = result_df[_].astype(float).round(3)
+        except:
+            continue
+    
+    result_for_save.append(result_df)
+    
+    # result_for_save.append(reporting)
     result_for_save.append(reporting_two)
     result_for_save.append(cross_df) 
     result_for_save.append(reporting_three)
@@ -50,6 +61,8 @@ def chi2(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Chi-Squared Te
     return result_for_save
     
 def fisher(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Fisher Exact Test'):
+    
+    result_df = pd.DataFrame(columns = ['set', 'statistic', 'p-value']).set_index('set')
     result_for_save = []
     cross_df = pd.crosstab(df[vars[0]], df[vars[1]])
     cross_df.name = None
@@ -59,6 +72,7 @@ def fisher(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Fisher Exact
         result_object = stats.fisher_exact(cross_df)
         s = result_object.statistic
         p = result_object.pvalue
+        result_df.loc[str(vars), : ] = [s, p]
     
     
     elif len(cross_df.columns) > 2 or len(cross_df.index) > 2:
@@ -69,10 +83,17 @@ def fisher(df: pd.DataFrame, vars: list, lang_set :str, testname = 'Fisher Exact
         raise KeyError(keyerror_message_for_fisherexact[lang_set])
     
     # --- #
-    reporting = frequency_analysis_result_reporting_one(vars)[lang_set]
-    reporting_two = frequency_analysis_result_reporting_two_fisher(s, p)[lang_set]
+    # reporting = frequency_analysis_result_reporting_one(vars)[lang_set]
+    reporting_two = frequency_analysis_result_reporting_two()[lang_set]
     
-    result_for_save.append(reporting)
+    for _ in result_df.columns:
+        try:
+            result_df[_] = result_df[_].astype(float).round(3)
+        except:
+            continue
+    
+    # result_for_save.append(reporting)
+    result_for_save.append(result_df)
     result_for_save.append(reporting_two)
     result_for_save.append(cross_df)    
     

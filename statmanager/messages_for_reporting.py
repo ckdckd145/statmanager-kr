@@ -57,8 +57,8 @@ keyerror_message_for_cronbach = {
 }
 
 percentage_of_under_five_values_word = {
-    'kor' : '기대빈도 5 미만의 cell이 차지하는 비율',
-    'eng' : 'Percentage of cells with expected frequency less than 5',
+    'kor' : '*기대빈도 5 미만의 cell이 차지하는 비율',
+    'eng' : '*Percentage of cells with expected frequency less than 5',
     }
 
 percentage_df_word = {
@@ -496,18 +496,10 @@ def frequency_analysis_result_reporting_one (vars):
     return result
 
 
-def frequency_analysis_result_reporting_two (s, p, dof):
+def frequency_analysis_result_reporting_two ():
     result = {
-        'kor' : f"\n카이제곱 χ² = {s:.3f}, p = {p:.3f}, 자유도 = {dof}\n분할표: ",
-        'eng' : f"\nχ² = {s:.3f}, p = {p:.3f}, degree of freedom = {dof}\nContingency Table: ",
-    }
-    
-    return result
-
-def frequency_analysis_result_reporting_two_fisher (s, p):
-    result ={ 
-        'kor' : f"\n검정 통계치 = {s:.3f}, p = {p:.3f}\n분할표: ",
-        'eng' : f"\nTest Statistic = {s:.3f}, p = {p:.3f}\nContingency Table: ",
+        'kor' : "분할표: ",
+        'eng' : "Contingency Table: ",
     }
     
     return result
