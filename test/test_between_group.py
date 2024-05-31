@@ -3,6 +3,9 @@ from statmanager import Stat_Manager
 import numpy as np
 from scipy import stats
 import ast
+from statsmodels.stats.anova import anova_lm
+from statsmodels.formula.api import ols
+
 
 import pytest
 
@@ -153,4 +156,69 @@ def test_brunner():
 
     
     assert sm_w == np.round(scipy_w, 3)
+    assert sm_pvalue == np.round(scipy_pvalue, 3)
+
+
+def test_f_oneway():
+    '''
+    testing One-Way Anova (vs. Statsmodels)
+    '''
+
+    formula = 'income ~ C(condition)'
+    model = ols(formula, data = df).fit()
+    anova_table = anova_lm(model, typ=3)
+    anova_table = anova_table.round(3)
+
+    result_df = sm.progress(method = 'f_oneway', vars = 'income', group_vars = 'condition').df_results[-1]
+    
+    statsmodels_ss = anova_table['sum_sq'].to_list()
+    statsmodels_df = anova_table['df'].to_list()
+    statsmodels_f = anova_table['F'].to_list()
+    statsmodels_pvalue = anova_table['PR(>F)'].to_list()
+    
+    sm_ss = result_df['sum_sq'].to_list()
+    sm_df = result_df['df'].to_list()
+    sm_f = result_df['F'].to_list()
+    sm_pvalue = result_df['p-value'].to_list()    
+    
+    
+    for n in range(len(sm_ss)):
+        assert sm_ss[n] == statsmodels_ss[n]
+    
+    for n in range(len(sm_df)):
+        assert sm_df[n] == statsmodels_df[n]
+    
+    for n in range(len(sm_f)):
+        if np.isnan(sm_f[n]) == False and np.isnan(statsmodels_f[n]) == False:
+            assert sm_f[n] == statsmodels_f[n]
+        else:
+            continue
+
+    for n in range(len(sm_pvalue)):
+        if np.isnan(sm_pvalue[n]) == False and np.isnan(statsmodels_pvalue[n]) == False:
+            assert sm_pvalue[n] == statsmodels_pvalue[n]
+        else:
+            continue
+    
+def test_kruskal():
+    '''
+    testing the kruskal-wallis h test (vs. Scipy)
+    '''
+    
+    result_df = sm.progress(method ='kruskal', vars = 'income', group_vars = 'condition').df_results[1]
+    
+    test_group = df.loc[df['condition'] == 'test_group', 'income']
+    sham_group = df.loc[df['condition'] == 'sham_group', 'income']
+    control_group = df.loc[df['condition'] == 'control_group', 'income']
+    series = [test_group, sham_group, control_group]
+    result_object = stats.kruskal(*series)
+    
+    
+    scipy_h = result_object.statistic
+    scipy_pvalue = result_object.pvalue
+    
+    sm_h = result_df['H-value'].item()
+    sm_pvalue = result_df['p-value'].item()
+    
+    assert sm_h == np.round(scipy_h, 3)
     assert sm_pvalue == np.round(scipy_pvalue, 3)
