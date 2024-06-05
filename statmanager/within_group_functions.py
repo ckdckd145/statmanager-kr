@@ -135,7 +135,7 @@ def friedman(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = F
         posthoc_table = posthoc_within(df, vars, parametric = False, posthoc_method = posthoc_method)
         reporting_posthoc = 'Posthoc: '
         result_for_save.append(reporting_posthoc)
-        result_for_save.append(posthoc_table)
+        result_for_save.extend(posthoc_table)
     
     print(testname)
     for n in result_for_save:
@@ -174,7 +174,7 @@ def rm_anova(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = F
         posthoc_table = posthoc_within(df, vars, parametric = True, posthoc_method = posthoc_method)
         reporting_posthoc = 'Posthoc: '
         result_for_save.append(reporting_posthoc)
-        result_for_save.append(posthoc_table)
+        result_for_save.extend(posthoc_table)
     
     print(testname)
     for n in result_for_save:

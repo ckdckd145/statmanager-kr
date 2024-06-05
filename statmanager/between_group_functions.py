@@ -292,7 +292,7 @@ def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, te
         posthoc_table = posthoc_between(df = df, vars = vars, group_vars = group_vars, group_names = group_names, parametric = True, posthoc_method = posthoc_method)
         reporting_posthoc = 'Posthoc: '
         result_for_save.append(reporting_posthoc)
-        result_for_save.append(posthoc_table)
+        result_for_save.extend(posthoc_table)
         
     print(testname)
     for n in result_for_save:
@@ -345,7 +345,7 @@ def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
         posthoc_table = posthoc_between(df = df, vars = vars, group_vars = group_vars, group_names = group_names, parametric = False, posthoc_method = posthoc_method)
         reporting_posthoc = 'Posthoc: '
         result_for_save.append(reporting_posthoc)
-        result_for_save.append(posthoc_table)
+        result_for_save.extend(posthoc_table)
         
     print(testname)
     for n in result_for_save:

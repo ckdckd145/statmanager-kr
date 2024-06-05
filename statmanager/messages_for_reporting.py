@@ -275,15 +275,15 @@ def f_nway_result_reporting_four (testname): # also applied in f_nway_rm
 def posthoc_message_for_main_effect (n):
     
     posthoc_messages = {
-        'kor' : f"\n{n}의 주효과에 대한 사후 검정",
-        'eng' : f"\nPosthoc test for main effect of {n}",
+        'kor' : f"\n{n}의 주효과에 대한 사후 검정:",
+        'eng' : f"\nPosthoc test for main effect of {n}:",
     }
     
     return posthoc_messages
 
 posthoc_message_for_interaction = {
-    "kor" : "상호작용에 대한 사후검정",
-    "eng" : "Posthoc test for interaction effect",
+    "kor" : "상호작용에 대한 사후검정:",
+    "eng" : "Posthoc test for interaction effect:",
     }
 
 ancova_model_result_reporting = {
