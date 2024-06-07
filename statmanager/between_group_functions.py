@@ -14,11 +14,21 @@ def ttest_ind(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, te
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 't-value', 'degree of freedom', 'p-value', '95% CI', "Cohen'd"]).set_index('dependent variable')
     
+    # error guard
+    if isinstance(vars, list) and len(vars) > 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+    
+    if isinstance(group_vars, list) and len(group_vars) > 1:
+        raise ValueError(error_message_for_more_group_vars[lang_set])
+
     dv = vars[0] if isinstance(vars, list) else vars
     
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     
     group_names = df[group_vars].unique()
+    
+    if len(group_names) != 2:
+        raise ValueError(error_message_for_the_number_of_the_group[lang_set])
 
     df = df.loc[df[group_vars].isin(group_names)]
     
@@ -66,20 +76,29 @@ def ttest_ind(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, te
                 
     return result_for_save
 
-def ttest_ind_unequal (df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
+def ttest_ind_unequal (df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result = ttest_ind(df = df, vars = vars , group_vars=group_vars, lang_set = lang_set, testname = testname, equal = False)
     return result
 
-def ttest_ind_yuen(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, trim = None):
+def ttest_ind_yuen(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, trim = None):
     
     result_for_save = []
     trim_not_working = False
     result_df = pd.DataFrame(columns = ['dependent variable', 't-value', 'degree of freedom', 'p-value', '95% CI']).set_index('dependent variable')
     
+    if isinstance(vars, list) and len(vars) > 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+    
+    if isinstance(group_vars, list) and len(group_vars) > 1:
+        raise ValueError(error_message_for_more_group_vars[lang_set])    
+    
     dv = vars[0] if isinstance(vars, list) else vars
     
     group_names = df[group_vars].unique()
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
+
+    if len(group_names) != 2:
+        raise ValueError(error_message_for_the_number_of_the_group[lang_set])
     
     df = df.loc[df[group_vars].isin(group_names)]
     
@@ -163,9 +182,18 @@ def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 'U-value', 'Z-value', 'p-value', 'Rank-biserial Correlation']).set_index('dependent variable')
     
+    if isinstance(vars, list) and len(vars) > 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+    
+    if isinstance(group_vars, list) and len(group_vars) > 1:
+        raise ValueError(error_message_for_more_group_vars[lang_set])    
+    
     dv = vars[0] if isinstance(vars, list) else vars
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     group_names = df[group_vars].unique()
+
+    if len(group_names) != 2:
+        raise ValueError(error_message_for_the_number_of_the_group[lang_set])
 
     df = df.loc[df[group_vars].isin(group_names)]
     
@@ -213,10 +241,19 @@ def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set
 def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 'W-value', 'p-value']).set_index('dependent variable')
+
+    if isinstance(vars, list) and len(vars) > 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+    
+    if isinstance(group_vars, list) and len(group_vars) > 1:
+        raise ValueError(error_message_for_more_group_vars[lang_set])    
     
     dv = vars[0] if isinstance(vars, list) else vars
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     group_names = df[group_vars].unique()
+
+    if len(group_names) != 2:
+        raise ValueError(error_message_for_the_number_of_the_group[lang_set])
 
     df = df.loc[df[group_vars].isin(group_names)]
     
@@ -256,8 +293,15 @@ def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
                 
     return result_for_save
 
-def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
+def f_oneway(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
+    
+    if isinstance(vars, list) and len(vars) > 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+    
+    if isinstance(group_vars, list) and len(group_vars) > 1:
+        raise ValueError(error_message_for_more_group_vars[lang_set])        
+    
     
     dv = vars[0] if isinstance(vars, list) else vars
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
@@ -309,6 +353,12 @@ def f_oneway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, te
 def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 'H-value', 'degree of freedom', 'p-value']).set_index('dependent variable')
+
+    if isinstance(vars, list) and len(vars) > 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+    
+    if isinstance(group_vars, list) and len(group_vars) > 1:
+        raise ValueError(error_message_for_more_group_vars[lang_set])   
     
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
     dv = vars[0] if isinstance(vars, list) else vars

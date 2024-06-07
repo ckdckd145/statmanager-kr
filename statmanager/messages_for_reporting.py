@@ -134,6 +134,20 @@ notation_message_for_calculating_eta_squared  = {
     'eng' : 'Effectsize: Eta-squared (η2) is calculated: ',
 }
 
+error_message_for_more_vars = {
+    'kor' : '해당 분석에서 종속 변수는 1개여야만 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should use only one dependent variable (`vars` parameter). '
+}
+
+error_message_for_more_group_vars = {
+    'kor' : '해당 분석에서 그룹 변수는 1개여야만 합니다. (`group_vars` 파라미터)',
+    'eng' : 'In this analysis, you should use only one group variable. (`group_vars` parameter)'
+}
+
+error_message_for_the_number_of_the_group = {
+    'kor' : '제공된 집단 변수(`group_vars` 매개변수)에 해당하는 집단이 2개가 아닙니다. ',
+    'eng' : 'There are not two groups for the group variables provided (`group_vars` parameter).'
+}
 
 def success_message_for_creating_object (ver, doclink):
     
