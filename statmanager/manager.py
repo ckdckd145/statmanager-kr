@@ -410,9 +410,14 @@ class Stat_Manager:
             return result_object, figure_object
         
         if testtype == 'within_group': # done 
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
-            result_object = self.saving_for_result(result = result, testname = testname)
-            return result_object
+            
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
+            
+            else:
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                return result_object
             
         if testtype == 'anova_nways' : # done
             result = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, selector = self.selector)

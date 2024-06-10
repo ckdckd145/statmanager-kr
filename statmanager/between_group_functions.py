@@ -15,12 +15,18 @@ def ttest_ind(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, te
     result_df = pd.DataFrame(columns = ['dependent variable', 't-value', 'degree of freedom', 'p-value', '95% CI', "Cohen'd"]).set_index('dependent variable')
     
     # error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])    
+    
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
     
     if isinstance(group_vars, list) and len(group_vars) > 1:
         raise ValueError(error_message_for_more_group_vars[lang_set])
-
+    
     dv = vars[0] if isinstance(vars, list) else vars
     
     group_vars = group_vars[0] if isinstance(group_vars, list) else group_vars
@@ -85,6 +91,13 @@ def ttest_ind_yuen(df: pd.DataFrame, vars: list | str, group_vars : str, lang_se
     result_for_save = []
     trim_not_working = False
     result_df = pd.DataFrame(columns = ['dependent variable', 't-value', 'degree of freedom', 'p-value', '95% CI']).set_index('dependent variable')
+
+    # error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])    
     
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
@@ -181,6 +194,13 @@ def ttest_ind_yuen(df: pd.DataFrame, vars: list | str, group_vars : str, lang_se
 def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 'U-value', 'Z-value', 'p-value', 'Rank-biserial Correlation']).set_index('dependent variable')
+
+    # error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])   
     
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
@@ -242,6 +262,13 @@ def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 'W-value', 'p-value']).set_index('dependent variable')
 
+    # error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])   
+
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
     
@@ -295,6 +322,13 @@ def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
 
 def f_oneway(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
+
+    # error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])   
     
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
@@ -353,6 +387,13 @@ def f_oneway(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, tes
 def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 'H-value', 'degree of freedom', 'p-value']).set_index('dependent variable')
+
+    # error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])   
 
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])

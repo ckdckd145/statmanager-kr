@@ -136,17 +136,48 @@ notation_message_for_calculating_eta_squared  = {
 
 error_message_for_more_vars = {
     'kor' : '해당 분석에서 종속 변수는 1개여야만 합니다. (`vars` 파라미터)',
-    'eng' : 'In this analysis, you should use only one dependent variable (`vars` parameter). '
+    'eng' : 'In this analysis, you should provide only one dependent variable in `vars` parameter. '
 }
+
+error_message_for_more_vars_within = {
+    'kor' : '해당 분석에서 종속 변수는 2개여야만 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide only two dependent variables in `vars` parameter. '
+}
+
+error_message_for_more_vars_within_rm_anova = {
+    'kor' : '해당 분석에서 종속 변수는 2개 이상이어야 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide more than two dependent variables in `vars` parameter. '
+}
+
+error_message_for_more_vars_within_friedman = {
+    'kor' : '해당 분석에서 종속 변수는 반드시 3개여야만 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide only three dependent variables in `vars` parameter. '
+}
+
 
 error_message_for_more_group_vars = {
     'kor' : '해당 분석에서 그룹 변수는 1개여야만 합니다. (`group_vars` 파라미터)',
-    'eng' : 'In this analysis, you should use only one group variable. (`group_vars` parameter)'
+    'eng' : 'In this analysis, you should provide only one group variable in `group_vars` parameter'
+}
+
+error_message_for_vars_are_none = {
+    'kor' : '해당 분석을 진행하기 위해서는 종속 변수가 설정되어야 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide the dependent variable in `vars` parameter. '
+}
+
+error_message_for_group_vars_are_none = {
+    'kor' : '해당 분석을 진행하기 위해서는 그룹 변수가 설정되어야 합니다. (`group_vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide the group variable in `group_vars` parameter. '
+}
+
+error_message_for_group_vars_arent_none = {
+    'kor' : '해당 분석에는 그룹 변수가 설정될 수 없습니다. (`group_vars` 파라미터)',
+    'eng' : 'In this analysis, you should not provide the group variable in `group_vars` parameter. '
 }
 
 error_message_for_the_number_of_the_group = {
     'kor' : '제공된 집단 변수(`group_vars` 매개변수)에 해당하는 집단이 2개가 아닙니다. ',
-    'eng' : 'There are not two groups for the group variables provided (`group_vars` parameter).'
+    'eng' : 'There are not two groups for the group variables provided in `group_vars` parameter.'
 }
 
 def success_message_for_creating_object (ver, doclink):
