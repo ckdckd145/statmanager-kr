@@ -23,6 +23,10 @@ def posthoc_within(df, vars, parametric: bool, posthoc_method):
         result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
         result_table = result_table.set_index('pair no.')
         
+        for index in result_table.index:
+            for column in result_table.columns:
+                result_table.loc[index, column] = result_table.loc[index, column].data
+        
         results_for_return.append(annotation)
         results_for_return.append(result_table)
         
@@ -37,6 +41,10 @@ def posthoc_within(df, vars, parametric: bool, posthoc_method):
         result_table.columns = ['group1', 'group2', 'stat', 'p-value', 'corrected p-value', 'reject']
         result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
         result_table = result_table.set_index('pair no.')
+
+        for index in result_table.index:
+            for column in result_table.columns:
+                result_table.loc[index, column] = result_table.loc[index, column].data
         
         results_for_return.append(annotation)
         results_for_return.append(result_table)         
@@ -51,6 +59,12 @@ def posthoc_within(df, vars, parametric: bool, posthoc_method):
         result_table.columns = ['group1', 'group2', 'mean differences', 'adjusted p-value', 'lower', 'upper', 'reject']
         result_table['pair no.'] = [n for n in range(1, len(result_table.index) +1 )]
         result_table = result_table.set_index('pair no.')
+        
+        
+        for index in result_table.index:
+            for column in result_table.columns:
+                result_table.loc[index, column] = result_table.loc[index, column].data        
+        
         
         results_for_return.append(annotation)
         results_for_return.append(result_table)
@@ -83,6 +97,10 @@ def posthoc_between(df, vars, group_vars, group_names, parametric: bool, posthoc
             result_table.columns = ['group1', 'group2', 'stat', 'p-value', 'corrected p-value', 'reject']
             result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
             result_table = result_table.set_index('pair no.')
+
+            for index in result_table.index:
+                for column in result_table.columns:
+                    result_table.loc[index, column] = result_table.loc[index, column].data
             
             results_for_return.append(annotation)
             results_for_return.append(result_table)
@@ -98,6 +116,10 @@ def posthoc_between(df, vars, group_vars, group_names, parametric: bool, posthoc
             result_table.columns = ['group1', 'group2', 'stat', 'p-value', 'corrected p-value', 'reject']
             result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
             result_table = result_table.set_index('pair no.')
+
+            for index in result_table.index:
+                for column in result_table.columns:
+                    result_table.loc[index, column] = result_table.loc[index, column].data
             
             results_for_return.append(annotation)
             results_for_return.append(result_table)
@@ -113,6 +135,10 @@ def posthoc_between(df, vars, group_vars, group_names, parametric: bool, posthoc
         result_table.columns = ['group1', 'group2', 'mean differences', 'adjusted p-value', 'lower', 'upper', 'reject']
         result_table['pair no.'] = [n for n in range(1, len(result_table.index) +1 )]
         result_table = result_table.set_index('pair no.')
+
+        for index in result_table.index:
+            for column in result_table.columns:
+                result_table.loc[index, column] = result_table.loc[index, column].data
         
         results_for_return.append(annotation)
         results_for_return.append(result_table)
@@ -137,6 +163,10 @@ def posthoc_ways(df, dv, group_vars, parametric, posthoc_method, interaction_col
             result_table.columns = ['group1', 'group2', 'stat', 'p-value', 'corrected p-value', 'reject']
             result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
             result_table = result_table.set_index('pair no.')                        
+
+            for index in result_table.index:
+                for column in result_table.columns:
+                    result_table.loc[index, column] = result_table.loc[index, column].data
             
             results_for_return.append(reporting)
             results_for_return.append(annotation)
@@ -154,6 +184,10 @@ def posthoc_ways(df, dv, group_vars, parametric, posthoc_method, interaction_col
             result_table.columns = ['group1', 'group2', 'mean differences', 'adjusted p-value', 'lower', 'upper', 'reject']
             result_table['pair no.'] = [n for n in range(1, len(result_table.index) +1 )]
             result_table = result_table.set_index('pair no.')
+
+            for index in result_table.index:
+                for column in result_table.columns:
+                    result_table.loc[index, column] = result_table.loc[index, column].data
     
             results_for_return.append(reporting)
             results_for_return.append(annotation)
@@ -176,7 +210,10 @@ def posthoc_ways(df, dv, group_vars, parametric, posthoc_method, interaction_col
             result_table.columns = ['group1', 'group2', 'stat', 'p-value', 'corrected p-value', 'reject']
             result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
             result_table = result_table.set_index('pair no.')            
-            
+
+            for index in result_table.index:
+                for column in result_table.columns:
+                    result_table.loc[index, column] = result_table.loc[index, column].data            
             
             results_for_return.append(reporting)
             results_for_return.append(annotation)
@@ -194,6 +231,10 @@ def posthoc_ways(df, dv, group_vars, parametric, posthoc_method, interaction_col
             result_table.columns = ['group1', 'group2', 'mean differences', 'adjusted p-value', 'lower', 'upper', 'reject']
             result_table['pair no.'] = [n for n in range(1, len(result_table.index) +1 )]
             result_table = result_table.set_index('pair no.')            
+
+            for index in result_table.index:
+                for column in result_table.columns:
+                    result_table.loc[index, column] = result_table.loc[index, column].data
 
             results_for_return.append(reporting)
             results_for_return.append(annotation)
