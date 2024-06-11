@@ -5,10 +5,16 @@ from .making_figure import *
 from itertools import product
 
 def levene(df: pd.DataFrame, vars: str | list, group_vars: str | list, lang_set : str, testname = 'Levene Test'):
-    result_for_save = []        
+    result_for_save = []     
+    
+    if isinstance(vars, list) and len(vars) != 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+    
     dv = vars[0] if isinstance(vars, list) else vars
     result_df = pd.DataFrame(columns = ['set', 'test statistic', 'p-value', 'conclusion']).set_index('set')
     
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])
     
     if isinstance(group_vars, list):
         if len(group_vars) == 1:
@@ -96,8 +102,15 @@ def fmax(df: pd.DataFrame, vars: str | list, group_vars: str, lang_set : str, te
     
     result_df = pd.DataFrame(columns = ['set', 'Max variance', 'Min variance', 'F-max statistic', 'conclusion']).set_index('set')
     result_for_save = [] 
-    dv = vars[0] if isinstance(vars, list) else vars
     
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])
+
+    if isinstance(vars, list) and len(vars) != 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+
+    dv = vars[0] if isinstance(vars, list) else vars
+
     if isinstance(group_vars, list):
         if len(group_vars) == 1:
             group_vars = group_vars[0]

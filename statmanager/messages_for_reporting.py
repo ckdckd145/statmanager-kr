@@ -52,8 +52,8 @@ warning_message_for_frequency_analysis = {
     }
 
 keyerror_message_for_cronbach = {
-    'kor' : "크론바흐의 알파를 계산하기 위해서는 적어도 두 개 이상의 컬럼이 제공되어야 합니다. ",
-    'eng' : "At least two columns must be provided to calculate Cronbach's alpha. ",
+    'kor' : "크론바흐의 알파를 계산하기 위해서는 `vars` 파라미터에 적어도 두 개 이상의 컬럼이 제공되어야 합니다. ",
+    'eng' : "At least two columns must be provided to calculate Cronbach's alpha in `vars` parameter. ",
 }
 
 percentage_of_under_five_values_word = {
@@ -154,7 +154,6 @@ error_message_for_more_vars_within_friedman = {
     'eng' : 'In this analysis, you should provide only three dependent variables in `vars` parameter. '
 }
 
-
 error_message_for_more_group_vars = {
     'kor' : '해당 분석에서 그룹 변수는 1개여야만 합니다. (`group_vars` 파라미터)',
     'eng' : 'In this analysis, you should provide only one group variable in `group_vars` parameter'
@@ -178,6 +177,11 @@ error_message_for_group_vars_arent_none = {
 error_message_for_the_number_of_the_group = {
     'kor' : '제공된 집단 변수(`group_vars` 매개변수)에 해당하는 집단이 2개가 아닙니다. ',
     'eng' : 'There are not two groups for the group variables provided in `group_vars` parameter.'
+}
+
+error_message_for_regression_vars_short = {
+    'kor' : "회귀 분석을 진행하기 위해서는, `vars` 파라미터에 최소한 종속 변수와 독립 변수가 제공되어야 합니다. `list` 내의 `list`를 활용하여 종속 변수와 독립 변수를 지정하십시오.\n예: vars = ['종속 변수' , ['독립변수']]",
+    'eng' : "To progress the regression analysis, you should provide the dependent and independent variables in `vars` parameter in the format of `list` in `list`.\nExample: vars = ['dv', ['iv']]"
 }
 
 def success_message_for_creating_object (ver, doclink):

@@ -24,7 +24,7 @@ def ttest_ind(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, te
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
     
-    if isinstance(group_vars, list) and len(group_vars) > 1:
+    if isinstance(group_vars, list) and len(group_vars) != 1:
         raise ValueError(error_message_for_more_group_vars[lang_set])
     
     dv = vars[0] if isinstance(vars, list) else vars
@@ -102,7 +102,7 @@ def ttest_ind_yuen(df: pd.DataFrame, vars: list | str, group_vars : str, lang_se
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
     
-    if isinstance(group_vars, list) and len(group_vars) > 1:
+    if isinstance(group_vars, list) and len(group_vars) != 1:
         raise ValueError(error_message_for_more_group_vars[lang_set])    
     
     dv = vars[0] if isinstance(vars, list) else vars
@@ -191,7 +191,7 @@ def ttest_ind_yuen(df: pd.DataFrame, vars: list | str, group_vars : str, lang_se
                 
     return result_for_save    
     
-def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
+def mannwhitneyu(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 'U-value', 'Z-value', 'p-value', 'Rank-biserial Correlation']).set_index('dependent variable')
 
@@ -205,7 +205,7 @@ def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
     
-    if isinstance(group_vars, list) and len(group_vars) > 1:
+    if isinstance(group_vars, list) and len(group_vars) != 1:
         raise ValueError(error_message_for_more_group_vars[lang_set])    
     
     dv = vars[0] if isinstance(vars, list) else vars
@@ -258,7 +258,7 @@ def mannwhitneyu(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set
                 
     return result_for_save
 
-def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
+def brunner(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 'W-value', 'p-value']).set_index('dependent variable')
 
@@ -272,7 +272,7 @@ def brunner(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, tes
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
     
-    if isinstance(group_vars, list) and len(group_vars) > 1:
+    if isinstance(group_vars, list) and len(group_vars) != 1:
         raise ValueError(error_message_for_more_group_vars[lang_set])    
     
     dv = vars[0] if isinstance(vars, list) else vars
@@ -333,7 +333,7 @@ def f_oneway(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, tes
     if isinstance(vars, list) and len(vars) > 1:
         raise ValueError(error_message_for_more_vars[lang_set])
     
-    if isinstance(group_vars, list) and len(group_vars) > 1:
+    if isinstance(group_vars, list) and len(group_vars) != 1:
         raise ValueError(error_message_for_more_group_vars[lang_set])        
     
     
@@ -384,7 +384,7 @@ def f_oneway(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, tes
                 
     return result_for_save    
     
-def kruskal(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
+def kruskal(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save = []
     result_df = pd.DataFrame(columns = ['dependent variable', 'H-value', 'degree of freedom', 'p-value']).set_index('dependent variable')
 

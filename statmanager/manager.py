@@ -346,6 +346,10 @@ class Stat_Manager:
             
         if testtype == 'regression':
             
+            
+            if isinstance(vars, str) or (isinstance(vars, list) and len(vars) < 2) or (isinstance(vars, list) and isinstance(vars[1], str)) or(isinstance(vars, list) and isinstance(vars[0], list)):
+                raise ValueError(error_message_for_regression_vars_short[self.language_set])
+            
             variables = []
             for variable in vars:
                 if isinstance(variable, str):
@@ -388,10 +392,14 @@ class Stat_Manager:
         
         if testtype == 'frequency_analysis': # done
             
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
-            result_object = self.saving_for_result(result = result, testname = testname)
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
             
-            return result_object            
+            else:
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                
+                return result_object            
             
         if testtype == 'normality':  # done
             
@@ -400,11 +408,13 @@ class Stat_Manager:
             return result_object
             
         if testtype == 'homoskedasticity': # done
+            
             result = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
         
         if testtype == 'bootstrap': # done
+            
             result, figure_object = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, resampling_no = resampling_no, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object, figure_object
@@ -441,21 +451,34 @@ class Stat_Manager:
             
         if testtype == 'correlation': # done
             
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
-            result_object = self.saving_for_result(result = result, testname = testname)
-            return result_object
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
+            
+            else:            
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                return result_object
     
         if testtype == 'regression': # done
             
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
-            result_object = self.saving_for_result(result = result, testname = testname)
-            return result_object 
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
+            
+            else:
+            
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                return result_object 
 
         if testtype == 'reliability': # done
             
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
-            result_object = self.saving_for_result(result = result, testname = testname)
-            return result_object
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
+            
+            else:
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                return result_object
     
         if testtype == 'making_figure': # done
             

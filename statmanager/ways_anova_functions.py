@@ -16,8 +16,14 @@ import copy
 AGG_FORMULA = ['count', 'mean', 'median', 'std', 'min', 'max'] # .round(3).rename(columns = {'count' : 'n'})
 
 
-def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, selector = None):
+def f_nway(df: pd.DataFrame, vars: list | str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, selector = None):
     result_for_save = []
+    
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])
+
+    if isinstance(vars, list) and len(vars) != 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
     
     df, interaction_columns = create_interaction_columns(df, group_vars)
     
@@ -82,8 +88,14 @@ def f_nway(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, test
     
     
     
-def f_nway_rm(df: pd.DataFrame, vars: list or str, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, selector = None):
+def f_nway_rm(df: pd.DataFrame, vars: list, group_vars : str, lang_set, testname, posthoc = None, posthoc_method = None, selector = None):
     result_for_save = []
+
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])
+
+    if isinstance(vars, str) or (isinstance(vars, list) and len(vars) < 2):
+        raise ValueError(error_message_for_more_vars_within_rm_anova[lang_set])
     
     group_vars_for_reporting = copy.copy(group_vars)
     index_col = df.index.name

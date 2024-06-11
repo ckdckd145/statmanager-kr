@@ -6,8 +6,12 @@ from itertools import product
 
 # result = testfunc(df = df, vars = vars, lang_set = self.language_set, testname = testname) <-- in .progress()
 
-def kstest(df: pd.DataFrame, vars: str or list, lang_set : str, testname : str = 'Kolmogorov-Smirnov Test', group_vars : str or list = None): 
+def kstest(df: pd.DataFrame, vars: str | list, lang_set : str, testname : str = 'Kolmogorov-Smirnov Test', group_vars : str | list = None): 
     result_for_save = []
+    
+    if isinstance(vars, list) and len(vars) != 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+    
     dv = vars[0] if isinstance(vars, list) else vars
     result_df = pd.DataFrame(columns = ['set', 'n', 'test statistic', 'p-value', 'maximum deviation location', 'deviation direction', 'conclusion']).set_index('set')
     df = df
@@ -159,8 +163,12 @@ def kstest(df: pd.DataFrame, vars: str or list, lang_set : str, testname : str =
                 
     return result_for_save   
 
-def shapiro(df: pd.DataFrame, vars: str or list, lang_set: str, testname: str = 'Shapiro-Wilks Test', group_vars = None): 
+def shapiro(df: pd.DataFrame, vars: str | list, lang_set: str, testname: str = 'Shapiro-Wilks Test', group_vars: str | list = None): 
     result_for_save = [] 
+
+    if isinstance(vars, list) and len(vars) != 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
+
     dv = vars[0] if isinstance(vars, list) else vars
     result_df = pd.DataFrame(columns = ['set', 'n', 'test statistic', 'p-value', 'conclusion']).set_index('set')
     
@@ -299,7 +307,10 @@ def shapiro(df: pd.DataFrame, vars: str or list, lang_set: str, testname: str = 
     
     return result_for_save
 
-def z_normal(df: pd.DataFrame, vars: str or list, lang_set: str, testname: str = 'z-skeweness & z-kurtosis test', group_vars = None):
+def z_normal(df: pd.DataFrame, vars: str | list, lang_set: str, testname: str = 'z-skeweness & z-kurtosis test', group_vars: str | list = None):
+
+    if isinstance(vars, list) and len(vars) != 1:
+        raise ValueError(error_message_for_more_vars[lang_set])
     
     dv = vars[0] if isinstance(vars, list) else vars
     result_df = pd.DataFrame(columns = ['set', 'n', 'skewness', 'SE of skewness', 'z-skewness', 'kurtosis', 'SE of kurtosis', 'z-kurtosis', 'cutoff', 'conclusion']).set_index('set')
