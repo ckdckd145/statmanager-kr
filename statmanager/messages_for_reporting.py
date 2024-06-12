@@ -180,8 +180,18 @@ error_message_for_the_number_of_the_group = {
 }
 
 error_message_for_regression_vars_short = {
-    'kor' : "회귀 분석을 진행하기 위해서는, `vars` 파라미터에 최소한 종속 변수와 독립 변수가 제공되어야 합니다. `list` 내의 `list`를 활용하여 종속 변수와 독립 변수를 지정하십시오.\n예: vars = ['종속 변수' , ['독립변수']]",
+    'kor' : "회귀 분석을 진행하기 위해서는, `vars` 파라미터에 최소한 종속 변수와 독립 변수가 제공되어야 합니다. `list` 내의 `list`를 활용하여 종속 변수와 독립 변수를 올바르게 지정하십시오.\n예: vars = ['종속 변수' , ['독립 변수']]",
     'eng' : "To progress the regression analysis, you should provide the dependent and independent variables in `vars` parameter in the format of `list` in `list`.\nExample: vars = ['dv', ['iv']]"
+}
+
+error_message_for_vars_ancova = {
+    'kor' : "ANCOVA를 진행하기 위해서는, `vars` 파라미터에 최소한 종속 변수와 공변량이 제공되어야 합니다. `list` 내의 `list`를 활용하여 종속 변수와 공변량을 올바르게 지정하십시오.\n예: vars = ['종속 변수', ['공변량']]",
+    'eng' : "To progress the ANCOVA analysis, you should provide the dependent and covariates in `vars` parameter in the format of `list` in `list`\nExample: vars = ['dv', ['covariate']]",
+}
+
+error_message_for_vars_rmancova = {
+    'kor' : "반복측정 ANCOVA를 진행하기 위해서는, `vars` 파라미터에 종속 변수들과 공변량이 제공되어야 합니다. `list` 내의 `list`를 활용하여 종속 변수들과 공변량을 올바르게 지정하십시오.\n예: vars = ['종속 변수1', '종속 변수2', ['공변량']]",
+    'eng' : "To progress the repeated-measures ANCOVA analysis, you should provide the dependent variables and covariates in `vars` parameter in the format of `list` in `list`\nExample: vars = ['dv1', 'dv2', ['covariate']]",
 }
 
 def success_message_for_creating_object (ver, doclink):

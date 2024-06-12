@@ -361,11 +361,16 @@ class Stat_Manager:
         
         elif testtype == 'compare_ancova':
             
-            if method == 'oneway_ancova':
-                self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = [vars[0]] + vars[1])
-                
-            elif method == 'rm_anocva':
-                self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = vars[-1] + vars[-1])
+            if isinstance(vars, str) or (isinstance(vars, list) and len(vars) < 2) or (isinstance(vars, list) and isinstance(vars[-1], str)) or (isinstance(vars, list) and isinstance(vars[0], list)):
+                raise ValueError(error_message_for_vars_ancova[self.language_set])
+            
+            
+            else:
+                if method == 'oneway_ancova':
+                    self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = [vars[0]] + vars[1])
+                    
+                elif method == 'rm_ancova':
+                    self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = vars[-1] + vars[-1])
         
         elif testtype == 'correlation':
             pass
