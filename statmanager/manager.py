@@ -120,12 +120,12 @@ class Stat_Manager:
         The results of the analysis will printed in format of str and pandas.DataFrame.   
         Also, an object of StatmanagerResult class will returned.   
         For more information of addtional methods for StatmanagerResult, see the 'Returns' sections below.   
-           
+        
         If you haven't read the officical documentation, it is recommended to check this: [Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
-           
+        
         Parameters:
         ----
-        method (str): Key value of statistical analysis   
+        `method` (str): Key value of statistical analysis   
             - `kstest`: Kolmogorov-Smirnov Test, Required: vars, Optional: group_vars
             - `shapiro`: Shapiro-Wilks Test, Required: vars, Optional: group_vars
             - `z_normal`: Z-skeweness & z-kurtosis test, Required: vars, Optional: group_vars
@@ -157,25 +157,25 @@ class Stat_Manager:
             - `rm_ancova`: One-way Repeated Measures ANCOVA, Required: vars
             - `cronbach`: Calculating Cronbach's Alpha, Required: vars
             
-        vars (str or list): Dependent Variables
+        `vars` (`str` or `list`): Dependent Variables
             - Provide dependent variable
             
-        group_vars (str or list, optional): Group variables
+        `group_vars` (`str` or `list`, optional): Group variables
             - Must be provided when applying between group functions. 
         
-        posthoc (bool, optional): Whether to conduct posthoc analysis
-            - Defaults to False.
+        `posthoc` (`bool`, optional): Whether to conduct posthoc analysis
+            - Defaults to `False`.
             - Posthoc analysis will conducted when True 
-            - Only for ANOVA, ANCOVA 
+            - Only for ANOVA, ANCOVA or similar non-parametric analysis
             
-        posthoc_method (str, optional): Method for posthoc analysis 
-            - Defaults to 'bonf'
-            - Bonferroni correction ('bonf') and Tukey HSD ('tukey') are supported   
+        `posthoc_method` (`str`, optional): Method for posthoc analysis 
+            - Defaults to `bonf`
+            - Bonferroni correction (`bonf`) and Tukey HSD (`tukey`) are supported   
             
-        selector (dict, optional): 
-            - Defaults to None
+        `selector` (`dict`, optional): 
+            - Defaults to `None`
             - Use it if only data that meets certain conditions should be analyzed. 
-            - For more informations, run .howtouse('selector')
+            - For more informations, run `.howtouse('selector')`
             
             - if a == b: Use {'a': 'b'} → Same in Pandas: df.loc[df['a'] == 'b']
             - if a != b: Use {'a': {'!=', 'b'}} → Same in Pandas: df.loc[df['a'] != 'b']
@@ -186,12 +186,12 @@ class Stat_Manager:
 
         Returns:
         ----
-        Object of StatmanagerResult Class.
+        Object of `StatmanagerResult` Class.
         
-        Functions of StatmanagerResult
+        Functions of `StatmanagerResult`
         ----
         `.figure()`
-            - Generating Figure (matplotlib.axes.Axes)
+            - Generating Figure (`matplotlib.axes.Axes`)
         
         `.show()`
             - Reprinting the results
@@ -201,13 +201,13 @@ class Stat_Manager:
             - method for saving the results
             
             Parameters:
-                filename (str)
+                filename (`str`)
                     - Specify the filename
                     - Do not include extensions such as .txt or .xlsx
                 
-                fileformat (str) 
-                    - Default to 'txt'
-                    - file format : 'txt' and 'xlsx' are supported
+                fileformat (`str`) 
+                    - Default to `txt`
+                    - file format : `txt` and `xlsx` are supported
         """
         method = method.lower()
         posthoc_method = posthoc_method.lower()
