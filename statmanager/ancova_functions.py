@@ -113,7 +113,7 @@ def oneway_ancova(df:pd.DataFrame, vars: list | str, lang_set, testname, posthoc
         warning= warning_message_for_ancova_posthoc[lang_set]
         result_for_save.append(reporting_posthoc)
         result_for_save.append(warning)
-        result_for_save.append(posthoc_table)
+        result_for_save.extend(posthoc_table)
 
     print(testname)
     for n in result_for_save:
@@ -240,7 +240,7 @@ def rm_ancova(df:pd.DataFrame, vars: list, group_vars, lang_set, testname, posth
         warning= warning_message_for_ancova_posthoc[lang_set]
         result_for_save.append(reporting_posthoc)
         result_for_save.append(warning)
-        result_for_save.append(posthoc_table)        
+        result_for_save.extend(posthoc_table)        
     
     print(testname)
     for n in result_for_save:

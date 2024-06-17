@@ -12,42 +12,43 @@ def posthoc_within(df, vars, parametric: bool, posthoc_method):
     
     results_for_return = []
     
-    if parametric:
-        result = mc.allpairtest(stats.ttest_ind, method ='bonf')
-        result_table = result[0]
-        annotation = extract_caption(result_table.as_html())
-        result_table = pd.DataFrame(result_table)
+    if posthoc_method == 'bonf':
+        if parametric:
+            result = mc.allpairtest(stats.ttest_ind, method ='bonf')
+            result_table = result[0]
+            annotation = extract_caption(result_table.as_html())
+            result_table = pd.DataFrame(result_table)
+            
+            result_table = result_table.drop(index = 0)
+            result_table.columns = ['group1', 'group2', 'stat', 'p-value', 'corrected p-value', 'reject']
+            result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
+            result_table = result_table.set_index('pair no.')
+            
+            for index in result_table.index:
+                for column in result_table.columns:
+                    result_table.loc[index, column] = result_table.loc[index, column].data
+            
+            results_for_return.append(annotation)
+            results_for_return.append(result_table)
+            
         
-        result_table = result_table.drop(index = 0)
-        result_table.columns = ['group1', 'group2', 'stat', 'p-value', 'corrected p-value', 'reject']
-        result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
-        result_table = result_table.set_index('pair no.')
-        
-        for index in result_table.index:
-            for column in result_table.columns:
-                result_table.loc[index, column] = result_table.loc[index, column].data
-        
-        results_for_return.append(annotation)
-        results_for_return.append(result_table)
-        
-    
-    if not parametric:
-        result = mc.allpairtest(stats.mannwhitneyu, method ='bonf')
-        result_table = result[0] 
-        annotation = extract_caption(result_table.as_html())
-        result_table = pd.DataFrame(result_table)
-        
-        result_table = result_table.drop(index = 0)
-        result_table.columns = ['group1', 'group2', 'stat', 'p-value', 'corrected p-value', 'reject']
-        result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
-        result_table = result_table.set_index('pair no.')
+        if not parametric:
+            result = mc.allpairtest(stats.mannwhitneyu, method ='bonf')
+            result_table = result[0] 
+            annotation = extract_caption(result_table.as_html())
+            result_table = pd.DataFrame(result_table)
+            
+            result_table = result_table.drop(index = 0)
+            result_table.columns = ['group1', 'group2', 'stat', 'p-value', 'corrected p-value', 'reject']
+            result_table['pair no.'] = [n for n in range(1, len(result_table.index) + 1)]
+            result_table = result_table.set_index('pair no.')
 
-        for index in result_table.index:
-            for column in result_table.columns:
-                result_table.loc[index, column] = result_table.loc[index, column].data
-        
-        results_for_return.append(annotation)
-        results_for_return.append(result_table)         
+            for index in result_table.index:
+                for column in result_table.columns:
+                    result_table.loc[index, column] = result_table.loc[index, column].data
+            
+            results_for_return.append(annotation)
+            results_for_return.append(result_table)         
     
     elif posthoc_method == 'tukey':
         result = mc.tukeyhsd()
