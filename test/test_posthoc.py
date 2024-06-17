@@ -15,13 +15,13 @@ sm = Stat_Manager(df)
 
 
 # between
-## f_oneway 
-## kruskal
-## oneway_ancova
+## f_oneway (done) 
+## kruskal (done)
+## oneway_ancova (done)
 
 # within
-## f_oneway_rm
-## friedman
+## f_oneway_rm (done)
+## friedman (done)
 ## rm_ancova
 
 # mix
@@ -91,6 +91,322 @@ def test_tukey_in_f_oneway():
     selected_df = df[selected_rows]
     
     mc = MultiComparison(selected_df['income'], selected_df['condition'])
+    result = mc.tukeyhsd()
+    result_table = result.summary()
+
+    result_table = pd.DataFrame(result_table)
+    result_table = result_table.drop(index = 0)
+    result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+        
+
+def test_bonf_kruskal():
+    
+    '''
+    testing the bonferroni posthoc in kruskal (vs. Statsmodels / Scipy)
+    '''
+    
+    result_df = sm.progress(method = 'kruskal', vars = 'income', group_vars = 'condition', posthoc = True).df_results[-1]
+    
+    groups = df['condition'].unique()
+    
+    cond_list = []
+    for n in range(len(groups)):
+        cond = df['condition'] == groups[n]
+        cond_list.append(cond)
+        
+    selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
+    selected_df = df[selected_rows]
+    
+    mc = MultiComparison(selected_df['income'], selected_df['condition'])
+    result = mc.allpairtest(stats.mannwhitneyu, method = 'bonf')
+    result_table = pd.DataFrame(result[0])
+    original_columns = ['group1', 'group2', 'stat', 'pval', 'pval_corr', 'reject']
+    result_table = result_table.drop(index = 0)
+    result_table.columns = original_columns
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+        
+def test_tukey_kruskal():
+    '''
+    testing the tukey HSD posthoc in kruskal (vs. Statsmodels)
+    '''
+    
+    result_df = sm.progress(method = 'kruskal', vars = 'income', group_vars = 'condition', posthoc = True, posthoc_method = 'tukey').df_results[-1]
+    
+    groups = df['condition'].unique()
+    
+    cond_list = []
+    for n in range(len(groups)):
+        cond = df['condition'] == groups[n]
+        cond_list.append(cond)
+        
+    selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
+    selected_df = df[selected_rows]
+    
+    mc = MultiComparison(selected_df['income'], selected_df['condition'])
+    result = mc.tukeyhsd()
+    result_table = result.summary()
+
+    result_table = pd.DataFrame(result_table)
+    result_table = result_table.drop(index = 0)
+    result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+
+def test_bonf_oneway_ancova():
+    '''
+    testing the bonferroni in oneway_ancova (vs. Statsmodels/Scipy)
+    '''
+    
+    result_df = sm.progress(method = 'oneway_ancova', vars = ['income', ['age']], group_vars = 'condition', posthoc = True).df_results[-1]
+    groups = df['condition'].unique()
+    
+    cond_list = []
+    for n in range(len(groups)):
+        cond = df['condition'] == groups[n]
+        cond_list.append(cond)
+        
+    selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
+    selected_df = df[selected_rows]
+    
+    mc = MultiComparison(selected_df['income'], selected_df['condition'])
+    result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
+    result_table = pd.DataFrame(result[0])
+    original_columns = ['group1', 'group2', 'stat', 'pval', 'pval_corr', 'reject']
+    result_table = result_table.drop(index = 0)
+    result_table.columns = original_columns
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+
+def test_tukey_oneway_ancova():
+    '''
+    testing the tukeyhsd in oneway_ancova (vs. Statsmodels)
+    '''
+    
+    result_df = sm.progress(method = 'oneway_ancova', vars = ['income', ['age']], group_vars = 'condition', posthoc = True, posthoc_method = 'tukey').df_results[-1]
+    groups = df['condition'].unique()
+    
+    cond_list = []
+    for n in range(len(groups)):
+        cond = df['condition'] == groups[n]
+        cond_list.append(cond)
+        
+    selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
+    selected_df = df[selected_rows]
+    
+    mc = MultiComparison(selected_df['income'], selected_df['condition'])
+    result = mc.tukeyhsd()
+    result_table = result.summary()
+
+    result_table = pd.DataFrame(result_table)
+    result_table = result_table.drop(index = 0)
+    result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+
+def test_bonf_f_oneway_rm():
+    '''
+    testing the bonferroni in f_oneway_rm (vs. Statsmodels/Scipy)
+    '''
+    
+    target_variables = ['prescore', 'postscore', 'fupscore']
+    result_df = sm.progress(method = 'f_oneway_rm', vars = target_variables, posthoc = True).df_results[-1]
+    
+    index_col = df.index.name
+    posthoc_df = df.reset_index().melt(id_vars=index_col, value_vars=['prescore', 'postscore', 'fupscore'])
+    mc = MultiComparison(posthoc_df['value'], posthoc_df['variable'])
+    
+    result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
+    result_table = pd.DataFrame(result[0])
+    original_columns = ['group1', 'group2', 'stat', 'pval', 'pval_corr', 'reject']
+    result_table = result_table.drop(index = 0)
+    result_table.columns = original_columns
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+        
+def test_tukey_f_oneway_rm():
+    '''
+    testing the tukey hsd in f_oneway_rm (vs. Statsmodels)
+    '''
+    
+    target_variables = ['prescore', 'postscore', 'fupscore']
+    result_df = sm.progress(method = 'f_oneway_rm', vars = target_variables, posthoc = True, posthoc_method = 'tukey').df_results[-1]
+    
+    index_col = df.index.name
+    posthoc_df = df.reset_index().melt(id_vars=index_col, value_vars=['prescore', 'postscore', 'fupscore'])
+    mc = MultiComparison(posthoc_df['value'], posthoc_df['variable'])
+    
+    result = mc.tukeyhsd()
+    result_table = result.summary()
+
+    result_table = pd.DataFrame(result_table)
+    result_table = result_table.drop(index = 0)
+    result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+        
+
+def test_bonf_friedman():
+    '''
+    testing the bonferroni in friedman (vs. Statsmodels/Scipy)
+    '''
+    
+    target_variables = ['prescore', 'postscore', 'fupscore']
+    result_df = sm.progress(method = 'friedman', vars = target_variables, posthoc = True).df_results[-1]
+    
+    index_col = df.index.name
+    posthoc_df = df.reset_index().melt(id_vars=index_col, value_vars=['prescore', 'postscore', 'fupscore'])
+    mc = MultiComparison(posthoc_df['value'], posthoc_df['variable'])
+
+    result = mc.allpairtest(stats.mannwhitneyu, method = 'bonf')
+    result_table = pd.DataFrame(result[0])
+    original_columns = ['group1', 'group2', 'stat', 'pval', 'pval_corr', 'reject']
+    result_table = result_table.drop(index = 0)
+    result_table.columns = original_columns
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+        
+
+def test_tukey_friedman():
+    '''
+    testing the bonferroni in friedman (vs. Statsmodels/Scipy)
+    '''
+    
+    target_variables = ['prescore', 'postscore', 'fupscore']
+    result_df = sm.progress(method = 'friedman', vars = target_variables, posthoc = True, posthoc_method = 'tukey').df_results[-1]
+    
+    index_col = df.index.name
+    posthoc_df = df.reset_index().melt(id_vars=index_col, value_vars=['prescore', 'postscore', 'fupscore'])
+    mc = MultiComparison(posthoc_df['value'], posthoc_df['variable'])
+
     result = mc.tukeyhsd()
     result_table = result.summary()
 
