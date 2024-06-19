@@ -6,6 +6,7 @@ import ast
 from statsmodels.stats.anova import anova_lm
 from statsmodels.formula.api import ols
 from statsmodels.stats.multicomp import MultiComparison
+from itertools import combinations
 
 
 import pytest
@@ -14,18 +15,6 @@ df = pd.read_csv(r"./testdata/testdf.csv", index_col = 'id')
 sm = Stat_Manager(df)
 
 
-# between
-## f_oneway (done) 
-## kruskal (done)
-## oneway_ancova (done)
-
-# within
-## f_oneway_rm (done)
-## friedman (done)
-## rm_ancova
-
-# mix
-# f_nway
 # f_nway_rm
 
 
@@ -295,7 +284,7 @@ def test_bonf_f_oneway_rm():
     result_df = sm.progress(method = 'f_oneway_rm', vars = target_variables, posthoc = True).df_results[-1]
     
     index_col = df.index.name
-    posthoc_df = df.reset_index().melt(id_vars=index_col, value_vars=['prescore', 'postscore', 'fupscore'])
+    posthoc_df = df.reset_index().melt(id_vars=index_col, value_vars=target_variables)
     mc = MultiComparison(posthoc_df['value'], posthoc_df['variable'])
     
     result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
@@ -397,7 +386,7 @@ def test_bonf_friedman():
 
 def test_tukey_friedman():
     '''
-    testing the bonferroni in friedman (vs. Statsmodels/Scipy)
+    testing the tukey in friedman (vs. Statsmodels/Scipy)
     '''
     
     target_variables = ['prescore', 'postscore', 'fupscore']
@@ -431,3 +420,259 @@ def test_tukey_friedman():
         assert sm_1[n] == statsmodels_1[n]
         assert sm_2[n] == statsmodels_2[n]
         assert sm_3[n] == statsmodels_3[n]
+        
+
+def test_bonf_rm_ancova():
+    '''
+    testing the bonferroni in rm_ancova (vs. Statsmodels/Scipy)
+    '''
+    
+    result_df = sm.progress(method = 'rm_ancova', vars = ['prescore', 'postscore', 'fupscore', ['income']], posthoc = True).df_results[-1]
+    index_col = df.index.name
+    
+    posthoc_df = df.reset_index().melt(id_vars = index_col, value_vars = ['prescore', 'postscore', 'fupscore'])
+    mc = MultiComparison(posthoc_df['value'], posthoc_df['variable'])
+    
+    result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
+    result_table = pd.DataFrame(result[0])
+    original_columns = ['group1', 'group2', 'stat', 'pval', 'pval_corr', 'reject']
+    result_table = result_table.drop(index = 0)
+    result_table.columns = original_columns
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+        
+
+def test_tukey_rm_ancova():
+    '''
+    testing tukey in rm_ancova (vs. Statsmodels/Scipy)
+    '''
+
+    result_df = sm.progress(method = 'rm_ancova', vars = ['prescore', 'postscore', 'fupscore', ['income']], posthoc = True, posthoc_method = 'tukey').df_results[-1]
+    index_col = df.index.name
+    
+    posthoc_df = df.reset_index().melt(id_vars = index_col, value_vars = ['prescore', 'postscore', 'fupscore'])
+    mc = MultiComparison(posthoc_df['value'], posthoc_df['variable'])
+    
+            
+    result = mc.tukeyhsd()
+    result_table = result.summary()
+
+    result_table = pd.DataFrame(result_table)
+    result_table = result_table.drop(index = 0)
+    result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+            
+    sm_1 = result_df.loc[1].to_list()
+    sm_2 = result_df.loc[2].to_list()
+    sm_3 = result_df.loc[3].to_list()
+    
+    statsmodels_1 = result_table.iloc[0].to_list()
+    statsmodels_2 = result_table.iloc[1].to_list()
+    statsmodels_3 = result_table.iloc[2].to_list()
+    
+    for n in range(len(sm_1)):
+        assert sm_1[n] == statsmodels_1[n]
+        assert sm_2[n] == statsmodels_2[n]
+        assert sm_3[n] == statsmodels_3[n]
+        
+def test_bonf_f_nway():
+    '''
+    Testing the bonf in 2-way ANOVA (vs. Statsmodels/Scipy)
+    '''
+    group_vars = ['sex','condition']
+    dv = 'income'
+
+    result_dfs = sm.progress(method = 'f_nway',vars = dv, group_vars = group_vars, posthoc = True).df_results[-3:]
+    
+    # main-effect-posthoc
+    for n in range(len(group_vars)):
+        group_var = group_vars[n]    
+        groups = df[group_var].unique()
+        
+        result_df = result_dfs[n]
+        
+        
+        cond_list = []
+        for n in range(len(groups)):
+            cond = df[group_var] == groups[n]
+            cond_list.append(cond)
+        
+        selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
+        selected_df = df[selected_rows]
+        
+        mc = MultiComparison(selected_df[dv], selected_df[group_var])
+        result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
+        result_table = pd.DataFrame(result[0])
+        original_columns = ['group1', 'group2', 'stat', 'pval', 'pval_corr', 'reject']
+        result_table = result_table.drop(index = 0)
+        result_table.columns = original_columns
+        
+        for index in result_table.index:
+            for column in result_table.columns:
+                result_table.loc[index, column] = result_table.loc[index, column].data
+                
+        
+        for n in range(len(result_table.index)):
+            
+            statmanager = result_df.iloc[n].to_list()
+            statsmodels = result_table.iloc[n].to_list()
+            
+            
+            for n in range(len(statmanager)):
+                assert statmanager[n] == statsmodels[n]
+    
+    # interaction-effect-posthoc 
+    interactions = []
+    new_df = df.copy() 
+    result_df = result_dfs[-1]
+
+    for n in range(2, len(group_vars) + 1):
+        for combo in combinations(group_vars, n):
+            interaction_name = "interaction_" + "_".join(combo)
+            
+            interaction_values = df[list(combo)].astype(str).agg('_'.join, axis=1)
+            
+            new_df[interaction_name] = interaction_values
+            interactions.append(interaction_name)
+
+
+    groups = new_df[interaction_name].unique()
+
+    cond_list = []
+
+    for n in range(len(groups)):
+        cond = new_df[interaction_name] == groups[n]
+        cond_list.append(cond)
+        
+    selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
+    selected_df = new_df[selected_rows]
+    mc = MultiComparison(selected_df[dv], selected_df[interaction_name])
+    result = mc.allpairtest(stats.ttest_ind, method = 'bonf')
+    result_table = pd.DataFrame(result[0])
+    original_columns = ['group1', 'group2', 'stat', 'pval', 'pval_corr', 'reject']
+    result_table = result_table.drop(index = 0)
+    result_table.columns = original_columns
+
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+    for n in range(len(result_table.index)):
+        statmanager = result_df.iloc[n].to_list()
+        statsmodels = result_table.iloc[n].to_list()
+        
+        for n in range(len(statmanager)):
+            assert statmanager[n] == statsmodels[n]
+            
+            
+def test_tukey_f_nway():
+    '''
+    Testing the bonf in 2-way ANOVA (vs. Statsmodels/Scipy)
+    '''
+    group_vars = ['sex','condition']
+    dv = 'income'
+
+    result_dfs = sm.progress(method = 'f_nway',vars = dv, group_vars = group_vars, posthoc = True, posthoc_method = 'tukey').df_results[-3:]
+    
+    # main-effect-posthoc
+    for n in range(len(group_vars)):
+        group_var = group_vars[n]    
+        groups = df[group_var].unique()
+        
+        result_df = result_dfs[n]
+        
+        
+        cond_list = []
+        for n in range(len(groups)):
+            cond = df[group_var] == groups[n]
+            cond_list.append(cond)
+        
+        selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
+        selected_df = df[selected_rows]
+        
+        mc = MultiComparison(selected_df[dv], selected_df[group_var])
+        result = mc.tukeyhsd()
+        result_table = result.summary()
+
+        result_table = pd.DataFrame(result_table)
+        result_table = result_table.drop(index = 0)
+        result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+        
+        for index in result_table.index:
+            for column in result_table.columns:
+                result_table.loc[index, column] = result_table.loc[index, column].data
+                
+        
+        for n in range(len(result_table.index)):
+            
+            statmanager = result_df.iloc[n].to_list()
+            statsmodels = result_table.iloc[n].to_list()
+            
+            
+            for n in range(len(statmanager)):
+                assert statmanager[n] == statsmodels[n]
+    
+    # interaction-effect-posthoc 
+    interactions = []
+    new_df = df.copy() 
+    result_df = result_dfs[-1]
+
+    for n in range(2, len(group_vars) + 1):
+        for combo in combinations(group_vars, n):
+            interaction_name = "interaction_" + "_".join(combo)
+            
+            interaction_values = df[list(combo)].astype(str).agg('_'.join, axis=1)
+            
+            new_df[interaction_name] = interaction_values
+            interactions.append(interaction_name)
+
+
+    groups = new_df[interaction_name].unique()
+
+    cond_list = []
+
+    for n in range(len(groups)):
+        cond = new_df[interaction_name] == groups[n]
+        cond_list.append(cond)
+        
+    selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
+    selected_df = new_df[selected_rows]
+    mc = MultiComparison(selected_df[dv], selected_df[interaction_name])
+    result = mc.tukeyhsd()
+    result_table = result.summary()
+
+    result_table = pd.DataFrame(result_table)
+    result_table = result_table.drop(index = 0)
+    result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+            
+    for n in range(len(result_table.index)):
+        statmanager = result_df.iloc[n].to_list()
+        statsmodels = result_table.iloc[n].to_list()
+        
+        for n in range(len(statmanager)):
+            assert statmanager[n] == statsmodels[n]
+            
+    
