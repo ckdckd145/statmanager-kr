@@ -314,7 +314,7 @@ def test_tukey_f_oneway_rm():
     '''
     
     target_variables = ['prescore', 'postscore', 'fupscore']
-    result_df = sm.progress(method = 'f_oneway_rm', vars = target_variables, posthoc = True, posthoc_method = 'tukey').df_results[-1]
+    result_df = sm.progress(method = 'f_oneway_rm', vars = target_variables, posthoc = True, posthoc_method = 'tukey', posthoc_method = 'tukey').df_results[-1]
     
     index_col = df.index.name
     posthoc_df = df.reset_index().melt(id_vars=index_col, value_vars=['prescore', 'postscore', 'fupscore'])
@@ -787,7 +787,124 @@ def test_bonf_f_nway_rm():
         statsmodels = result_table.iloc[n].to_list()
         
         for n in range(len(statmanager)):
-            if statmanager[n] == statsmodels[n]:
-                print('yes')
-            else:
-                print('no')
+            assert statmanager[n] == statsmodels[n]
+            
+            
+def test_tukey_f_nway_rm():
+    '''
+    testing the tukey in f_nway_rm (vs. Statsmodels)
+    '''
+    
+    dvs = ['prescore', 'postscore', 'fupscore']
+    group_vars = 'condition'
+    
+    result_dfs = sm.progress(method = 'f_nway_rm', vars = dvs, group_vars = 'condition', posthoc = True).df_results[-3:]
+
+    
+    # main-effect-posthoc (repeated-measures)
+    
+    index_col = df.index.name
+    
+    posthoc_df = df.reset_index().melt(id_vars = index_col, value_vars = dvs)
+    mc = MultiComparison(posthoc_df['value'], posthoc_df['variable'])
+    
+    result = mc.tukeyhsd()
+    result_table = result.summary()
+
+    result_table = pd.DataFrame(result_table)
+    result_table = result_table.drop(index = 0)
+    result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+    
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+    
+    result_df = result_dfs[1]
+    
+    for n in range(len(result_table.index)):
+        statmanager = result_df.iloc[n].to_list()
+        statsmodels = result_table.iloc[n].to_list()
+        
+        for n in range(len(statmanager)):
+            assert statmanager[n] == statsmodels[n]
+            
+    # main-effect-posthoc (group variable)
+    
+    posthoc_df = df.reset_index().melt(id_vars = index_col, value_vars = dvs, var_name = 'time').set_index(index_col)
+    merged_df = df.drop(columns = dvs).merge(posthoc_df, how = 'outer', on = index_col)
+    new_dv = 'value'
+
+    mc = MultiComparison(merged_df[new_dv], merged_df['condition'])
+    result = mc.tukeyhsd()
+    result_table = result.summary()
+
+    result_table = pd.DataFrame(result_table)
+    result_table = result_table.drop(index = 0)
+    result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+
+
+    result_df = result_dfs[0]
+        
+    for n in range(len(result_table.index)):
+        statmanager = result_df.iloc[n].to_list()
+        statsmodels = result_table.iloc[n].to_list()
+        
+        for n in range(len(statmanager)):
+            assert statmanager[n] == statsmodels[n]
+    
+    
+    # interaction
+    index_col = df.index.name
+    group_vars = ['condition', 'time']
+
+
+    posthoc_df = df.reset_index().melt(id_vars = index_col, value_vars = dvs, var_name = 'time').set_index(index_col)
+    merged_df = df.drop(columns = dvs).merge(posthoc_df, how = 'outer', on = index_col)
+
+    interactions = []
+    new_df = merged_df.copy()
+
+    for n in range(2, len(group_vars) + 1):
+        for combo in combinations(group_vars, n):
+            interaction_name = "interaction_" + "_".join(combo)
+            
+            interaction_values = merged_df[list(combo)].astype(str).agg('_'.join, axis=1)
+            
+            new_df[interaction_name] = interaction_values
+            interactions.append(interaction_name)
+            
+    groups = new_df[interaction_name].unique()
+
+    cond_list = []
+
+    for n in range(len(groups)):
+        cond = new_df[interaction_name] == groups[n]
+        cond_list.append(cond)
+        
+    selected_rows = pd.concat(cond_list, axis=1).any(axis=1)
+    selected_df = new_df[selected_rows]
+    mc = MultiComparison(selected_df['value'], selected_df[interaction_name])
+    result = mc.tukeyhsd()
+    result_table = result.summary()
+
+    result_table = pd.DataFrame(result_table)
+    result_table = result_table.drop(index = 0)
+    result_table.columns = ['group1', 'group2', 'meandiff', 'p-adj', 'lower', 'upper', 'reject']
+
+
+    for index in result_table.index:
+        for column in result_table.columns:
+            result_table.loc[index, column] = result_table.loc[index, column].data
+
+    result_df = result_dfs[-1]
+            
+    for n in range(len(result_table.index)):
+        statmanager = result_df.iloc[n].to_list()
+        statsmodels = result_table.iloc[n].to_list()
+        
+        for n in range(len(statmanager)):
+            assert statmanager[n] == statsmodels[n]
