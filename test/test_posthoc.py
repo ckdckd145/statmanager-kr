@@ -314,7 +314,7 @@ def test_tukey_f_oneway_rm():
     '''
     
     target_variables = ['prescore', 'postscore', 'fupscore']
-    result_df = sm.progress(method = 'f_oneway_rm', vars = target_variables, posthoc = True, posthoc_method = 'tukey', posthoc_method = 'tukey').df_results[-1]
+    result_df = sm.progress(method = 'f_oneway_rm', vars = target_variables, posthoc = True, posthoc_method = 'tukey').df_results[-1]
     
     index_col = df.index.name
     posthoc_df = df.reset_index().melt(id_vars=index_col, value_vars=['prescore', 'postscore', 'fupscore'])
