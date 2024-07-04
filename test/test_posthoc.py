@@ -798,7 +798,7 @@ def test_tukey_f_nway_rm():
     dvs = ['prescore', 'postscore', 'fupscore']
     group_vars = 'condition'
     
-    result_dfs = sm.progress(method = 'f_nway_rm', vars = dvs, group_vars = 'condition', posthoc = True).df_results[-3:]
+    result_dfs = sm.progress(method = 'f_nway_rm', vars = dvs, group_vars = 'condition', posthoc = True, posthoc_method = 'tukey').df_results[-3:]
 
     
     # main-effect-posthoc (repeated-measures)
