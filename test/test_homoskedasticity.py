@@ -14,7 +14,7 @@ def test_levene():
     testing the Levene test (vs. Scipy)
     '''
     
-    result_df = sm.progress(method = 'levene', vars = 'income', group_vars = 'sex')
+    result_df = sm.progress(method = 'levene', vars = 'income', group_vars = 'sex').df_results[0]
     
     female = df.loc[df['sex'] == 'female', 'income']
     male = df.loc[df['sex'] == 'male', 'income']

@@ -13,7 +13,7 @@ def test_chi2():
     '''
     testing the Chi-squared test (vs. Scipy)
     '''
-    result_df = sm.progress(method = 'chi2_contingency', vars = ['sex','condition'])
+    result_df = sm.progress(method = 'chi2_contingency', vars = ['sex','condition']).df_results[0]
     
     cross_df = pd.crosstab(df['sex'], df['condition'])
     result_object = stats.chi2_contingency(cross_df)
@@ -36,7 +36,7 @@ def test_fisher():
     testing the fisher-exact test (vs. Scipy)
     '''
     
-    result_df = sm.progress(method = 'fisher', vars = ['sex','condition'])
+    result_df = sm.progress(method = 'fisher', vars = ['sex','condition']).df_results[0]
     
     cross_df = pd.crosstab(df['sex'], df['condition'])
     result_object = stats.fisher_exact(cross_df)
