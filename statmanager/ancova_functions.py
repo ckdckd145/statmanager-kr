@@ -7,9 +7,15 @@ from statsmodels.formula.api import ols
 
 # RULE :  args for 'vars' --> [dv, [covar]]
 
-def oneway_ancova(df:pd.DataFrame, vars: list, lang_set, testname, posthoc, posthoc_method, group_vars = None):
+def oneway_ancova(df:pd.DataFrame, vars: list | str, lang_set, testname, posthoc, posthoc_method, group_vars = None):
     
     result_for_save = []
+
+    if group_vars == None:
+        raise ValueError(error_message_for_group_vars_are_none[lang_set])
+    
+    if isinstance(group_vars, list) and len(group_vars) != 1:
+        raise ValueError(error_message_for_more_group_vars[lang_set])
     
     group_names = df[group_vars].unique()
     
@@ -107,7 +113,7 @@ def oneway_ancova(df:pd.DataFrame, vars: list, lang_set, testname, posthoc, post
         warning= warning_message_for_ancova_posthoc[lang_set]
         result_for_save.append(reporting_posthoc)
         result_for_save.append(warning)
-        result_for_save.append(posthoc_table)
+        result_for_save.extend(posthoc_table)
 
     print(testname)
     for n in result_for_save:
@@ -123,6 +129,15 @@ def oneway_ancova(df:pd.DataFrame, vars: list, lang_set, testname, posthoc, post
     
 
 def rm_ancova(df:pd.DataFrame, vars: list, group_vars, lang_set, testname, posthoc, posthoc_method):
+    
+    if group_vars != None:
+        raise ValueError(error_message_for_group_vars_arent_none[lang_set])
+    
+    for n in range( len(vars[:-1]) ):
+        if not isinstance(vars[n], str):
+            raise ValueError(error_message_for_vars_rmancova[lang_set])
+        else:
+            continue
     
     result_for_save = []
 
@@ -143,7 +158,7 @@ def rm_ancova(df:pd.DataFrame, vars: list, group_vars, lang_set, testname, posth
     df = df.merge(covar_df, left_index=True, right_index = True, how = 'left')
 
     vars_for_customjoin.append(new_covars)
-    print(vars_for_customjoin)
+    # print(vars_for_customjoin)
 
     vars_for_melting  = [index_col] + new_covars
 
@@ -225,7 +240,7 @@ def rm_ancova(df:pd.DataFrame, vars: list, group_vars, lang_set, testname, posth
         warning= warning_message_for_ancova_posthoc[lang_set]
         result_for_save.append(reporting_posthoc)
         result_for_save.append(warning)
-        result_for_save.append(posthoc_table)        
+        result_for_save.extend(posthoc_table)        
     
     print(testname)
     for n in result_for_save:

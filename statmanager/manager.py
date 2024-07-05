@@ -120,12 +120,12 @@ class Stat_Manager:
         The results of the analysis will printed in format of str and pandas.DataFrame.   
         Also, an object of StatmanagerResult class will returned.   
         For more information of addtional methods for StatmanagerResult, see the 'Returns' sections below.   
-           
+        
         If you haven't read the officical documentation, it is recommended to check this: [Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
-           
+        
         Parameters:
         ----
-        method (str): Key value of statistical analysis   
+        `method` (str): Key value of statistical analysis   
             - `kstest`: Kolmogorov-Smirnov Test, Required: vars, Optional: group_vars
             - `shapiro`: Shapiro-Wilks Test, Required: vars, Optional: group_vars
             - `z_normal`: Z-skeweness & z-kurtosis test, Required: vars, Optional: group_vars
@@ -157,25 +157,25 @@ class Stat_Manager:
             - `rm_ancova`: One-way Repeated Measures ANCOVA, Required: vars
             - `cronbach`: Calculating Cronbach's Alpha, Required: vars
             
-        vars (str or list): Dependent Variables
+        `vars` (`str` or `list`): Dependent Variables
             - Provide dependent variable
             
-        group_vars (str or list, optional): Group variables
+        `group_vars` (`str` or `list`, optional): Group variables
             - Must be provided when applying between group functions. 
         
-        posthoc (bool, optional): Whether to conduct posthoc analysis
-            - Defaults to False.
+        `posthoc` (`bool`, optional): Whether to conduct posthoc analysis
+            - Defaults to `False`.
             - Posthoc analysis will conducted when True 
-            - Only for ANOVA, ANCOVA 
+            - Only for ANOVA, ANCOVA or similar non-parametric analysis
             
-        posthoc_method (str, optional): Method for posthoc analysis 
-            - Defaults to 'bonf'
-            - Bonferroni correction ('bonf') and Tukey HSD ('tukey') are supported   
+        `posthoc_method` (`str`, optional): Method for posthoc analysis 
+            - Defaults to `bonf`
+            - Bonferroni correction (`bonf`) and Tukey HSD (`tukey`) are supported   
             
-        selector (dict, optional): 
-            - Defaults to None
+        `selector` (`dict`, optional): 
+            - Defaults to `None`
             - Use it if only data that meets certain conditions should be analyzed. 
-            - For more informations, run .howtouse('selector')
+            - For more informations, run `.howtouse('selector')`
             
             - if a == b: Use {'a': 'b'} → Same in Pandas: df.loc[df['a'] == 'b']
             - if a != b: Use {'a': {'!=', 'b'}} → Same in Pandas: df.loc[df['a'] != 'b']
@@ -186,12 +186,12 @@ class Stat_Manager:
 
         Returns:
         ----
-        Object of StatmanagerResult Class.
+        Object of `StatmanagerResult` Class.
         
-        Functions of StatmanagerResult
+        Functions of `StatmanagerResult`
         ----
         `.figure()`
-            - Generating Figure (matplotlib.axes.Axes)
+            - Generating Figure (`matplotlib.axes.Axes`)
         
         `.show()`
             - Reprinting the results
@@ -201,13 +201,13 @@ class Stat_Manager:
             - method for saving the results
             
             Parameters:
-                filename (str)
+                filename (`str`)
                     - Specify the filename
                     - Do not include extensions such as .txt or .xlsx
                 
-                fileformat (str) 
-                    - Default to 'txt'
-                    - file format : 'txt' and 'xlsx' are supported
+                fileformat (`str`) 
+                    - Default to `txt`
+                    - file format : `txt` and `xlsx` are supported
         """
         method = method.lower()
         posthoc_method = posthoc_method.lower()
@@ -346,6 +346,10 @@ class Stat_Manager:
             
         if testtype == 'regression':
             
+            
+            if isinstance(vars, str) or (isinstance(vars, list) and len(vars) < 2) or (isinstance(vars, list) and isinstance(vars[1], str)) or(isinstance(vars, list) and isinstance(vars[0], list)):
+                raise ValueError(error_message_for_regression_vars_short[self.language_set])
+            
             variables = []
             for variable in vars:
                 if isinstance(variable, str):
@@ -357,11 +361,16 @@ class Stat_Manager:
         
         elif testtype == 'compare_ancova':
             
-            if method == 'oneway_ancova':
-                self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = [vars[0]] + vars[1])
-                
-            elif method == 'rm_anocva':
-                self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = vars[-1] + vars[-1])
+            if isinstance(vars, str) or (isinstance(vars, list) and len(vars) < 2) or (isinstance(vars, list) and isinstance(vars[-1], str)) or (isinstance(vars, list) and isinstance(vars[0], list)):
+                raise ValueError(error_message_for_vars_ancova[self.language_set])
+            
+            
+            else:
+                if method == 'oneway_ancova':
+                    self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = [vars[0]] + vars[1])
+                    
+                elif method == 'rm_ancova':
+                    self.df_analysis = self.df_analysis.dropna(axis=0, how = 'any', subset = vars[-1] + vars[-1])
         
         elif testtype == 'correlation':
             pass
@@ -388,10 +397,14 @@ class Stat_Manager:
         
         if testtype == 'frequency_analysis': # done
             
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
-            result_object = self.saving_for_result(result = result, testname = testname)
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
             
-            return result_object            
+            else:
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                
+                return result_object            
             
         if testtype == 'normality':  # done
             
@@ -400,19 +413,26 @@ class Stat_Manager:
             return result_object
             
         if testtype == 'homoskedasticity': # done
+            
             result = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object
         
         if testtype == 'bootstrap': # done
+            
             result, figure_object = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, resampling_no = resampling_no, lang_set = self.language_set, testname = testname)
             result_object = self.saving_for_result(result = result, testname = testname)
             return result_object, figure_object
         
         if testtype == 'within_group': # done 
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
-            result_object = self.saving_for_result(result = result, testname = testname)
-            return result_object
+            
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
+            
+            else:
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                return result_object
             
         if testtype == 'anova_nways' : # done
             result = testfunc(df = self.df_analysis, vars = vars, group_vars = group_vars, lang_set = self.language_set, testname = testname, posthoc = posthoc, posthoc_method = posthoc_method, selector = self.selector)
@@ -436,21 +456,34 @@ class Stat_Manager:
             
         if testtype == 'correlation': # done
             
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
-            result_object = self.saving_for_result(result = result, testname = testname)
-            return result_object
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
+            
+            else:            
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                return result_object
     
         if testtype == 'regression': # done
             
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
-            result_object = self.saving_for_result(result = result, testname = testname)
-            return result_object 
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
+            
+            else:
+            
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                return result_object 
 
         if testtype == 'reliability': # done
             
-            result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
-            result_object = self.saving_for_result(result = result, testname = testname)
-            return result_object
+            if group_vars != None:
+                raise ValueError(error_message_for_group_vars_arent_none[self.language_set])
+            
+            else:
+                result = testfunc(df = self.df_analysis, vars = vars, lang_set = self.language_set, testname = testname)
+                result_object = self.saving_for_result(result = result, testname = testname)
+                return result_object
     
         if testtype == 'making_figure': # done
             
@@ -564,11 +597,20 @@ class Stat_Manager:
         
         else: # keyword == None. ( when user just run .howtouse() )
             
-            print(NOTATION_FOR_HOWTOUSE[self.language_set])
+            # Prinintg sample code for using .progress() methods
+            print(SAMPLECODE_FOR_HOWTOUSE[self.language_set])
+            
+            # Printing notations for each analysis 
+            print(NOTATION_FOR_HOWTOUSE[self.language_set]) 
+            
+            # Printing guidebook for each analysis (menu_for_howtouse_eng.csv, menu_for_howtouse_kor.csv)
             self.showing(self.menu_for_howtouse.set_index(search_logic['menu_for_howtouse']['index_for_howtouse']))
             self.showing(self.figure_for_howtouse.set_index(search_logic['figure_for_howtouse']['index_for_howtouse']))
             
+            # Printing notations for selector parameter
             print(NOTATION_FOR_HOWTOUSE_SELECTOR[self.language_set])
+            
+            # Printing guidbook for using selector parameter (selector_for_howtouse_eng.csv, selector_for_howtouse_kor.csv)
             self.showing(self.selector_for_howtouse)
             
             return self

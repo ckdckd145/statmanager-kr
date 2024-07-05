@@ -1,7 +1,7 @@
 
 LINK_DOC ={
-    'kor' : '*****\n↓↓ 상세한 정보는 Documentation link를 확인하세요! ↓↓\nhttps://cslee145.notion.site/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01&pvs=4 \n*****\n',
-    'eng' : '*****\n↓↓ Check for the more details in documentation! ↓↓\nhttps://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4 \n*****\n'
+    'kor' : '*****\n↓↓ 상세한 정보는 공식 문서를 확인하세요! ↓↓\nhttps://cslee145.notion.site/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01&pvs=4 \n*****\n',
+    'eng' : '*****\n↓↓ Check for the more details in official documentation! ↓↓\nhttps://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4 \n*****\n'
 }
 
 
@@ -52,13 +52,13 @@ warning_message_for_frequency_analysis = {
     }
 
 keyerror_message_for_cronbach = {
-    'kor' : "크론바흐의 알파를 계산하기 위해서는 적어도 두 개 이상의 컬럼이 제공되어야 합니다. ",
-    'eng' : "At least two columns must be provided to calculate Cronbach's alpha. ",
+    'kor' : "크론바흐의 알파를 계산하기 위해서는 `vars` 파라미터에 적어도 두 개 이상의 컬럼이 제공되어야 합니다. ",
+    'eng' : "At least two columns must be provided to calculate Cronbach's alpha in `vars` parameter. ",
 }
 
 percentage_of_under_five_values_word = {
-    'kor' : '기대빈도 5 미만의 cell이 차지하는 비율',
-    'eng' : 'Percentage of cells with expected frequency less than 5',
+    'kor' : '*기대빈도 5 미만의 cell이 차지하는 비율',
+    'eng' : '*Percentage of cells with expected frequency less than 5',
     }
 
 percentage_df_word = {
@@ -90,12 +90,12 @@ conclusion_for_normality_assumption = {
 
 conclusion_for_homoskedasticity_assumption = {
     'kor': {
-        'under' : '결론: 등분산성 가정 미충족',
-        'up' : '결론: 등분산성 가정 충족' ,
+        'under' : '등분산성 가정 미충족',
+        'up' : '등분산성 가정 충족' ,
         },
     'eng': {
-        'under' : 'Conclusion : The homoskedasticity assumption is not met',
-        'up' : 'Conclusion : The homoskedasticity assumption is met',
+        'under' : 'The homoskedasticity assumption is not met',
+        'up' : 'The homoskedasticity assumption is met',
         },
 }
 
@@ -114,9 +114,14 @@ notation_message_for_cronbach_alpha = {
     'eng' : "Note: Missing values are automatically deleted. \n",
 }
 
+SAMPLECODE_FOR_HOWTOUSE = {
+    'kor' : ".progress()를 통해 원하는 통계분석을 실행할 수 있습니다. \n\n예. 성별(sex)에 따른 연령(age) 차이 검정을 위해 독립표본 T검정을 실시하는 경우:\nsm.progress(method = 'ttest_ind', vars = 'sex', group_vars = 'age').figure()\n",
+    'eng' : "Statistical analysis can be applied using .progress(). \n\nExample. Independent samples t-test to test for differences in age by sex:\nsm.progress(method = 'ttest_ind', vars = 'sex', group_vars = 'age').figure()\n"
+}
+
 NOTATION_FOR_HOWTOUSE = {
-    'kor' : '.howtouse()에 분석과 관련해 검색할 키워드를 입력하세요.\n\n예시 1. ANOVA의 적용 방법이 궁금한 경우 sm.howtouse("ANOVA")\n예시 2. 정규성 검정이 궁금한 경우 sm.howtouse("정규성")\n예시 3. 비모수 검정이 궁금한 경우 sm.howtouse("비모수")\n\n데이터 필터링 방법을 확인하고 싶다면 sm.howtouse("selector")를 입력하세요! \n\n아래 표는 statmanager-kr에 구현된 통계분석 방법별로 구현 방법을 요약한 것입니다. \n통계분석 방법 외, 그림이나 그래프를 그리는 기능을 확인하려면 sm.howtouse("fgiure")를 검색하세요! ',
-    'eng' : 'In .howtouse(), enter the keywords you want to search for the analysis:\n\nExample 1. If you want to know how to apply ANOVA, sm.howtouse("ANOVA")\nExample 2. If you want to know how to test normality, sm.howtouse("normality")\nExample 3. If you want to know how to test nonparametric, sm.howtouse("Non-parametric")\n\nIf you want to know how to filter your data, enter sm.howtouse("selector")! \n\nThe table below summarizes the implementation methods for each statistical analysis method applied to statmanager-kr. \n Search sm.howtouse("fgiure") for the function to draw pictures and graphs! '
+    'kor' : '.howtouse()에 분석에 대한 검색어를 입력함으로써 구체적인 사용 방법에 대한 도움을 얻을 수 있습니다.\n\n예시 1. ANOVA의 적용 방법이 궁금한 경우 sm.howtouse("ANOVA")\n예시 2. 정규성 검정이 궁금한 경우 sm.howtouse("정규성")\n예시 3. 비모수 검정이 궁금한 경우 sm.howtouse("비모수")\n\n데이터 필터링 방법을 확인하고 싶다면 sm.howtouse("selector")를 입력하세요! \n\n아래 표는 statmanager-kr에 구현된 통계분석 방법별로 실행 방법을 요약한 것입니다. \n통계분석 방법 외, 그림이나 그래프를 그리는 기능을 확인하려면 sm.howtouse("figure")를 검색하세요! ',
+    'eng' : 'In .howtouse(), enter the keywords you want to search for the analysis:\n\nExample 1. If you want to know how to apply ANOVA, sm.howtouse("ANOVA")\nExample 2. If you want to know how to test normality, sm.howtouse("normality")\nExample 3. If you want to know how to test nonparametric, sm.howtouse("Non-parametric")\n\nIf you want to know how to filter your data, enter sm.howtouse("selector")! \n\nThe table below summarizes the implementation methods for each statistical analysis method applied to statmanager-kr. \n Search sm.howtouse("figure") for the function to draw pictures and graphs! '
 }
 
 NOTATION_FOR_HOWTOUSE_SELECTOR = {
@@ -129,6 +134,65 @@ notation_message_for_calculating_eta_squared  = {
     'eng' : 'Effectsize: Eta-squared (η2) is calculated: ',
 }
 
+error_message_for_more_vars = {
+    'kor' : '해당 분석에서 종속 변수는 1개여야만 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide only one dependent variable in `vars` parameter. '
+}
+
+error_message_for_more_vars_within = {
+    'kor' : '해당 분석에서 종속 변수는 2개여야만 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide only two dependent variables in `vars` parameter. '
+}
+
+error_message_for_more_vars_within_rm_anova = {
+    'kor' : '해당 분석에서 종속 변수는 2개 이상이어야 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide more than two dependent variables in `vars` parameter. '
+}
+
+error_message_for_more_vars_within_friedman = {
+    'kor' : '해당 분석에서 종속 변수는 반드시 3개여야만 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide only three dependent variables in `vars` parameter. '
+}
+
+error_message_for_more_group_vars = {
+    'kor' : '해당 분석에서 그룹 변수는 1개여야만 합니다. (`group_vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide only one group variable in `group_vars` parameter'
+}
+
+error_message_for_vars_are_none = {
+    'kor' : '해당 분석을 진행하기 위해서는 종속 변수가 설정되어야 합니다. (`vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide the dependent variable in `vars` parameter. '
+}
+
+error_message_for_group_vars_are_none = {
+    'kor' : '해당 분석을 진행하기 위해서는 그룹 변수가 설정되어야 합니다. (`group_vars` 파라미터)',
+    'eng' : 'In this analysis, you should provide the group variable in `group_vars` parameter. '
+}
+
+error_message_for_group_vars_arent_none = {
+    'kor' : '해당 분석에는 그룹 변수가 설정될 수 없습니다. (`group_vars` 파라미터)',
+    'eng' : 'In this analysis, you should not provide the group variable in `group_vars` parameter. '
+}
+
+error_message_for_the_number_of_the_group = {
+    'kor' : '제공된 집단 변수(`group_vars` 매개변수)에 해당하는 집단이 2개가 아닙니다. ',
+    'eng' : 'There are not two groups for the group variables provided in `group_vars` parameter.'
+}
+
+error_message_for_regression_vars_short = {
+    'kor' : "회귀 분석을 진행하기 위해서는, `vars` 파라미터에 최소한 종속 변수와 독립 변수가 제공되어야 합니다. `list` 내의 `list`를 활용하여 종속 변수와 독립 변수를 올바르게 지정하십시오.\n예: vars = ['종속 변수' , ['독립 변수']]",
+    'eng' : "To progress the regression analysis, you should provide the dependent and independent variables in `vars` parameter in the format of `list` in `list`.\nExample: vars = ['dv', ['iv']]"
+}
+
+error_message_for_vars_ancova = {
+    'kor' : "ANCOVA를 진행하기 위해서는, `vars` 파라미터에 최소한 종속 변수와 공변량이 제공되어야 합니다. `list` 내의 `list`를 활용하여 종속 변수와 공변량을 올바르게 지정하십시오.\n예: vars = ['종속 변수', ['공변량']]",
+    'eng' : "To progress the ANCOVA analysis, you should provide the dependent and covariates in `vars` parameter in the format of `list` in `list`\nExample: vars = ['dv', ['covariate']]",
+}
+
+error_message_for_vars_rmancova = {
+    'kor' : "반복측정 ANCOVA를 진행하기 위해서는, `vars` 파라미터에 종속 변수들과 공변량이 제공되어야 합니다. `list` 내의 `list`를 활용하여 종속 변수들과 공변량을 올바르게 지정하십시오.\n예: vars = ['종속 변수1', '종속 변수2', ['공변량']]",
+    'eng' : "To progress the repeated-measures ANCOVA analysis, you should provide the dependent variables and covariates in `vars` parameter in the format of `list` in `list`\nExample: vars = ['dv1', 'dv2', ['covariate']]",
+}
 
 def success_message_for_creating_object (ver, doclink):
     
@@ -270,15 +334,15 @@ def f_nway_result_reporting_four (testname): # also applied in f_nway_rm
 def posthoc_message_for_main_effect (n):
     
     posthoc_messages = {
-        'kor' : f"\n{n}의 주효과에 대한 사후 검정",
-        'eng' : f"\nPosthoc test for main effect of {n}",
+        'kor' : f"\n{n}의 주효과에 대한 사후 검정:",
+        'eng' : f"\nPosthoc test for main effect of {n}:",
     }
     
     return posthoc_messages
 
 posthoc_message_for_interaction = {
-    "kor" : "상호작용에 대한 사후검정",
-    "eng" : "Posthoc test for interaction effect",
+    "kor" : "상호작용에 대한 사후검정:",
+    "eng" : "Posthoc test for interaction effect:",
     }
 
 ancova_model_result_reporting = {
@@ -491,18 +555,10 @@ def frequency_analysis_result_reporting_one (vars):
     return result
 
 
-def frequency_analysis_result_reporting_two (s, p, dof):
+def frequency_analysis_result_reporting_two ():
     result = {
-        'kor' : f"\n카이제곱 χ² = {s:.3f}, p = {p:.3f}, 자유도 = {dof}\n분할표: ",
-        'eng' : f"\nχ² = {s:.3f}, p = {p:.3f}, degree of freedom = {dof}\nContingency Table: ",
-    }
-    
-    return result
-
-def frequency_analysis_result_reporting_two_fisher (s, p):
-    result ={ 
-        'kor' : f"\n검정 통계치 = {s:.3f}, p = {p:.3f}\n분할표: ",
-        'eng' : f"\nTest Statistic = {s:.3f}, p = {p:.3f}\nContingency Table: ",
+        'kor' : "분할표: ",
+        'eng' : "Contingency Table: ",
     }
     
     return result

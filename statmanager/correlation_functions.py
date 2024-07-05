@@ -11,6 +11,9 @@ def pearson(df: pd.DataFrame, vars : list, lang_set, testname):
     tf = stats.pearsonr
     method = 'pearson'
     
+    if isinstance(vars, str) or (isinstance(vars, list) and len(vars) < 2):
+        raise ValueError(error_message_for_more_vars_within_rm_anova[lang_set])
+    
     print(testname)
     result_for_save = correlations(df = df, vars = vars, method = method, tf = tf, lang_set = lang_set)
     return result_for_save
@@ -18,6 +21,9 @@ def pearson(df: pd.DataFrame, vars : list, lang_set, testname):
 def spearman(df: pd.DataFrame, vars : list, lang_set, testname):
     tf = stats.spearmanr
     method = 'spearman'
+
+    if isinstance(vars, str) or (isinstance(vars, list) and len(vars) < 2):
+        raise ValueError(error_message_for_more_vars_within_rm_anova[lang_set])
     
     print(testname)
     result_for_save = correlations(df = df, vars = vars, method = method, tf = tf, lang_set = lang_set)
@@ -26,6 +32,9 @@ def spearman(df: pd.DataFrame, vars : list, lang_set, testname):
 def kendall(df: pd.DataFrame, vars : list, lang_set, testname):
     tf = stats.kendalltau
     method = 'kendall'
+
+    if isinstance(vars, str) or (isinstance(vars, list) and len(vars) < 2):
+        raise ValueError(error_message_for_more_vars_within_rm_anova[lang_set])
     
     print(testname)
     result_for_save = correlations(df = df, vars = vars, method = method, tf = tf, lang_set = lang_set)

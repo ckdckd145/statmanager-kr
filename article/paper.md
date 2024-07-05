@@ -1,5 +1,5 @@
 ---
-title: 'Statmanager-kr: A user-friendly statistical package for Python in Pandas'
+title: 'Statmanager-kr: A User-friendly Statistical Package for Python in Pandas'
 tags:
   - Python
   - statistic analysis
@@ -19,34 +19,34 @@ bibliography: paper.bib
 
 # Summary
 
-Python is one of the most popular and easiest programming languages. Many researchers use Python for data preprocessing and statistical analysis. However, there are few statistical packages that inherit Python's simple, user-friendly characteristics. Many researchers who are not familiar with programming may not know how to utilize various methods for different types of analysis and adjust parameters effectively. Consequently, people who possess statistical knowledge but lack familiarity with programming languages continue to rely on other costly software. 
+Python is one of the most popular and easiest programming languages. Despite the fact that manay researchers use Python for data preprocessing and statistical analysis, there are few statistical packages that have inherited the simple, easy-to-use nature of Python.  Consequently, people who possess statistical knowledge but lack familiarity with programming languages continue to rely on other costly software. Because researchers who are not familiar with programming may not know how to use different methods and adjust parameters effectively. 
 
-The `statmanager-kr` was designed to provide easy-to-use statistical functions for people with little knowledge of programming languages. Because many people are already familiar with data in table format, such as that in Microsoft Excel, `statmanager-kr` was designed to be compatible with `Pandas.DataFrame`. In addition, the `statmanager-kr` was designed so that the analysis is performed using only one method and utilizes as few parameters as possible.
+The `Statmanager-kr` was designed to provide easy-to-use statistical functions for people with little knowledge of programming languages. Because many people are already familiar with data in table format, such as that in Microsoft Excel, `Statmanager-kr` was designed to be compatible with `Pandas.DataFrame`. In addition, the `Statmanager-kr` was designed so that the analysis is performed using only one method utilizing as few parameters as possible.
 
-Additionally, `statmanager-kr` relies on `scipy` and `statsmodels` for accurate and valid statistical analysis. The `statmanager-kr` provides functions related to testing for normality and homoscedasticity assumptions, comparing between-group and within-group differences, conducting regression analysis, and data visualization.
+Additionally, `Statmanager-kr` relies on `Scipy` and `Statsmodels` for valid analysis. The `Statmanager-kr` provides methods related to testing the normality and homoscedasticity assumptions, comparing between-group and within-group differences, conducting regression analysis, and data visualization.
 
 # Statement of need
 
-The `statmanager-kr` is a statistical package for Python in `Pandas`. This package provides functions commonly used for null hypothesis significance testing (NHST), which is of interest to researchers in various fields of research [@Moon2020]. The `statmanager-kr` provides statistical analysis functions to test the researcher's or student's hypothesis. It is also possible to check whether the assumption of normality or equivariance is met. For example, the Shapiro-Wilk Test, the Levene Test or the Fmax test can be used. 
+The `statmanager-kr` is a statistical package for Python in `Pandas`. This package provides methods commonly used for null hypothesis significance testing (NHST), which is of interest to researchers in various fields [@Moon2020]. It is also possible to check whether the normality or equivariance assumption is met, using the Shapiro-Wilk, Levene, or Fmax tests. 
 
-Most statistical software available today is difficult to use and expensive. One of the difficulties university students face in statistics course was the use of software [@Murtonen:2003]. Although there are basic statistical libraries in Python, such as Scipy [@seabold:2010] and Statsmodels [@Virtanen:2020], they are quite difficult and complex. While some studies involve complex and detailed statistical modelling and analysis, there are also many studies that require only a few hypothesis tests. It would therefore be of great benefit to these researchers if a statistical package could be developed that is easy to use.
+Most of the statistical software available today is difficult to use, as demonstrated by previous study reporting that one of the challenges college students face in statistics courses was "using software" [@Murtonen:2003]. Although there are basic statistical libraries in Python, such as Scipy [@seabold:2010] and Statsmodels [@Virtanen:2020], they are quite complex. While some studies involve complex and detailed statistical modeling and analysis, there are also many studies that require only a few hypothesis tests. Therefore, the development of an easy-to-use statistical package would be of great benefit to these researchers. 
 
-To achieve this goal, the `statmanager-kr` has been designed to allow running analyses with only three lines of code: 1. read data as a `Pandas.DataFrame`, 2. create a `Stat_Manager` object, 3. execute the `.progress()` method. Therefore, users can use the `statmanager-kr` as long as they know the Pandas methods to read the data, such as `.read_csv()` or `.read_excel()`. It also includes functions to visualize the results depending on the analysis method.
+To achieve this, the `statmanager-kr` has been designed to run analyses with only three lines of code: 1. read data as a `Pandas.DataFrame`, 2. create a `Stat_Manager` object, 3. execute the `.progress()` method. Therefore, users can use the `Statmanager-kr` as long as they know the Pandas methods to read the data, such as `.read_csv()` or `.read_excel()`. It also includes functions to visualize the results depending on the analysis method.
 
 
 # Related Work
 
-Recent advances in the statistical field have been accomplished through the emergence of user-friendly packages such as `Pingouin`[@vallat2018]. The `Pingouin` is designed to be an easy-to-use statistical package that offers a wide range of tests. The purpose of tthe `statmanager-kr` has been similar to the goal of the `Pingouin` project. Similar to the `Pingouin`, the `statmanager-kr` provides various statistical functions. However, while sharing the common goal of user-friendly, the `statmanager-kr` differs in several key aspects. 
+Recent advances in the field of statistics have been achieved through the emergence of user-friendly packages, such as `Pingouin` [@vallat2018]. Pingouin is an easy-to-use statistics package that offers a wide range of analytical functions. Like `Pingouin`, `Statmanager-kr` is similar in that it aims to be a user-friendly statistics package. 
 
-The `statmanager-kr` was developed with a focus on researchers with limited programming experience. This means that in the simplified workflow, there are differences between the `statamanager-kr` and the `Pingouin`. The `statmanager-kr` offers a streamlined workflow that allows users to perform a wide range of statistical analyses by simply specifying the analysis type, variables, or group variables. Users can perform various statistical tests always using the same `.progress()` method, making it accessible to users unfamiliar with programming concepts in the `statmanager-kr` This design philosophy reduces user complexity, which is especially beneficial for those in fast-paced research environments who need fast and reliable results. Although the `Pingouin` is also easy to use, it aimed more at researchers with some programming experience. Therefore in terms of workflow, the `Pingouin` offers a more comprehensive set of statistical analysis and fine-tuning capabilities, but it requires users to learn about the analysis-specific methods to use. However, the `Pingouin` has the advantage of providing more detailed analysis results. Due to the separated functionality, the `Pingouin` supports a more extensive range of statistical analysis with more diverse and highly cutomizable than the `statmanager-kr`. Also, the `statmanager-kr` only works with `Pandas.DataFrame` for convenience, while the `Pingouin` has the advantage of being compatible with a wider range of datasets. 
+However, `Statmanager-kr` and `Pingouin` differ in their target users. Since `Statmanager-kr` is designed for researchers with limited programming experience, it focuses on keeping the workflow short and concise; therefore, `Statmanager-kr` was designed to allow users to apply analyses and obtain results by always running a single method, `.progress()`, in a similar way. On the other hand, `Pingouin` was developed for users who have a relatively high level of programming knowledge and experience; therefore, in terms of workflow, `Pingouin` offers more comprehensive and fine-tunable analysis methods and provides more detailed analysis results. Also, `Statmanager-kr` only works with `Pandas.DataFrame`, while `Pingouin` has the advantage of being compatible with a wider range of datasets. 
 
-The `statmanager-kr` and the `Pingouin` also differ in the visualization of results and the post-hoc. The `statmanager-kr` performs post-hoc by adding the `posthoc` parameter in the `.progress()`. In addition, it is possible to visualize the results by using `.figure()` as a chain method. While the `Pingouin` does not support the ability to directly visualize the results of the analysis. However, the `Pingouin` offers more useful functions to generate graphs than the `statmanager-kr`, such as paired plot, shift plot, and plot for circle mean. In addition, the Pingouin has the advantage of supporting a wider range of post-hoc tests than the `statmanager-kr`. 
+Another difference is related to visualization and post-hoc. The `statmanager-kr` performs post-hoc by adding the parameter `posthoc` to the `.progress()`. In addition, it is possible to visualize the results by using `.figure()` as a method chaining. Although `Pingouin` does not provide the ability to directly visualize the results of an analysis, it does support the generation of graphs that are very useful from a statistical perspective, such as paired plots, shift plots, and circle mean plots. In addition, Pingouin has the advantage of supporting a wider range of post-hoc tests. 
 
-Therefore, the `statmanager-kr` and the `pingouin` may be applied differently depending on the user's familiarity with programming. Researchers who are comfortable with programming and are in a situation may be better suited to the `pingouin`, which supports a wider range of analysis methods and customization. On the other hand, the `statmanager-kr` is designed to be used by researchers who are not familiar with programming and coding, but need to get fast, quick results.
+In conclusion, depending on the programming experience of the researcher and the purpose of the study, `Statmanager-kr` and `Pingouin` can be used differently.  Researchers who are familiar with programming may be better suited to use `Pingouin` as it supports more analysis methods and customization. On the other hand, `Statmanager-kr` is designed to be used by researchers who are not familiar with programming and coding, but want to get quick and fast results.
 
 # Features
 
-The `statmanager-kr` was designed to be compatible with the wide range form of `pandas.DataFrame`.  
+The `Statmanager-kr` was designed to be compatible with the wide range form of `Pandas.DataFrame`.  
 
 ## User-friendly Features
 
@@ -139,7 +139,7 @@ The method-specific information needed to use the `.progress()` method can be fo
 | `rm_ancova`        | One-way Repeated Measures ANCOVA    | `vars`               |
 | `cronbach`         | Calculating Cronbach's Alpha        | `vars`               |
 
-Also the `statmanager-kr` provides two posthoc methods. It can be run by providing the key of the `posthoc_method` parameter as follows:
+Also `Statmanager-kr` provides two posthoc methods. It can be run by providing the key of the `posthoc_method` parameter as follows:
 
 | Key of `posthoc_method` | Method                |
 | ----------------------- | --------------------- |
