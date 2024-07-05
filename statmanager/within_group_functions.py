@@ -13,6 +13,13 @@ def ttest_rel(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, 
     result_for_save = []
     result_df = pd.DataFrame(columns = ['variables', 't-value', 'degree of freedom', 'p-value', '95% CI', "Cohen's d"]).set_index('variables')
     
+    #error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if (isinstance(vars, list) and len(vars) != 2) or isinstance(vars, str):
+        raise ValueError(error_message_for_more_vars_within[lang_set])
+    
     n = len(df)
     
     series = []
@@ -60,6 +67,13 @@ def ttest_rel(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, 
 def wilcoxon(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, posthoc_method = None):
     result_for_save =[]
     result_df = pd.DataFrame(columns = ['variables', 'Test-Statistic', 'Z-value', 'p-value', 'Rank-biserial correlation']).set_index('variables')
+
+    #error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if (isinstance(vars, list) and len(vars) != 2) or isinstance(vars, str):
+        raise ValueError(error_message_for_more_vars_within[lang_set])
     
     n = len(df)
     
@@ -105,6 +119,13 @@ def wilcoxon(df: pd.DataFrame, vars: list, lang_set, testname, posthoc = None, p
 def friedman(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = False, posthoc_method = 'bonf'):
     result_for_save =[]
     result_df = pd.DataFrame(columns = ['variables', 'correcting for ties', 'p-value']).set_index('variables')
+
+    #error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if (isinstance(vars, list) and len(vars) != 3) or isinstance(vars, str):
+        raise ValueError(error_message_for_more_vars_within_friedman[lang_set])
     
     n = len(df)
     
@@ -135,7 +156,7 @@ def friedman(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = F
         posthoc_table = posthoc_within(df, vars, parametric = False, posthoc_method = posthoc_method)
         reporting_posthoc = 'Posthoc: '
         result_for_save.append(reporting_posthoc)
-        result_for_save.append(posthoc_table)
+        result_for_save.extend(posthoc_table)
     
     print(testname)
     for n in result_for_save:
@@ -151,6 +172,13 @@ def friedman(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = F
     
 def rm_anova(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = False, posthoc_method = 'bonf'):
     result_for_save =[]
+
+    #error guard
+    if vars == None:
+        raise ValueError(error_message_for_vars_are_none[lang_set])
+    
+    if (isinstance(vars, list) and len(vars) < 2) or isinstance(vars, str):
+        raise ValueError(error_message_for_more_vars_within_rm_anova[lang_set])
     
     n = len(df)
     index_col = df.index.name
@@ -174,7 +202,7 @@ def rm_anova(df: pd.DataFrame, vars: list, lang_set, testname, posthoc: bool = F
         posthoc_table = posthoc_within(df, vars, parametric = True, posthoc_method = posthoc_method)
         reporting_posthoc = 'Posthoc: '
         result_for_save.append(reporting_posthoc)
-        result_for_save.append(posthoc_table)
+        result_for_save.extend(posthoc_table)
     
     print(testname)
     for n in result_for_save:

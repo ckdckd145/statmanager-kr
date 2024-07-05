@@ -9,7 +9,7 @@ Fisher's Exact Test,Cross-tabulation analysis,fisher,Variables to check for freq
 Correlation analysis: Pearson r,Correlation analysis - Parametric test,pearsonr,Variables to check correlation (list),,
 Correlation analysis: Spearman rho,Correlation analysis - Non-parametric test,spearmanr,Variables to check correlation (list),,
 Correlation analysis: Kendall's tau-b,Correlation analysis - Non-parametric test,kendallt,Variables to check correlation (list),,
-Indenpendent Samples T-test,Compare between groups (two) - Parametric test,ttest_ind,Dependent variable (str),Group variable (str),
+Independent Samples T-test,Compare between groups (two) - Parametric test,ttest_ind,Dependent variable (str),Group variable (str),
 Dependent Samples T-test,Compare between times (two) - Parametric test,ttest_rel,Dependent variables (list),,
 Yuen's two-sample t-test (Independent samples T-test using unequal variance),Compare between groups (two) - Non-parametric test,ttest_ind_trim{trim_ratio},Dependent variable (str),Group variable (str),
 Mann-Whitney U Test (Wilcoxon Rank Sum Test),Compare between groups (two) - Non-parametric test,mannwhitneyu,Dependent variable (str),Group variable (str),

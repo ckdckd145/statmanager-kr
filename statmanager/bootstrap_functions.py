@@ -130,7 +130,7 @@ def percentile_method(df: pd.DataFrame, vars: list or str, group_vars: str, lang
     # Display the plot
     plt.show()
     
-    figure_object = FigureInStatmanager(xlabel=f"Value of {a_var} & {b_var}", ylabel="No. of Samples", title=f'Histogram of {a_var} & {b_var}', figure = ax)
+    # figure_object = FigureInStatmanager(xlabel=f"Value of {a_var} & {b_var}", ylabel="No. of Samples", title=f'Histogram of {a_var} & {b_var}', figure = ax)
     # result_for_save.append(figure_object)
     # plt.figure(figsize=(10, 8))
     # if lang_set == 'kor':            
@@ -153,7 +153,7 @@ def percentile_method(df: pd.DataFrame, vars: list or str, group_vars: str, lang
     # plt.grid(False)
     # plt.show()
     
-    return result_for_save, figure_object
+    return result_for_save, ax
 
 def bootstrapping(series: pd.Series, resampling_no, statistic=np.mean):
     
