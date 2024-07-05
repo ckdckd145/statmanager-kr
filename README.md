@@ -3,6 +3,17 @@
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/ckdckd145/statmanager-kr/blob/main/LICENSE)
 ![logo](./doc/logo.png)
 
+### Available Operating Systems
+`Windows 10`   
+`Windows 11`   
+`Mac`   
+`Linux`  
+
+### Availabe Python Versions
+`Python 3.10`   
+`Python 3.11`   
+`Python 3.12`
+
 
 # Statmanager-kr
 ### Open-source Statistical Package for Python based on the Pandas.    
