@@ -8,7 +8,7 @@ with open(r'statmanager\README.md', encoding='utf-8') as f:
 
 setup(
     name='statmanager-kr',
-    version='1.8.1.10',
+    version='1.8.1.11',
     license='MIT',
     long_description=description_markdown,
     long_description_content_type='text/markdown',
@@ -20,7 +20,7 @@ setup(
     install_requires=['pandas', 'scipy', 'statsmodels', 'matplotlib', 'seaborn', 'XlsxWriter'],
     packages=find_packages(),
     keywords=['statistic', 'socialscience', 'stats',],
-    python_requires='>=3.0',
+    python_requires='>=3.10',
     package_data={
         'statmanager' : ['*.csv', '*.png'],
         },
