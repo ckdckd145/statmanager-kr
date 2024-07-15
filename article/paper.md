@@ -19,17 +19,17 @@ bibliography: paper.bib
 
 # Summary
 
-Python is one of the most popular and easiest programming languages. Despite the fact that manay researchers use Python for data preprocessing and statistical analysis, there are few statistical packages that have inherited the simple, easy-to-use nature of Python.  Consequently, people who possess statistical knowledge but lack familiarity with programming languages continue to rely on other costly software. Because researchers who are not familiar with programming may not know how to use different methods and adjust parameters effectively. 
+Python is one of the most popular and easy-to-use programming languages. Despite the fact that many researchers use Python for data preprocessing and statistical analysis, there are few statistical packages that have inherited the simple and easy-to-use nature of Python. As a result, people with statistical skills but no familiarity with programming languages continue to rely on other expensive software. This is because researchers who are not familiar with programming may not know how to use different methods and adjust parameters effectively. 
 
-The `Statmanager-kr` was designed to provide easy-to-use statistical functions for people with little knowledge of programming languages. Because many people are already familiar with data in table format, such as that in Microsoft Excel, `Statmanager-kr` was designed to be compatible with `Pandas.DataFrame`. In addition, the `Statmanager-kr` was designed so that the analysis is performed using only one method utilizing as few parameters as possible.
+The `Statmanager-kr` has been designed to provide easy-to-use statistical functions especially for people with little knowledge of programming languages. The `Statmanager-kr` was designed to be compatible with `Pandas.DataFrame`. In addition, the `Statmanager-kr` was designed so that the analysis is performed using only one method with as few parameters as possible.
 
-Additionally, `Statmanager-kr` relies on `Scipy` and `Statsmodels` for valid analysis. The `Statmanager-kr` provides methods related to testing the normality and homoscedasticity assumptions, comparing between-group and within-group differences, conducting regression analysis, and data visualization.
+Additionally, `Statmanager-kr` relies on `Scipy` and `Statsmodels` for valid analysis. The `Statmanager-kr` provides methods for testing the normality and homoscedasticity assumptions, comparing between-group and within-group differences, performing regression analysis, and data visualization.
 
 # Statement of need
 
-The `statmanager-kr` is a statistical package for Python in `Pandas`. This package provides methods commonly used for null hypothesis significance testing (NHST), which is of interest to researchers in various fields [@Moon2020]. It is also possible to check whether the normality or equivariance assumption is met, using the Shapiro-Wilk, Levene, or Fmax tests. 
+The `statmanager-kr` is a statistical package for Python in `Pandas`. This package provides methods commonly used for null hypothesis significance testing (NHST), which is of interest to researchers in various fields [@Moon2020]. It is also possible to test for normality or equivariance using the Shapiro-Wilk, Levene, or Fmax tests. 
 
-Most of the statistical software available today is difficult to use, as demonstrated by previous study reporting that one of the challenges college students face in statistics courses was "using software" [@Murtonen:2003]. Although there are basic statistical libraries in Python, such as Scipy [@seabold:2010] and Statsmodels [@Virtanen:2020], they are quite complex. While some studies involve complex and detailed statistical modeling and analysis, there are also many studies that require only a few hypothesis tests. Therefore, the development of an easy-to-use statistical package would be of great benefit to these researchers. 
+Most of the statistical software available today is difficult to use, as a previous study reported that one of the challenges students face in statistics courses was "using software" [@Murtonen:2003]. Although there are basic statistical libraries in Python, such as Scipy [@seabold:2010] and Statsmodels [@Virtanen:2020], they are quite complex. While some studies require complex and detailed statistical modeling and analysis, there are also many studies that require only a few hypothesis tests. Therefore, the development of an easy-to-use statistical package would be of great benefit to these researchers. 
 
 To achieve this, the `statmanager-kr` has been designed to run analyses with only three lines of code: 1. read data as a `Pandas.DataFrame`, 2. create a `Stat_Manager` object, 3. execute the `.progress()` method. Therefore, users can use the `Statmanager-kr` as long as they know the Pandas methods to read the data, such as `.read_csv()` or `.read_excel()`. It also includes functions to visualize the results depending on the analysis method.
 
@@ -38,11 +38,11 @@ To achieve this, the `statmanager-kr` has been designed to run analyses with onl
 
 Recent advances in the field of statistics have been achieved through the emergence of user-friendly packages, such as `Pingouin` [@vallat2018]. Pingouin is an easy-to-use statistics package that offers a wide range of analytical functions. Like `Pingouin`, `Statmanager-kr` is similar in that it aims to be a user-friendly statistics package. 
 
-However, `Statmanager-kr` and `Pingouin` differ in their target users. Since `Statmanager-kr` is designed for researchers with limited programming experience, it focuses on keeping the workflow short and concise; therefore, `Statmanager-kr` was designed to allow users to apply analyses and obtain results by always running a single method, `.progress()`, in a similar way. On the other hand, `Pingouin` was developed for users who have a relatively high level of programming knowledge and experience; therefore, in terms of workflow, `Pingouin` offers more comprehensive and fine-tunable analysis methods and provides more detailed analysis results. Also, `Statmanager-kr` only works with `Pandas.DataFrame`, while `Pingouin` has the advantage of being compatible with a wider range of datasets. 
+However, `Statmanager-kr` and `Pingouin` differ in their target users. Since `Statmanager-kr` is designed for researchers with limited programming experience, it focuses on keeping the workflow short and concise; therefore, `Statmanager-kr` was designed to allow users to apply analyses and obtain results by always running a single method, `.progress()`, in a similar way. On the other hand, `Pingouin` was developed for users with a relatively high level of programming knowledge and experience; therefore, in terms of workflow, `Pingouin` offers more comprehensive and fine-tunable analysis methods and provides more detailed analysis results. Also, `Statmanager-kr` only works with `Pandas.DataFrame`, while `Pingouin` has the advantage of being compatible with a wider range of datasets. 
 
 Another difference is related to visualization and post-hoc. The `statmanager-kr` performs post-hoc by adding the parameter `posthoc` to the `.progress()`. In addition, it is possible to visualize the results by using `.figure()` as a method chaining. Although `Pingouin` does not provide the ability to directly visualize the results of an analysis, it does support the generation of graphs that are very useful from a statistical perspective, such as paired plots, shift plots, and circle mean plots. In addition, Pingouin has the advantage of supporting a wider range of post-hoc tests. 
 
-In conclusion, depending on the programming experience of the researcher and the purpose of the study, `Statmanager-kr` and `Pingouin` can be used differently.  Researchers who are familiar with programming may be better suited to use `Pingouin` as it supports more analysis methods and customization. On the other hand, `Statmanager-kr` is designed to be used by researchers who are not familiar with programming and coding, but want to get quick and fast results.
+In conclusion, depending on the researcher's programming experience and the purpose of the study, `Statmanager-kr` and `Pingouin` can be used differently. Researchers who are familiar with programming may be better suited to use `Pingouin` as it supports more analysis methods and customization. On the other hand, `Statmanager-kr` is designed to be used by researchers who are not familiar with programming and coding, but want to get quick results.
 
 # Features
 
@@ -50,7 +50,7 @@ The `Statmanager-kr` was designed to be compatible with the wide range form of `
 
 ## User-friendly Features
 
-### Set Language
+### Setting the Language
 
 It is possible to change the language by adjusting the `language` parameter when creating an object of the Stat_Manager class. The supported languages are Korean ("kor") and English ("eng"), and the default is Korean.
 
