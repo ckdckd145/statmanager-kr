@@ -27,7 +27,7 @@ Additionally, `Statmanager-kr` relies on `Scipy` and `Statsmodels` for valid ana
 
 # Statement of need
 
-`Statmanager-kr` is a statistical package for Python in `Pandas`. This package provides methods commonly used for null hypothesis significance testing (NHST), which is of interest to researchers in various fields [@Moon2020]. It is also possible to test for normality or equivariance using the Shapiro-Wilk, Levene, or Fmax tests. 
+`Statmanager-kr` is a statistical package for Python in `Pandas`. This package provides methods commonly used for null hypothesis significance testing (NHST), which is of interest to researchers in various fields [@Moon2020]. It is also possible to test for normality or equivariance using the Shapiro-Wilk, Levene, or F<sub>max</sub> tests. 
 
 Most of the statistical software available today is difficult to use, as a previous study reported that one of the challenges students face in statistics courses was "using software" [@Murtonen:2003]. Although there are basic statistical libraries in Python, such as Scipy [@seabold:2010] and Statsmodels [@Virtanen:2020], they are quite complex. While some studies require complex and detailed statistical modeling and analysis, there are also many studies that require only a few hypothesis tests. Therefore, the development of an easy-to-use statistical package would be of great benefit to these researchers. 
 
@@ -69,8 +69,8 @@ The implementation of analysis in `Statmanager-kr` can be summarized as follows.
 
 | Objective                             | Analysis                                                                                                                                                |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Check the normality assumption        | Kolmogorov-Smirnov Test, Shapiro-Wilks Test, Z-Skeweness & Z-Kurtosis Test                                                                              |
-| Check the homoskedasticity assumption | Levenve Test, Fmax Test                                                                                                                                 |
+| Check the normality assumption        | Kolmogorov-Smirnov Test, Shapiro-Wilks Test, Z-Skewness & Z-Kurtosis Test                                                                              |
+| Check the homoskedasticity assumption | Levene's Test, F<sub>max</sub> Test                                                                                                                                 |
 | Frequency analysis                    | Chi-Squared Test, Fisher’s Exact Test                                                                                                                   |
 | Check the reliability of the scale    | Calculating Cronbach’s Alpha                                                                                                                            |
 | Correlation analysis                  | Pearson’s r, Spearman’s rho, Kendall’s tau                                                                                                              |
@@ -110,9 +110,9 @@ The method-specific information needed to use the `.progress()` method can be fo
 | ------------------ | ----------------------------------- | -------------------- | --------------------------- |
 | `kstest`           | Kolmogorov-Smirnov Test             | `vars`               | `group_vars`                |
 | `shapiro`          | Shapiro-Wilks Test                  | `vars`               | `group_vars`                |
-| `z_normal`         | Z-skeweness & z-kurtosis test       | `vars`               | `group_vars`                |
+| `z_normal`         | Z-Skewness & Z-Kurtosis test        | `vars`               | `group_vars`                |
 | `levene`           | Levene Test                         | `vars`, `group_vars` |
-| `fmax`             | Fmax Test                           | `vars`, `group_vars` |
+| `fmax`             | F<sub>max</sub> Test                | `vars`, `group_vars` |
 | `chi2_contingency` | Chi-squared Test                    | `vars`               |
 | `fisher`           | Fisher's Exact Test                 | `vars`               |
 | `pearsonr`         | Pearson's r                         | `vars`               |
