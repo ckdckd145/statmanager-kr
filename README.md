@@ -1,18 +1,25 @@
  
 [![PyPI version](https://badge.fury.io/py/statmanager-kr.svg)](https://badge.fury.io/py/statmanager-kr)
 [![license](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/ckdckd145/statmanager-kr/blob/main/LICENSE)
+[![status](https://joss.theoj.org/papers/d88c1a10e30fbfc39104534970afcd23/status.svg)](https://joss.theoj.org/papers/d88c1a10e30fbfc39104534970afcd23)
+<img src="https://img.shields.io/badge/Python-3776AB?style=flat&logo=Python&logoColor=white">
+<img src="https://img.shields.io/badge/Pandas-150458?style=flat&logo=Pandas&logoColor=white">
+<img src="https://img.shields.io/badge/Jupyter-F37626?style=flat&logo=Jupyter&logoColor=white">
+<img src="https://img.shields.io/badge/Scipy-8CAAE6?style=flat&logo=Scipy&logoColor=white">
+
+
 ![logo](./doc/logo.png)
 
 ### Available Operating Systems
-`Windows 10`   
-`Windows 11`   
-`Mac`   
-`Linux`  
+<img src="https://img.shields.io/badge/Windows_10-00adef">
+<img src="https://img.shields.io/badge/Windows_11-0078d4">
+<img src="https://img.shields.io/badge/Mac_OS-000000">
+<img src="https://img.shields.io/badge/Linux-FCC624">
 
 ### Availabe Python Versions
-`Python 3.10`   
-`Python 3.11`   
-`Python 3.12`
+<img src="https://img.shields.io/badge/Python_3.10-3776AB">
+<img src="https://img.shields.io/badge/Python_3.11-3776AB">
+<img src="https://img.shields.io/badge/Python_3.12-3776AB">
 
 
 # Statmanager-kr

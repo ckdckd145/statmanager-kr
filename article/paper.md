@@ -19,11 +19,7 @@ bibliography: paper.bib
 
 # Summary
 
-Python is one of the most popular and easy-to-use programming languages. Despite the fact that many researchers use Python for data preprocessing and statistical analysis, there are few statistical packages that have inherited the simple and easy-to-use nature of Python. As a result, people with statistical skills but no familiarity with programming languages continue to rely on other expensive software. This is because researchers who are not familiar with programming may not know how to use different methods and adjust parameters effectively. 
-
-`Statmanager-kr` has been designed to provide easy-to-use statistical functions especially for people with little knowledge of programming languages. `Statmanager-kr` was designed to be compatible with `Pandas.DataFrame`. In addition, the `Statmanager-kr` was designed so that the analysis is performed using only one method with as few parameters as possible.
-
-Additionally, `Statmanager-kr` relies on `Scipy` and `Statsmodels` for valid analysis. `Statmanager-kr` provides methods for testing the normality and homoscedasticity assumptions, comparing between-group and within-group differences, performing regression analysis, and data visualization.
+Python is one of the most accessible and adaptable programming languages, utilized in various research domains, including statistics. However, few statistical packages inherit these characteristics of Python, leaving researchers unfamiliar with programming languages dependent on other expensive software. To address this gap, `Statmanager-kr` has been developed to provide non-programmers with convenient access to statistical functions. `Statmanager-kr` is designed to be compatible with `Pandas.DataFrame` and enables statistical analyses using a single method with a relatively small number of parameters. With `Scipy` and `Statsmodels` ensuring the validity of analyses, `Statmanager-kr` offers functions for hypothesis testing, comparing between-group and within-group differences, regression, correlations, data visualization, and more.
 
 # Statement of need
 
