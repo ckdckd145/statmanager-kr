@@ -1,8 +1,10 @@
 
 LINK_DOC ={
-    'kor' : '*****\n↓↓ 상세한 정보는 공식 문서를 확인하세요! ↓↓\nhttps://cslee145.notion.site/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01&pvs=4 \n*****\n',
-    'eng' : '*****\n↓↓ Check for the more details in official documentation! ↓↓\nhttps://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4 \n*****\n'
+    'kor' : '\n↓↓ Official Documentation - Korean ↓↓\nhttps://cslee145.notion.site/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01&pvs=4 \n\n',
+    'eng' : '\n↓↓ Official Documentation - English ↓↓\nhttps://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4 \n\n'
 }
+
+CITATION = 'Lee, C., (2024). Statmanager-kr: A User-friendly Statistical Package for Python in Pandas. Journal of Open Source Software, 9(102), 6642, https://doi.org/10.21105/joss.06642'
 
 
 TRIM_REFERENCE = "Reference:\n[1] Guo, J. H., & Luh, W. M. (2009). Optimum sample size allocation to minimize cost or maximize power for the two‐sample trimmed mean test. British Journal of Mathematical and Statistical Psychology, 62(2), 283-298.\n[2] Yuen, K. K. (1974). The two-sample trimmed t for unequal population variances. Biometrika, 61(1), 165-170.\n\n"
@@ -195,11 +197,10 @@ error_message_for_vars_rmancova = {
 }
 
 def success_message_for_creating_object (ver, doclink):
-    
     success_message = {
-        'kor' :  f"Stat_Manager 객체 생성 완료! (Version {ver})\n\n사용법 설명 메소드: .howtouse()\n분석 메소드: .progress()\n언어 세팅 변경 메소드: .set_language()\n데이터프레임 변경 메소드 .change_dataframe()\nNote: To change the language, provide 'eng' as an argument to the 'language' parameter when creating the Stat_Manager() object.\nOr just run .set_language('eng')\n\n{doclink}",
-        'eng' : f"Stat_Manager object created successfully! (Version {ver})\n\nMethod to check how to use: .howtouse()\nMethod for statistical analysis: .progress()\nMethod for changing language: .set_language()\nMethod for changing dataframe .change_dataframe()\n\n{doclink}",
-            }
+        'kor' : f"Statmanager-kr (Version {ver})\n{doclink}Reference\n{CITATION}", 
+        'eng' : f"Statmanager-kr (Version {ver})\n{doclink}Reference\n{CITATION}",
+    } 
     
     return success_message
 success_message_for_changing_dataframe = {

@@ -11,73 +11,32 @@
 ![logo](./doc/logo.png)
 
 ### Available Operating Systems
+
 <img src="https://img.shields.io/badge/Windows_10-00adef">
 <img src="https://img.shields.io/badge/Windows_11-0078d4">
 <img src="https://img.shields.io/badge/Mac_OS-000000">
 <img src="https://img.shields.io/badge/Linux-FCC624">
 
 ### Availabe Python Versions
+
 <img src="https://img.shields.io/badge/Python_3.10-3776AB">
 <img src="https://img.shields.io/badge/Python_3.11-3776AB">
 <img src="https://img.shields.io/badge/Python_3.12-3776AB">
 
+<br>
 
-# Statmanager-kr
-### Open-source Statistical Package for Python based on the Pandas.    
-### Python과 Pandas 사용자를 위한 오픈소스 통계 패키지
- 
-#
-
-Statmanager-kr is developed for researchers, data scientists, psychologist, studends, and anyone who need statistical analysis to validate their hypothesis. The statmanager-kr aims to organize packages that are "convenient to use", "uncompliated to use", and "convenient to see results". The end goal of statmanager-kr is to be a <b>simple and useful package</b> that <b>can be used </b>by people <b>who don't know much about Python and Pandas</b>.  
-
-Statmanager-kr은 가설을 검증하기 위해 통계 분석이 필요한 연구원, 데이터분석가, 심리학자, 학생 등을 위해 개발되었습니다. statmanager-kr은 사용이 쉽고, 복잡하지 않은 통계 패키지를 목표로 지속적으로 개발됩니다. statmanager-kr 개발의 최종 목표는 <b>Python과 Pandas를 잘 알지 못하는 사람</b>도 이용할 수 있는 <b>매우 간편하면서도 유용한 통계 패키지를 만드는 것</b>입니다.  
+<b>Statmanager-kr</b> is open-source statistical package for researchers, data scientists, psychologist, studends, and anyone who need statistical analysis. <b>Statmanager-kr</b> aims to be a user-friendly statistical package that can be easily used by people who unfamiliar with programming language.
 
 Currently, <b><u>KOREAN</u></b> and <b><u>ENGLISH</u></b> are supported.   
-현재 지원하는 언어 세팅은 <b><u>한글</u></b>과 <b><u>영어</u></b>입니다. 
 
 
 ## Documentaion
-[한글 공식 문서](https://cslee145.notion.site/cslee145/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01)   
-[Official Documentation](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
 
+[Official documentation - Korean](https://cslee145.notion.site/fd776d4f9a4f4c9db2cf1bbe60726971?v=3b2b237555fc4cd3a41a8da337d80c01)   
+[Official Documentation - English](https://cslee145.notion.site/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4)
 
-## Notifications :
-Source codes are available in the [Github respository](https://github.com/ckdckd145/statmanager-kr)  
-소스코드는 [깃헙 레포지토리](https://github.com/ckdckd145/statmanager-kr)에서 확인할 수 있습니다.  
-
-For updates, please see [the notice in the documentation]((https://www.notion.so/cslee145/NOTICEs-4bb2177eeb0f412a81b8dbd3215058e6)) or the [Github release](https://github.com/ckdckd145/statmanager-kr/releases).  
-업데이트 내역은 정식 문서 내 [공지사항](https://www.notion.so/cslee145/NOTICEs-4bb2177eeb0f412a81b8dbd3215058e6) 혹은 [Github release](https://github.com/ckdckd145/statmanager-kr/releases)에서 확인하시기 바랍니다.    
-
-### Contribution Guidelines
-
-Please check the [guidelines](https://www.notion.so/cslee145/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4#96a4e9547ae54a41928ff4114729f6c2) in official documentation.   
-공식 문서 내 기여 [가이드라인](https://www.notion.so/cslee145/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4#96a4e9547ae54a41928ff4114729f6c2)을 확인해주시기 바랍니다. 
-
-Please use [Github Discussion](https://github.com/ckdckd145/statmanager-kr/discussions) to let me know if you have any questions, bugs you encounter, suggestions, etc. Of course, you can also email the developer directly.   
-궁금하신 점, 발생하는 버그, 제안 사항 등 모든 것은 [Github Discussion](https://github.com/ckdckd145/statmanager-kr/discussions)을 활용해서 알려주시면 감사하겠습니다. 물론, 개발자에게 직접 이메일을 보내셔도 됩니다. 
-
-
-#
-* [Quick Start with sample jupyter notebook file](https://github.com/ckdckd145/statmanager-kr/blob/main/test.ipynb) 
-* Available functions | 현재 사용 가능한 분석
-  * [Read detailed instructions](https://www.notion.so/cslee145/Documentation-74a610c12881402d96dc5d1654f97433?pvs=4#be93db7f4159419fa73eb324d6567793)  | [상세 사용법 열람](https://www.notion.so/cslee145/dded43262f784c70a37fddb11ec7c9d1?pvs=4#ef9a4aacd8b34b96bd7a4abdea4f5170)
-    1. Normality assumption | 정규성 가정
-    2. Homoskedasticity assumption | 등분산성 가정
-    3. Reliability | 신뢰도 확인
-    4. Frequency analysis  | 빈도분석
-    5. Correlation analysis | 상관분석
-    6. Comparison (2) | 차이비교 (2)
-    7. Comparison (3) | 차이비교 (3)
-    8. Regression
-
-
-* Available functions to make figure or graph | 그래프 혹은 그림 제작에 활용되는 기능
-  * P-P plot 
-  * Q-Q plot 
-  * Histogram 
-  * Histogram (cumulative)
-  * Pointplot (within differences)
-  * Boxplot (between group difference)
+## Source Code & Dependency
+Source codes are available in the [Github respository](https://github.com/ckdckd145/statmanager-kr)
 
 #### Dependency
 * pandas
@@ -88,21 +47,30 @@ Please use [Github Discussion](https://github.com/ckdckd145/statmanager-kr/discu
 * seaborn
 * XlsxWriter
 
-It is recommended to use the <b>latest versions</b> of these libraries and packages to avoid unexpected errors. 
-예상치 못한 오류를 방지하기 위하여, 위 패키지 및 라이브러리는 항상 최신 버전으로 업데이트할 것을 권고합니다. 
+It is recommended to use the <b>latest versions</b> of these libraries and packages to avoid unexpected errors.
 
-#### Recommendation
-Using "Jupyter Notebook" is <b>STRONGLY RECOMMENDED</b> (Of course, statmanager-kr works just as well in a Python environment)   
-"주피터 노트북(Jupyter Notebook)" 사용을 <b>강력하게 권고</b>합니다. 물론, Python 환경에서도 statmanager-kr은 문제없이 작동합니다.  
+## Contribution Guidelines
 
-#### Installing statmanager-kr
-    pip install statmanager-kr
+Please check the [guidelines](https://www.notion.so/cslee145/60cbfcbc90614fe990e02ab8340630cc?v=4991650ae5ce4427a215d1043802f5c0&pvs=4#96a4e9547ae54a41928ff4114729f6c2) in official documentation.   
 
-#### Updating statmanager-kr
-    pip install statmanager-kr --upgrade
+Please use [Github Discussion](https://github.com/ckdckd145/statmanager-kr/discussions) to let me know the questions, bugs, suggestions or anything. 
 
 
 # Quick Start
+
+[If you want to start with sample file, click this](https://github.com/ckdckd145/statmanager-kr/blob/main/test.ipynb)
+[Read manual in documentation](https://www.notion.so/cslee145/Documentation-74a610c12881402d96dc5d1654f97433?pvs=4#be93db7f4159419fa73eb324d6567793)  | 
+
+
+### Installation
+```python
+pip install statmanager-kr
+```
+
+### Update
+```python
+pip install statmanager-kr --upgrade
+```
 
 ### Import 
 
@@ -110,7 +78,8 @@ Using "Jupyter Notebook" is <b>STRONGLY RECOMMENDED</b> (Of course, statmanager-
 import pandas as pd
 from statmanager import Stat_Manager
 
-df = pd.read_csv('testdf.csv', index_col = 'id')
+# use your data file instead of 'testdf.csv'
+df = pd.read_csv('testdf.csv', index_col = 'id') 
 sm = Stat_Manager(df, language = 'eng')
 ```
 
@@ -276,11 +245,11 @@ The main difference is that `Statmanager-kr` was developed with the goal of bein
 
 In conclusion, `Statmanager-kr` is a good package for researchers who lack programming experience and knowledge and want to see results quickly. [`Pingouin`](https://pingouin-stats.org/build/html/index.html), on the other hand, is a more suitable package for researchers with more programming experience and knowledge, who need a fine-tuned approach to each analysis method. 
 
-앞서 말했듯, `Statmanager-kr`은 Python과 같은 프로그래밍 언어에 익숙하지 않더라도, 가설을 검증하기 위한 통계 분석 방법을 유저 친화적으로 제공하기 위해 개발되었습니다. 이와 같이, 유저 친화적인 기능을 제공하는 유관 소프트웨어로는 대표적으로 [`Pingouin`](https://pingouin-stats.org/build/html/index.html)을 들 수 있습니다. 
 
-가장 큰 차이점은, `Statmanager-kr`은 프로그래밍 관련 지식이나 경험이 부족한 연구자도 사용할 수 있는 패키지를 목표로 개발되었다는 점입니다. 이를 위해 `Statmanager-kr`은 분석방법 별로 독립적인 메소드를 구현하기보다, 사용자가 언제든 하나의 메소드에 동일한 방식의 코드를 입력하여 통계 분석을 실행하고 결과를 얻을 수 있도록 설계되었습니다. [`Pingouin`](https://pingouin-stats.org/build/html/index.html)도 사용자 친화적인 특성을 공유하나, `Statmanager-kr`과 비교하였을 대에는 비교적 프로그래밍 경험과 지식이 많은 사용자에게 적합한 패키지입니다. 다만, 이러한 차이로 인해 `Statmanager-kr`은 매개 변수를 조정하여 분석 방법을 세밀하게 조율하는 기능을 지원할 수 없습니다. 반면, [`Pingouin`](https://pingouin-stats.org/build/html/index.html)은 매개 변수를 조정하여 보다 세심하고 적합한 결과를 확보하는 데 유용합니다. 
+## How to cite? 
 
-결론적으로, `Statmanager-kr`은 프로그래밍 경험과 지식이 부족하며, 빠르게 결과를 확인하고자 하는 연구자에게 적합한 패키지입니다. 반면, [`Pingouin`](https://pingouin-stats.org/build/html/index.html)은 프로그래밍 경험과 지식이 비교적 풍부하며, 각 분석 방법별로 세밀한 조정과 접근이 필요한 연구자에게 보다 적합한 패키지입니다. 
+For inserting the citations, please use this:
+* Lee, C., (2024). Statmanager-kr: A User-friendly Statistical Package for Python in Pandas. Journal of Open Source Software, 9(102), 6642, https://doi.org/10.21105/joss.06642
 
 
 ## Development: Changseok Lee
