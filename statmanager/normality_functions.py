@@ -415,7 +415,7 @@ def select_cutoff_in_z_normal(n):
     if n < 50:
         cutoff = 1.96
     
-    elif n < 200:
+    elif n <= 200:
         cutoff = 2.59
     
     elif n > 200:
