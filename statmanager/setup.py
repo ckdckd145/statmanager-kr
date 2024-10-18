@@ -8,7 +8,7 @@ with open(r'statmanager\README.md', encoding='utf-8') as f:
 
 setup(
     name='statmanager-kr',
-    version='1.8.1.14',
+    version='1.8.1.15',
     license='MIT',
     long_description=description_markdown,
     long_description_content_type='text/markdown',
@@ -19,7 +19,7 @@ setup(
     download_url='https://github.com/ckdckd145/statmanager-kr',
     install_requires=['pandas', 'scipy', 'statsmodels', 'matplotlib', 'seaborn', 'XlsxWriter'],
     packages=find_packages(),
-    keywords=['statistic', 'socialscience', 'stats',],
+    keywords=['statistic', 'socialscience', 'stats', 'analysis', 'data', 'research', 'science'],
     python_requires='>=3.10',
     package_data={
         'statmanager' : ['*.csv', '*.png'],
@@ -28,12 +28,15 @@ setup(
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Intended Audience :: Science/Research',
-        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Operating System :: Microsoft :: Windows :: Windows 10',
         'Operating System :: Microsoft :: Windows :: Windows 11',
         'Operating System :: MacOS', 
+        'Operating System :: POSIX :: Linux', 
         'Natural Language :: Korean',
-        'Natural Language :: English',        
+        'Natural Language :: English',
         'Development Status :: 4 - Beta',
         'Topic :: Scientific/Engineering',
     ],
