@@ -24,6 +24,7 @@ from .__init__ import __version__
 VERSION = __version__
 
 LINK = LINK_DOC
+PAPER_REFERENCE = CITATION
 
 class Stat_Manager: 
     """
